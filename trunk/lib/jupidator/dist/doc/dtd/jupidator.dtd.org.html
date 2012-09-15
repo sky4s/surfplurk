@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html> <head>
+<meta http-equiv='CONTENT-TYPE' content='text/html; charset=UTF-8' />
+<link rel='StyleSheet' href='DTDDocStyle.css' type='text/css' media='screen' />
+<title>Remote definition file</title>
+</head><body>
+<p class='DTDSource'><b><code>jupidator.dtd</code></b>: <a href='jupidator.dtd.html'>Elements</a> - Entities - <a href='jupidator.dtd.org.html'>Source</a> | <a href='intro.html'>Intro</a> - <a href='elementsIndex.html'>Index</a><br /><a href='index.html' target='_top'>FRAMES</a>&nbsp;/&nbsp;<a href='jupidator.dtd.org.html' target='_top'>NO FRAMES</a></p><pre id='dtd_source'><span class="dtd_processing_instruction">&lt;?xml version='1.0' encoding='UTF-8'?&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    This is the main element of the Jupidator file.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@title</span><span class="dtd_comment"> Remote definition file</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@root</span><span class="dtd_comment"> updatelist</span>
+<span class="dtd_comment"> --&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">updatelist</span><span class="dtd_plain"> (</span><span class="dtd_attribute_name">architect</span><span class="dtd_plain">*, </span><span class="dtd_attribute_name">version</span><span class="dtd_plain">+)</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr application</span><span class="dtd_comment"> The application name</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr baseurl</span><span class="dtd_comment"> The base URL of the files to be downloaded. This is the reference &quot;parent&quot; URL, where all remote URL addresses are defined.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr icon</span><span class="dtd_comment"> The image icon of the application. It should be in a format that the JRE will be able to understand (e.g. PNG).</span>
+<span class="dtd_comment">        For example, if baseurl is http://www.myserver.org/files and icon is icons/mascot.png then the icon URL is http://www.myserver.org/files/icons/mascot.png </span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr jupidator</span><span class="dtd_comment"> The minimum required release of Jupidator. To find the current release number, run Jupidator jar from the command line with no parameters. If no version is provided, no implicit Jupidator library version will be required.</span>
+<span class="dtd_comment"> --&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">updatelist</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">application</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">baseurl</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">icon</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#IMPLIED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">jupidator</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#IMPLIED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_plain">  </span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">Jupidator can be used in various architectures. With this element we define which architectures we support. Since Jupidator is developed in Java, where multi-platform programming is encouraged, this is reflected here too. Architectures are marked with a &quot;tag&quot; and this &quot;tag&quot; can be used in more than one actual architecture (for example in Mac OS X under PPC and Intel machines at the same time). See also documentation of &lt;a href=&quot;#architect_tag&quot;&gt;tag attribute&lt;/a&gt;</span>
+<span class="dtd_comment">  --&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">architect</span><span class="dtd_plain"> (</span><span class="dtd_attribute_name">launcher</span><span class="dtd_plain">)</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr tag</span><span class="dtd_comment"> The tag which marks this architecture. More than one architectures can share the same tag and are used the same by Jupidator. Some special tags exist: &quot;any&quot; and &quot;all&quot;. When &quot;any&quot; is used,it matchs all architectures that do &lt;b&gt;not&lt;/b&gt; have a specific arch tag defined. Tag &quot;all&quot; matches all targets, and adds it's child elements to the currently most appropriate arch target. So, the final elements are a combination of (a) those either specifically mentioned with &quot;architect&quot; compatible tags &lt;b&gt;or&lt;/b&gt; the &quot;any&quot; tag &lt;b&gt;and&lt;/b&gt; (b) elements defined by &quot;all&quot; tags.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr os</span><span class="dtd_comment"> The operating system of this machine. This variable matches current operating system if System property &quot;os.name&quot; starts with this value. This attribute is not case sensitive.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr arch</span><span class="dtd_comment"> The machine architecture. This variable matches current operating system if System property &quot;os.arch&quot; starts with this value. This attribute is not case sensitive.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">architect</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">tag</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">os</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">arch</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    This element is mandatory and defines how the application should be launched after the update procedure. Launching the updater is typically the same across updates, but differs in every platform.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">launcher</span><span class="dtd_plain"> (</span><span class="dtd_attribute_name">argument</span><span class="dtd_plain">*)</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr exec</span><span class="dtd_comment"> The executable filename. If arguments are required, these are defined by the nested argument element. Have in mind that variables, like ${JAVABIN}, can be used.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">launcher</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">exec</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_plain">  </span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Command line argument for the launcher. If no arguments are required, this element can be ommited. In the XML file there are as many argument elements, as the required arguments. Have in mind that variables, like ${APPHOME} can be used.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">argument</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr value</span><span class="dtd_comment"> The value of the argument</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">argument</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">value</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Every new version of the application has one version element. Here the files which needed to be updated are defined. If this version is written only for display reasons (i.e. to produce the changelog of versions prior of Jupidator), no arch elements are required.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">version</span><span class="dtd_plain"> (</span><span class="dtd_attribute_name">description</span><span class="dtd_plain">, (</span><span class="dtd_attribute_name">arch</span><span class="dtd_plain">)*)</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr release</span><span class="dtd_comment"> &lt;p&gt;The integer value of the current release. This number is checked against the &quot;release&quot; value of the runtime environment.&lt;/p&gt;</span>
+<span class="dtd_comment">        &lt;p&gt;Remember that release files are incrementally defined. &lt;i&gt;All&lt;/i&gt; versions with release number greater than the one given to the runtime environment, will be taken into account -  &lt;i&gt;not&lt;/i&gt; only the last one!&lt;/p&gt;</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr version</span><span class="dtd_comment"> Human readable display of the current release version</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">version</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">release</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">version</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Free text description of this version. HTML tags are allowed, if escaped correctly to be included inside the XML document.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">description</span><span class="dtd_plain"> (</span><span class="dtd_keyword">#PCDATA</span><span class="dtd_plain">)</span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Architecture dependent actions. If this is a matching architecture, a set of actions will be performed. If more than one architecture has changes for this release, then all architectures should be defined. If no changes exist for one arhcitecture, then this information will be skipped.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">arch</span><span class="dtd_plain"> (</span><span class="dtd_attribute_name">file</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">rm</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">chmod</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">chown</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">exec</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">kill</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">wait</span><span class="dtd_plain">)*</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr name</span><span class="dtd_comment"> The name of this architecture, as defined by the &lt;a href=&quot;#architect_tag&quot;&gt;tag&lt;/a&gt; attribute of the &lt;a href=&quot;#architect&quot;&gt;architect&lt;/a&gt; element.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr gui</span><span class="dtd_comment"> The installer will present a graphical window spinning for this version onwards. If this attribute is not present, no GUI is requested.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">arch</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">name</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">gui</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Download a file from the remote location, relative to base URL. The latest file from every version will be taken into account.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">file</span><span class="dtd_plain"> (</span><span class="dtd_attribute_name">sha1</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">sha2</span><span class="dtd_plain">|</span><span class="dtd_attribute_name">md5</span><span class="dtd_plain">)*</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr sourcedir</span><span class="dtd_comment"> The directory in the source location where this file exists. This is appended to the base URL.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr destdir</span><span class="dtd_comment"> The destination directory of the file. This directory is &lt;i&gt;not&lt;/i&gt; relative to anything. If you want to refer to other locations, like for example the application home, you &lt;i&gt;need&lt;/i&gt; to specifically define this location with variables, such as ${APPHOME}.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr name</span><span class="dtd_comment"> The file name. The name of the file is the same in both the source URL and in the destination directory. If this file is &lt;a href=&quot;#file_compress&quot;&gt;compressed&lt;/a&gt; then the appropriate compression extension is added to the source file name. The compression extension should &lt;i&gt;never&lt;/i&gt; be present in this tag (even for package files). If this is a zip or tar file with at least two content files (i.e. is a &quot;package&quot; file), then the value of this attribute is used only to locate the filename on the server and will not be inherited to the destination location. You can use directories inside the zip file to deploy to a deeper level directory.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr size</span><span class="dtd_comment"> The size of the source file. It will be used to check if the downloaded file has correct size.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr compress</span><span class="dtd_comment"> &lt;p&gt;The source file is compressed in the server. The following methods can be used: &quot;gzip&quot; &quot;bzip2&quot; &quot;zip&quot; &quot;tar&quot; &quot;tar.gz&quot; &quot;tar.bz2&quot;. This extension will be added to the source URL.&lt;/p&gt;&lt;p&gt;If a file is marked as one of &quot;zip&quot;, &quot;tar&quot;, &quot;tar.gz&quot; or &quot;tar.bz2&quot;, then this is a package file. If only one file is found inside the package file, then this file is treated as a &quot;stream&quot;, like the &quot;gzip&quot; and &quot;bzip2&quot; containers, and the filename stored inside the zip file will be ignored. If more than one file is found inside the package file, then all the file contents of this  package file will be unpacked at the &lt;a href=&quot;#file_destdir&quot;&gt;desired location&lt;/a&gt;. This is a convenience method to unpack a bunch of files simultaneously, as a package, without the need to define these files one by one.&lt;/p&gt;&lt;p&gt;An actual package file which is not marked &quot;compress&quot;-ed with this attribute, is handled like any other regular file, and no decompression is performed.&lt;/p&gt;</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr ifexists</span><span class="dtd_comment"> Download and install this file &lt;i&gt;only&lt;/i&gt; if this file already exists. If it does not, then this file is ignored.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr forceinstall</span><span class="dtd_comment"> This attribute is disabled (false) by default. With this default behaviour, if the selected runtime application is under an operating system that takes care of the update process by itself, this file is ignored. If it is enabled, then this file is used no matter what the operating system does. Enable this feature if you want to upgrade parts of the application that are not taken care by the operating system.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">file</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">sourcedir</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">destdir</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">name</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">size</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">compress</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;none&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">ifexists</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">forceinstall</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">   SHA1 checksum of the specified file</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">sha1</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr value</span><span class="dtd_comment"> Value of SHA1 checksum in HEX</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">sha1</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">value</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">   SHA2 checksum of the specified file. Defaults to to SHA-256, but the developer can use other methods</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">sha2</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr type</span><span class="dtd_comment"> The type of the SHA2 algorithm. Defaults to 256. Other valid values are 384 and 512</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr value</span><span class="dtd_comment"> Value of SHA2 checksum in HEX</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">sha2</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">type</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;256&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">value</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">   MD5 checksum of the specified file</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">md5</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr value</span><span class="dtd_comment"> Value of MD5 checksum in HEX</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">md5</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">value</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Remove a local file.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">rm</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr file</span><span class="dtd_comment"> The local file name. The full path name is expected.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr forceinstall</span><span class="dtd_comment"> If enabled, the owner of this file are changed in any case. For discussion about this parameter, see &lt;a href=&quot;#file_forceinstall&quot;&gt;forceinstall&lt;/a&gt; under the &lt;a href=&quot;#file&quot;&gt;file&lt;/a&gt; element.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">rm</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">file</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">forceinstall</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Change permissions of a local file. This element is supported only in Unix-like operating systems.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">chmod</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr file</span><span class="dtd_comment"> The local file name. The full path name is expected.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr attr</span><span class="dtd_comment"> The new attributes of this file. The syntax is the same with &lt;command&gt;chmod&lt;/command&gt; command.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr recursive</span><span class="dtd_comment"> If this is a directory, change attributes of all files recursively.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr forceinstall</span><span class="dtd_comment"> If enabled, the owner of this file are changed in any case. For discussion about this parameter, see &lt;a href=&quot;#file_forceinstall&quot;&gt;forceinstall&lt;/a&gt; under the &lt;a href=&quot;#file&quot;&gt;file&lt;/a&gt; element.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">chmod</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">file</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">attr</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">recursive</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">forceinstall</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Change owner of a local file. This element is supported only in Unix-like operating systems.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">chown</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr file</span><span class="dtd_comment"> The local file name. The full path name is expected.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr attr</span><span class="dtd_comment"> The new owner of this file. The syntax is the same with &lt;command&gt;chown&lt;/command&gt; command.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr recursive</span><span class="dtd_comment"> If this is a directory, change owner of all files recursively.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr forceinstall</span><span class="dtd_comment"> If enabled, the owner of this file are changed in any case. For discussion about this parameter, see &lt;a href=&quot;#file_forceinstall&quot;&gt;forceinstall&lt;/a&gt; under the &lt;a href=&quot;#file&quot;&gt;file&lt;/a&gt; element.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">chown</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">file</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">attr</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">recursive</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">forceinstall</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Execute a native command</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">exec</span><span class="dtd_plain"> (</span><span class="dtd_attribute_name">argument</span><span class="dtd_plain">*)</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr executable</span><span class="dtd_comment"> The filename of the executable</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr time</span><span class="dtd_comment"> When this command will be executed. Should be &quot;BEFORE&quot; &quot;AFTER&quot; or &quot;MID&quot;. By default &quot;MID&quot; parameter is used. This property is not case sensitive.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr input</span><span class="dtd_comment"> The input of this command, if needed by the application</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr forceinstall</span><span class="dtd_comment"> If enabled, the command is executed in any case. For discussion about this parameter, see &lt;a href=&quot;#file_forceinstall&quot;&gt;forceinstall&lt;/a&gt; under the &lt;a href=&quot;#file&quot;&gt;file&lt;/a&gt; element.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">exec</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">executable</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">time</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;AFTER&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">input</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">forceinstall</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    Kill a specified task. This element works in both Windows and Unix-like systems</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">kill</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr process</span><span class="dtd_comment"> The name of the process. This could be a regular expression which will match the running process. When applied, could match more than one running process.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr signal</span><span class="dtd_comment"> The signal to send. This is platform specific information. In Unix-like is the &quot;TERM&quot; signal. There is no need to preceed the signal name/number with a &quot;-&quot; sybol.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr forceinstall</span><span class="dtd_comment"> If enabled, the application is killed in any case. For discussion about this parameter, see &lt;a href=&quot;#file_forceinstall&quot;&gt;forceinstall&lt;/a&gt; under the &lt;a href=&quot;#file&quot;&gt;file&lt;/a&gt; element.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">kill</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">process</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_keyword">#REQUIRED</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">signal</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;TERM&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">forceinstall</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    This element is used in the last stage of the installation, to pause the installer for the specified number of milliseconds</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ELEMENT</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">wait</span><span class="dtd_plain"> </span><span class="dtd_keyword">EMPTY</span><span class="dtd_tag_symbols">&gt;</span>
+<span class="dtd_comment">&lt;!--</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr msecs</span><span class="dtd_comment"> The number of milliseconds the installer should wait</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr time</span><span class="dtd_comment"> When this command will be executed. Should be &quot;BEFORE&quot; &quot;AFTER&quot; or &quot;MID&quot;. By default &quot;BEFORE&quot; parameter is used. This property is not case sensitive.</span>
+<span class="dtd_comment">    </span><span class="dtd_dtddoc_tag">@attr forceinstall</span><span class="dtd_comment"> If enabled, waiting is performed in any case (and installation information is displayed). For discussion about this parameter, see &lt;a href=&quot;#file_forceinstall&quot;&gt;forceinstall&lt;/a&gt; under the &lt;a href=&quot;#file&quot;&gt;file&lt;/a&gt; element.</span>
+<span class="dtd_comment">--&gt;</span>
+<span class="dtd_tag_symbols">&lt;!</span><span class="dtd_tag_name">ATTLIST</span><span class="dtd_plain"> </span><span class="dtd_attribute_name">wait</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">msecs</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;1000&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">time</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;BEFORE&quot;</span>
+<span class="dtd_plain">    </span><span class="dtd_attribute_name">forceinstall</span><span class="dtd_plain"> </span><span class="dtd_keyword">CDATA</span><span class="dtd_plain"> </span><span class="dtd_attribute_value">&quot;false&quot;</span>
+<span class="dtd_plain">  </span><span class="dtd_tag_symbols">&gt;</span>
+</pre>
+</body></html>
