@@ -1,0 +1,525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head>
+<meta http-equiv='CONTENT-TYPE' content='text/html; charset=UTF-8' />
+<link rel='StyleSheet' href='DTDDocStyle.css' type='text/css' media='screen' />
+<title>Remote definition file</title>
+</head><body>
+<p class='DTDSource'><b><code>jupidator.dtd</code></b>: <a href='jupidator.dtd.html'>Elements</a> - Entities - <a href='jupidator.dtd.org.html'>Source</a> | <a href='intro.html'>Intro</a> - <a href='elementsIndex.html'>Index</a><br /><a href='index.html' target='_top'>FRAMES</a>&nbsp;/&nbsp;<a href='jupidator.dtd.html' target='_top'>NO FRAMES</a></p><h1>Remote definition file</h1>
+<a name='updatelist'></a>
+<br /><table class='elementTitle' summary="updatelist"><tr><td class='leftElementTitle'>
+&lt;updatelist&gt;</td><td class='rightElementTitle'>
+Root element
+</td></tr></table>
+<p>This is the main element of the Jupidator file.</p><blockquote><table summary='element info'><tr>
+<td class='construct'><table summary="&lt;updatelist&gt;'s children">
+<thead>
+<tr><th class='title' colspan='2'>&lt;updatelist&gt;'s children</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+<tr><th class='subtitle'>Name</th><th class='subtitle'>Cardinality</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+</thead>
+<tbody><tr><td><a href='#architect'>architect</a></td><td>Any number</td></tr>
+<tr><td><a href='#version'>version</a></td><td>At least one</td></tr>
+</tbody></table></td><td class='construct'><table  summary="&lt;updatelist&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;updatelist&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#updatelist_application'>application</a></td><td></td><td></td></tr><tr><td><a href='#updatelist_baseurl'>baseurl</a></td><td></td><td></td></tr><tr><td><a href='#updatelist_icon'>icon</a></td><td></td><td></td></tr><tr><td><a href='#updatelist_jupidator'>jupidator</a></td><td></td><td></td></tr></table></td></tr></table></blockquote>
+<span class='inTextTitle'>Element's model:</span><p class='model'>(<a href='#architect'>architect</a>*, <a href='#version'>version</a>+)</p><a name='updatelist_application'></a>
+<br /><table class='attributeTitle' summary="application"><tr><td class='leftAttributeTitle'>
+@application</td><td class='rightAttributeTitle'>
+Attribute of <a href='#updatelist'>updatelist</a>
+</td></tr></table>
+<p>The application name</p><p><span class='inTextTitle'>Required</span></p><a name='updatelist_baseurl'></a>
+<br /><table class='attributeTitle' summary="baseurl"><tr><td class='leftAttributeTitle'>
+@baseurl</td><td class='rightAttributeTitle'>
+Attribute of <a href='#updatelist'>updatelist</a>
+</td></tr></table>
+<p>The base URL of the files to be downloaded. This is the reference "parent" URL, where all remote URL addresses are defined.</p><p><span class='inTextTitle'>Required</span></p><a name='updatelist_icon'></a>
+<br /><table class='attributeTitle' summary="icon"><tr><td class='leftAttributeTitle'>
+@icon</td><td class='rightAttributeTitle'>
+Attribute of <a href='#updatelist'>updatelist</a>
+</td></tr></table>
+<p>The image icon of the application. It should be in a format that the JRE will be able to understand (e.g. PNG).
+For example, if baseurl is http://www.myserver.org/files and icon is icons/mascot.png then the icon URL is http://www.myserver.org/files/icons/mascot.png</p><a name='updatelist_jupidator'></a>
+<br /><table class='attributeTitle' summary="jupidator"><tr><td class='leftAttributeTitle'>
+@jupidator</td><td class='rightAttributeTitle'>
+Attribute of <a href='#updatelist'>updatelist</a>
+</td></tr></table>
+<p>The minimum required release of Jupidator. To find the current release number, run Jupidator jar from the command line with no parameters. If no version is provided, no implicit Jupidator library version will be required.</p><a name='architect'></a>
+<br /><table class='elementTitle' summary="architect"><tr><td class='leftElementTitle'>
+&lt;architect&gt;</td><td class='rightElementTitle'>
+Child of <a href='#updatelist'>updatelist</a>
+</td></tr></table>
+<p>Jupidator can be used in various architectures. With this element we define which architectures we support. Since Jupidator is developed in Java, where multi-platform programming is encouraged, this is reflected here too. Architectures are marked with a "tag" and this "tag" can be used in more than one actual architecture (for example in Mac OS X under PPC and Intel machines at the same time). See also documentation of <a href="#architect_tag">tag attribute</a></p><blockquote><table summary='element info'><tr>
+<td class='construct'><table summary="&lt;architect&gt;'s children">
+<thead>
+<tr><th class='title' colspan='2'>&lt;architect&gt;'s children</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+<tr><th class='subtitle'>Name</th><th class='subtitle'>Cardinality</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+</thead>
+<tbody><tr><td><a href='#launcher'>launcher</a></td><td>Only one</td></tr>
+</tbody></table></td><td class='construct'><table  summary="&lt;architect&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;architect&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#architect_arch'>arch</a></td><td></td><td></td></tr><tr><td><a href='#architect_os'>os</a></td><td></td><td></td></tr><tr><td><a href='#architect_tag'>tag</a></td><td></td><td></td></tr></table></td></tr></table></blockquote>
+<span class='inTextTitle'>Element's model:</span><p class='model'>(<a href='#launcher'>launcher</a>)</p><a name='architect_tag'></a>
+<br /><table class='attributeTitle' summary="tag"><tr><td class='leftAttributeTitle'>
+@tag</td><td class='rightAttributeTitle'>
+Attribute of <a href='#architect'>architect</a>
+</td></tr></table>
+<p>The tag which marks this architecture. More than one architectures can share the same tag and are used the same by Jupidator. Some special tags exist: "any" and "all". When "any" is used,it matchs all architectures that do <b>not</b> have a specific arch tag defined. Tag "all" matches all targets, and adds it's child elements to the currently most appropriate arch target. So, the final elements are a combination of (a) those either specifically mentioned with "architect" compatible tags <b>or</b> the "any" tag <b>and</b> (b) elements defined by "all" tags.</p><p><span class='inTextTitle'>Required</span></p><a name='architect_os'></a>
+<br /><table class='attributeTitle' summary="os"><tr><td class='leftAttributeTitle'>
+@os</td><td class='rightAttributeTitle'>
+Attribute of <a href='#architect'>architect</a>
+</td></tr></table>
+<p>The operating system of this machine. This variable matches current operating system if System property "os.name" starts with this value. This attribute is not case sensitive.</p><p><span class='inTextTitle'>Required</span></p><a name='architect_arch'></a>
+<br /><table class='attributeTitle' summary="arch"><tr><td class='leftAttributeTitle'>
+@arch</td><td class='rightAttributeTitle'>
+Attribute of <a href='#architect'>architect</a>
+</td></tr></table>
+<p>The machine architecture. This variable matches current operating system if System property "os.arch" starts with this value. This attribute is not case sensitive.</p><p><span class='inTextTitle'>Required</span></p><a name='launcher'></a>
+<br /><table class='elementTitle' summary="launcher"><tr><td class='leftElementTitle'>
+&lt;launcher&gt;</td><td class='rightElementTitle'>
+Child of <a href='#architect'>architect</a>
+</td></tr></table>
+<p>This element is mandatory and defines how the application should be launched after the update procedure. Launching the updater is typically the same across updates, but differs in every platform.</p><blockquote><table summary='element info'><tr>
+<td class='construct'><table summary="&lt;launcher&gt;'s children">
+<thead>
+<tr><th class='title' colspan='2'>&lt;launcher&gt;'s children</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+<tr><th class='subtitle'>Name</th><th class='subtitle'>Cardinality</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+</thead>
+<tbody><tr><td><a href='#argument'>argument</a></td><td>Any number</td></tr>
+</tbody></table></td><td class='construct'><table  summary="&lt;launcher&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;launcher&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#launcher_exec'>exec</a></td><td></td><td></td></tr></table></td></tr></table></blockquote>
+<span class='inTextTitle'>Element's model:</span><p class='model'>(<a href='#argument'>argument</a>*)</p><a name='launcher_exec'></a>
+<br /><table class='attributeTitle' summary="exec"><tr><td class='leftAttributeTitle'>
+@exec</td><td class='rightAttributeTitle'>
+Attribute of <a href='#launcher'>launcher</a>
+</td></tr></table>
+<p>The executable filename. If arguments are required, these are defined by the nested argument element. Have in mind that variables, like ${JAVABIN}, can be used.</p><p><span class='inTextTitle'>Required</span></p><a name='argument'></a>
+<br /><table class='elementTitle' summary="argument"><tr><td class='leftElementTitle'>
+&lt;argument/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#launcher'>launcher</a>, <a href='#exec'>exec</a>
+</td></tr></table>
+<p>Command line argument for the launcher. If no arguments are required, this element can be ommited. In the XML file there are as many argument elements, as the required arguments. Have in mind that variables, like ${APPHOME} can be used.</p><blockquote>
+<table  summary="&lt;argument&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;argument&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#argument_value'>value</a></td><td></td><td></td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='argument_value'></a>
+<br /><table class='attributeTitle' summary="value"><tr><td class='leftAttributeTitle'>
+@value</td><td class='rightAttributeTitle'>
+Attribute of <a href='#argument'>argument</a>
+</td></tr></table>
+<p>The value of the argument</p><p><span class='inTextTitle'>Required</span></p><a name='version'></a>
+<br /><table class='elementTitle' summary="version"><tr><td class='leftElementTitle'>
+&lt;version&gt;</td><td class='rightElementTitle'>
+Child of <a href='#updatelist'>updatelist</a>
+</td></tr></table>
+<p>Every new version of the application has one version element. Here the files which needed to be updated are defined. If this version is written only for display reasons (i.e. to produce the changelog of versions prior of Jupidator), no arch elements are required.</p><blockquote><table summary='element info'><tr>
+<td class='construct'><table summary="&lt;version&gt;'s children">
+<thead>
+<tr><th class='title' colspan='2'>&lt;version&gt;'s children</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+<tr><th class='subtitle'>Name</th><th class='subtitle'>Cardinality</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+</thead>
+<tbody><tr><td><a href='#arch'>arch</a></td><td>Any number</td></tr>
+<tr><td><a href='#description'>description</a></td><td>Only one</td></tr>
+</tbody></table></td><td class='construct'><table  summary="&lt;version&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;version&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#version_release'>release</a></td><td></td><td></td></tr><tr><td><a href='#version_version'>version</a></td><td></td><td></td></tr></table></td></tr></table></blockquote>
+<span class='inTextTitle'>Element's model:</span><p class='model'>(<a href='#description'>description</a>, (<a href='#arch'>arch</a>)*)</p><a name='version_release'></a>
+<br /><table class='attributeTitle' summary="release"><tr><td class='leftAttributeTitle'>
+@release</td><td class='rightAttributeTitle'>
+Attribute of <a href='#version'>version</a>
+</td></tr></table>
+<p>The integer value of the current release. This number is checked against the "release" value of the runtime environment.</p>
+<p>Remember that release files are incrementally defined. <i>All</i> versions with release number greater than the one given to the runtime environment, will be taken into account - <i>not</i> only the last one!</p><p><span class='inTextTitle'>Required</span></p><a name='version_version'></a>
+<br /><table class='attributeTitle' summary="version"><tr><td class='leftAttributeTitle'>
+@version</td><td class='rightAttributeTitle'>
+Attribute of <a href='#version'>version</a>
+</td></tr></table>
+<p>Human readable display of the current release version</p><p><span class='inTextTitle'>Required</span></p><a name='description'></a>
+<br /><table class='elementTitle' summary="description"><tr><td class='leftElementTitle'>
+&lt;description&gt;</td><td class='rightElementTitle'>
+Child of <a href='#version'>version</a>
+</td></tr></table>
+<p>Free text description of this version. HTML tags are allowed, if escaped correctly to be included inside the XML document.</p><a name='arch'></a>
+<br /><table class='elementTitle' summary="arch"><tr><td class='leftElementTitle'>
+&lt;arch&gt;</td><td class='rightElementTitle'>
+Child of <a href='#version'>version</a>
+</td></tr></table>
+<p>Architecture dependent actions. If this is a matching architecture, a set of actions will be performed. If more than one architecture has changes for this release, then all architectures should be defined. If no changes exist for one arhcitecture, then this information will be skipped.</p><blockquote><table summary='element info'><tr>
+<td class='construct'><table summary="&lt;arch&gt;'s children">
+<thead>
+<tr><th class='title' colspan='2'>&lt;arch&gt;'s children</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+<tr><th class='subtitle'>Name</th><th class='subtitle'>Cardinality</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+</thead>
+<tbody><tr><td><a href='#chmod'>chmod</a></td><td>Any number</td></tr>
+<tr><td><a href='#chown'>chown</a></td><td>Any number</td></tr>
+<tr><td><a href='#exec'>exec</a></td><td>Any number</td></tr>
+<tr><td><a href='#file'>file</a></td><td>Any number</td></tr>
+<tr><td><a href='#kill'>kill</a></td><td>Any number</td></tr>
+<tr><td><a href='#rm'>rm</a></td><td>Any number</td></tr>
+<tr><td><a href='#wait'>wait</a></td><td>Any number</td></tr>
+</tbody></table></td><td class='construct'><table  summary="&lt;arch&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;arch&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#arch_gui'>gui</a></td><td></td><td>false</td></tr><tr><td><a href='#arch_name'>name</a></td><td></td><td></td></tr></table></td></tr></table></blockquote>
+<span class='inTextTitle'>Element's model:</span><p class='model'>(<a href='#file'>file</a> | <a href='#rm'>rm</a> | <a href='#chmod'>chmod</a> | <a href='#chown'>chown</a> | <a href='#exec'>exec</a> | <a href='#kill'>kill</a> | <a href='#wait'>wait</a>)*</p><a name='arch_name'></a>
+<br /><table class='attributeTitle' summary="name"><tr><td class='leftAttributeTitle'>
+@name</td><td class='rightAttributeTitle'>
+Attribute of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>The name of this architecture, as defined by the <a href="#architect_tag">tag</a> attribute of the <a href="#architect">architect</a> element.</p><p><span class='inTextTitle'>Required</span></p><a name='arch_gui'></a>
+<br /><table class='attributeTitle' summary="gui"><tr><td class='leftAttributeTitle'>
+@gui</td><td class='rightAttributeTitle'>
+Attribute of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>The installer will present a graphical window spinning for this version onwards. If this attribute is not present, no GUI is requested.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='file'></a>
+<br /><table class='elementTitle' summary="file"><tr><td class='leftElementTitle'>
+&lt;file&gt;</td><td class='rightElementTitle'>
+Child of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>Download a file from the remote location, relative to base URL. The latest file from every version will be taken into account.</p><blockquote><table summary='element info'><tr>
+<td class='construct'><table summary="&lt;file&gt;'s children">
+<thead>
+<tr><th class='title' colspan='2'>&lt;file&gt;'s children</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+<tr><th class='subtitle'>Name</th><th class='subtitle'>Cardinality</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+</thead>
+<tbody><tr><td><a href='#md5'>md5</a></td><td>Any number</td></tr>
+<tr><td><a href='#sha1'>sha1</a></td><td>Any number</td></tr>
+<tr><td><a href='#sha2'>sha2</a></td><td>Any number</td></tr>
+</tbody></table></td><td class='construct'><table  summary="&lt;file&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;file&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#file_compress'>compress</a></td><td></td><td>none</td></tr><tr><td><a href='#file_destdir'>destdir</a></td><td></td><td></td></tr><tr><td><a href='#file_forceinstall'>forceinstall</a></td><td></td><td>false</td></tr><tr><td><a href='#file_ifexists'>ifexists</a></td><td></td><td>false</td></tr><tr><td><a href='#file_name'>name</a></td><td></td><td></td></tr><tr><td><a href='#file_size'>size</a></td><td></td><td></td></tr><tr><td><a href='#file_sourcedir'>sourcedir</a></td><td></td><td></td></tr></table></td></tr></table></blockquote>
+<span class='inTextTitle'>Element's model:</span><p class='model'>(<a href='#sha1'>sha1</a> | <a href='#sha2'>sha2</a> | <a href='#md5'>md5</a>)*</p><a name='file_sourcedir'></a>
+<br /><table class='attributeTitle' summary="sourcedir"><tr><td class='leftAttributeTitle'>
+@sourcedir</td><td class='rightAttributeTitle'>
+Attribute of <a href='#file'>file</a>
+</td></tr></table>
+<p>The directory in the source location where this file exists. This is appended to the base URL.</p><p><span class='inTextTitle'>Required</span></p><a name='file_destdir'></a>
+<br /><table class='attributeTitle' summary="destdir"><tr><td class='leftAttributeTitle'>
+@destdir</td><td class='rightAttributeTitle'>
+Attribute of <a href='#file'>file</a>
+</td></tr></table>
+<p>The destination directory of the file. This directory is <i>not</i> relative to anything. If you want to refer to other locations, like for example the application home, you <i>need</i> to specifically define this location with variables, such as ${APPHOME}.</p><p><span class='inTextTitle'>Required</span></p><a name='file_name'></a>
+<br /><table class='attributeTitle' summary="name"><tr><td class='leftAttributeTitle'>
+@name</td><td class='rightAttributeTitle'>
+Attribute of <a href='#file'>file</a>
+</td></tr></table>
+<p>The file name. The name of the file is the same in both the source URL and in the destination directory. If this file is <a href="#file_compress">compressed</a> then the appropriate compression extension is added to the source file name. The compression extension should <i>never</i> be present in this tag (even for package files). If this is a zip or tar file with at least two content files (i.e. is a "package" file), then the value of this attribute is used only to locate the filename on the server and will not be inherited to the destination location. You can use directories inside the zip file to deploy to a deeper level directory.</p><p><span class='inTextTitle'>Required</span></p><a name='file_size'></a>
+<br /><table class='attributeTitle' summary="size"><tr><td class='leftAttributeTitle'>
+@size</td><td class='rightAttributeTitle'>
+Attribute of <a href='#file'>file</a>
+</td></tr></table>
+<p>The size of the source file. It will be used to check if the downloaded file has correct size.</p><p><span class='inTextTitle'>Required</span></p><a name='file_compress'></a>
+<br /><table class='attributeTitle' summary="compress"><tr><td class='leftAttributeTitle'>
+@compress</td><td class='rightAttributeTitle'>
+Attribute of <a href='#file'>file</a>
+</td></tr></table>
+<p>The source file is compressed in the server. The following methods can be used: "gzip" "bzip2" "zip" "tar" "tar.gz" "tar.bz2". This extension will be added to the source URL.</p><p>If a file is marked as one of "zip", "tar", "tar.gz" or "tar.bz2", then this is a package file. If only one file is found inside the package file, then this file is treated as a "stream", like the "gzip" and "bzip2" containers, and the filename stored inside the zip file will be ignored. If more than one file is found inside the package file, then all the file contents of this package file will be unpacked at the <a href="#file_destdir">desired location</a>. This is a convenience method to unpack a bunch of files simultaneously, as a package, without the need to define these files one by one.</p><p>An actual package file which is not marked "compress"-ed with this attribute, is handled like any other regular file, and no decompression is performed.</p><p><span class='inTextTitle'>Default value</span>: none</p><a name='file_ifexists'></a>
+<br /><table class='attributeTitle' summary="ifexists"><tr><td class='leftAttributeTitle'>
+@ifexists</td><td class='rightAttributeTitle'>
+Attribute of <a href='#file'>file</a>
+</td></tr></table>
+<p>Download and install this file <i>only</i> if this file already exists. If it does not, then this file is ignored.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='file_forceinstall'></a>
+<br /><table class='attributeTitle' summary="forceinstall"><tr><td class='leftAttributeTitle'>
+@forceinstall</td><td class='rightAttributeTitle'>
+Attribute of <a href='#file'>file</a>
+</td></tr></table>
+<p>This attribute is disabled (false) by default. With this default behaviour, if the selected runtime application is under an operating system that takes care of the update process by itself, this file is ignored. If it is enabled, then this file is used no matter what the operating system does. Enable this feature if you want to upgrade parts of the application that are not taken care by the operating system.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='sha1'></a>
+<br /><table class='elementTitle' summary="sha1"><tr><td class='leftElementTitle'>
+&lt;sha1/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#file'>file</a>
+</td></tr></table>
+<p>SHA1 checksum of the specified file</p><blockquote>
+<table  summary="&lt;sha1&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;sha1&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#sha1_value'>value</a></td><td></td><td></td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='sha1_value'></a>
+<br /><table class='attributeTitle' summary="value"><tr><td class='leftAttributeTitle'>
+@value</td><td class='rightAttributeTitle'>
+Attribute of <a href='#sha1'>sha1</a>
+</td></tr></table>
+<p>Value of SHA1 checksum in HEX</p><p><span class='inTextTitle'>Required</span></p><a name='sha2'></a>
+<br /><table class='elementTitle' summary="sha2"><tr><td class='leftElementTitle'>
+&lt;sha2/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#file'>file</a>
+</td></tr></table>
+<p>SHA2 checksum of the specified file. Defaults to to SHA-256, but the developer can use other methods</p><blockquote>
+<table  summary="&lt;sha2&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;sha2&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#sha2_type'>type</a></td><td></td><td>256</td></tr><tr><td><a href='#sha2_value'>value</a></td><td></td><td></td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='sha2_type'></a>
+<br /><table class='attributeTitle' summary="type"><tr><td class='leftAttributeTitle'>
+@type</td><td class='rightAttributeTitle'>
+Attribute of <a href='#sha2'>sha2</a>
+</td></tr></table>
+<p>The type of the SHA2 algorithm. Defaults to 256. Other valid values are 384 and 512</p><p><span class='inTextTitle'>Default value</span>: 256</p><a name='sha2_value'></a>
+<br /><table class='attributeTitle' summary="value"><tr><td class='leftAttributeTitle'>
+@value</td><td class='rightAttributeTitle'>
+Attribute of <a href='#sha2'>sha2</a>
+</td></tr></table>
+<p>Value of SHA2 checksum in HEX</p><p><span class='inTextTitle'>Required</span></p><a name='md5'></a>
+<br /><table class='elementTitle' summary="md5"><tr><td class='leftElementTitle'>
+&lt;md5/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#file'>file</a>
+</td></tr></table>
+<p>MD5 checksum of the specified file</p><blockquote>
+<table  summary="&lt;md5&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;md5&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#md5_value'>value</a></td><td></td><td></td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='md5_value'></a>
+<br /><table class='attributeTitle' summary="value"><tr><td class='leftAttributeTitle'>
+@value</td><td class='rightAttributeTitle'>
+Attribute of <a href='#md5'>md5</a>
+</td></tr></table>
+<p>Value of MD5 checksum in HEX</p><p><span class='inTextTitle'>Required</span></p><a name='rm'></a>
+<br /><table class='elementTitle' summary="rm"><tr><td class='leftElementTitle'>
+&lt;rm/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>Remove a local file.</p><blockquote>
+<table  summary="&lt;rm&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;rm&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#rm_file'>file</a></td><td></td><td></td></tr><tr><td><a href='#rm_forceinstall'>forceinstall</a></td><td></td><td>false</td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='rm_file'></a>
+<br /><table class='attributeTitle' summary="file"><tr><td class='leftAttributeTitle'>
+@file</td><td class='rightAttributeTitle'>
+Attribute of <a href='#rm'>rm</a>
+</td></tr></table>
+<p>The local file name. The full path name is expected.</p><p><span class='inTextTitle'>Required</span></p><a name='rm_forceinstall'></a>
+<br /><table class='attributeTitle' summary="forceinstall"><tr><td class='leftAttributeTitle'>
+@forceinstall</td><td class='rightAttributeTitle'>
+Attribute of <a href='#rm'>rm</a>
+</td></tr></table>
+<p>If enabled, the owner of this file are changed in any case. For discussion about this parameter, see <a href="#file_forceinstall">forceinstall</a> under the <a href="#file">file</a> element.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='chmod'></a>
+<br /><table class='elementTitle' summary="chmod"><tr><td class='leftElementTitle'>
+&lt;chmod/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>Change permissions of a local file. This element is supported only in Unix-like operating systems.</p><blockquote>
+<table  summary="&lt;chmod&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;chmod&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#chmod_attr'>attr</a></td><td></td><td></td></tr><tr><td><a href='#chmod_file'>file</a></td><td></td><td></td></tr><tr><td><a href='#chmod_forceinstall'>forceinstall</a></td><td></td><td>false</td></tr><tr><td><a href='#chmod_recursive'>recursive</a></td><td></td><td>false</td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='chmod_file'></a>
+<br /><table class='attributeTitle' summary="file"><tr><td class='leftAttributeTitle'>
+@file</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chmod'>chmod</a>
+</td></tr></table>
+<p>The local file name. The full path name is expected.</p><p><span class='inTextTitle'>Required</span></p><a name='chmod_attr'></a>
+<br /><table class='attributeTitle' summary="attr"><tr><td class='leftAttributeTitle'>
+@attr</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chmod'>chmod</a>
+</td></tr></table>
+<p>The new attributes of this file. The syntax is the same with &lt;command>chmod&lt;/command> command.</p><p><span class='inTextTitle'>Required</span></p><a name='chmod_recursive'></a>
+<br /><table class='attributeTitle' summary="recursive"><tr><td class='leftAttributeTitle'>
+@recursive</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chmod'>chmod</a>
+</td></tr></table>
+<p>If this is a directory, change attributes of all files recursively.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='chmod_forceinstall'></a>
+<br /><table class='attributeTitle' summary="forceinstall"><tr><td class='leftAttributeTitle'>
+@forceinstall</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chmod'>chmod</a>
+</td></tr></table>
+<p>If enabled, the owner of this file are changed in any case. For discussion about this parameter, see <a href="#file_forceinstall">forceinstall</a> under the <a href="#file">file</a> element.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='chown'></a>
+<br /><table class='elementTitle' summary="chown"><tr><td class='leftElementTitle'>
+&lt;chown/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>Change owner of a local file. This element is supported only in Unix-like operating systems.</p><blockquote>
+<table  summary="&lt;chown&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;chown&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#chown_attr'>attr</a></td><td></td><td></td></tr><tr><td><a href='#chown_file'>file</a></td><td></td><td></td></tr><tr><td><a href='#chown_forceinstall'>forceinstall</a></td><td></td><td>false</td></tr><tr><td><a href='#chown_recursive'>recursive</a></td><td></td><td>false</td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='chown_file'></a>
+<br /><table class='attributeTitle' summary="file"><tr><td class='leftAttributeTitle'>
+@file</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chown'>chown</a>
+</td></tr></table>
+<p>The local file name. The full path name is expected.</p><p><span class='inTextTitle'>Required</span></p><a name='chown_attr'></a>
+<br /><table class='attributeTitle' summary="attr"><tr><td class='leftAttributeTitle'>
+@attr</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chown'>chown</a>
+</td></tr></table>
+<p>The new owner of this file. The syntax is the same with &lt;command>chown&lt;/command> command.</p><p><span class='inTextTitle'>Required</span></p><a name='chown_recursive'></a>
+<br /><table class='attributeTitle' summary="recursive"><tr><td class='leftAttributeTitle'>
+@recursive</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chown'>chown</a>
+</td></tr></table>
+<p>If this is a directory, change owner of all files recursively.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='chown_forceinstall'></a>
+<br /><table class='attributeTitle' summary="forceinstall"><tr><td class='leftAttributeTitle'>
+@forceinstall</td><td class='rightAttributeTitle'>
+Attribute of <a href='#chown'>chown</a>
+</td></tr></table>
+<p>If enabled, the owner of this file are changed in any case. For discussion about this parameter, see <a href="#file_forceinstall">forceinstall</a> under the <a href="#file">file</a> element.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='exec'></a>
+<br /><table class='elementTitle' summary="exec"><tr><td class='leftElementTitle'>
+&lt;exec&gt;</td><td class='rightElementTitle'>
+Child of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>Execute a native command</p><blockquote><table summary='element info'><tr>
+<td class='construct'><table summary="&lt;exec&gt;'s children">
+<thead>
+<tr><th class='title' colspan='2'>&lt;exec&gt;'s children</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+<tr><th class='subtitle'>Name</th><th class='subtitle'>Cardinality</th></tr>
+<tr><th colspan='2' height='1' class='ruler'></th></tr>
+</thead>
+<tbody><tr><td><a href='#argument'>argument</a></td><td>Any number</td></tr>
+</tbody></table></td><td class='construct'><table  summary="&lt;exec&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;exec&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#exec_executable'>executable</a></td><td></td><td></td></tr><tr><td><a href='#exec_forceinstall'>forceinstall</a></td><td></td><td>false</td></tr><tr><td><a href='#exec_input'>input</a></td><td></td><td></td></tr><tr><td><a href='#exec_time'>time</a></td><td></td><td>AFTER</td></tr></table></td></tr></table></blockquote>
+<span class='inTextTitle'>Element's model:</span><p class='model'>(<a href='#argument'>argument</a>*)</p><a name='exec_executable'></a>
+<br /><table class='attributeTitle' summary="executable"><tr><td class='leftAttributeTitle'>
+@executable</td><td class='rightAttributeTitle'>
+Attribute of <a href='#exec'>exec</a>
+</td></tr></table>
+<p>The filename of the executable</p><p><span class='inTextTitle'>Required</span></p><a name='exec_time'></a>
+<br /><table class='attributeTitle' summary="time"><tr><td class='leftAttributeTitle'>
+@time</td><td class='rightAttributeTitle'>
+Attribute of <a href='#exec'>exec</a>
+</td></tr></table>
+<p>When this command will be executed. Should be "BEFORE" "AFTER" or "MID". By default "MID" parameter is used. This property is not case sensitive.</p><p><span class='inTextTitle'>Default value</span>: AFTER</p><a name='exec_input'></a>
+<br /><table class='attributeTitle' summary="input"><tr><td class='leftAttributeTitle'>
+@input</td><td class='rightAttributeTitle'>
+Attribute of <a href='#exec'>exec</a>
+</td></tr></table>
+<p>The input of this command, if needed by the application</p><a name='exec_forceinstall'></a>
+<br /><table class='attributeTitle' summary="forceinstall"><tr><td class='leftAttributeTitle'>
+@forceinstall</td><td class='rightAttributeTitle'>
+Attribute of <a href='#exec'>exec</a>
+</td></tr></table>
+<p>If enabled, the command is executed in any case. For discussion about this parameter, see <a href="#file_forceinstall">forceinstall</a> under the <a href="#file">file</a> element.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='kill'></a>
+<br /><table class='elementTitle' summary="kill"><tr><td class='leftElementTitle'>
+&lt;kill/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>Kill a specified task. This element works in both Windows and Unix-like systems</p><blockquote>
+<table  summary="&lt;kill&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;kill&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#kill_forceinstall'>forceinstall</a></td><td></td><td>false</td></tr><tr><td><a href='#kill_process'>process</a></td><td></td><td></td></tr><tr><td><a href='#kill_signal'>signal</a></td><td></td><td>TERM</td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='kill_process'></a>
+<br /><table class='attributeTitle' summary="process"><tr><td class='leftAttributeTitle'>
+@process</td><td class='rightAttributeTitle'>
+Attribute of <a href='#kill'>kill</a>
+</td></tr></table>
+<p>The name of the process. This could be a regular expression which will match the running process. When applied, could match more than one running process.</p><p><span class='inTextTitle'>Required</span></p><a name='kill_signal'></a>
+<br /><table class='attributeTitle' summary="signal"><tr><td class='leftAttributeTitle'>
+@signal</td><td class='rightAttributeTitle'>
+Attribute of <a href='#kill'>kill</a>
+</td></tr></table>
+<p>The signal to send. This is platform specific information. In Unix-like is the "TERM" signal. There is no need to preceed the signal name/number with a "-" sybol.</p><p><span class='inTextTitle'>Default value</span>: TERM</p><a name='kill_forceinstall'></a>
+<br /><table class='attributeTitle' summary="forceinstall"><tr><td class='leftAttributeTitle'>
+@forceinstall</td><td class='rightAttributeTitle'>
+Attribute of <a href='#kill'>kill</a>
+</td></tr></table>
+<p>If enabled, the application is killed in any case. For discussion about this parameter, see <a href="#file_forceinstall">forceinstall</a> under the <a href="#file">file</a> element.</p><p><span class='inTextTitle'>Default value</span>: false</p><a name='wait'></a>
+<br /><table class='elementTitle' summary="wait"><tr><td class='leftElementTitle'>
+&lt;wait/&gt;</td><td class='rightElementTitle'>
+Child of <a href='#arch'>arch</a>
+</td></tr></table>
+<p>This element is used in the last stage of the installation, to pause the installer for the specified number of milliseconds</p><blockquote>
+<table  summary="&lt;wait&gt;'s attributes"><tr>
+<th class='title' colspan='3'>&lt;wait&gt;'s attributes</th>
+</tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr>
+<th class='subtitle'>Name</th><th class='subtitle'>Values</th><th class='subtitle'>Default</th></tr>
+<tr><th colspan='3' height='1' class='ruler'></th></tr>
+<tr><td><a href='#wait_forceinstall'>forceinstall</a></td><td></td><td>false</td></tr><tr><td><a href='#wait_msecs'>msecs</a></td><td></td><td>1000</td></tr><tr><td><a href='#wait_time'>time</a></td><td></td><td>BEFORE</td></tr></table></blockquote>
+<p class='emptyTagNote'>This element is always empty.</p><a name='wait_msecs'></a>
+<br /><table class='attributeTitle' summary="msecs"><tr><td class='leftAttributeTitle'>
+@msecs</td><td class='rightAttributeTitle'>
+Attribute of <a href='#wait'>wait</a>
+</td></tr></table>
+<p>The number of milliseconds the installer should wait</p><p><span class='inTextTitle'>Default value</span>: 1000</p><a name='wait_time'></a>
+<br /><table class='attributeTitle' summary="time"><tr><td class='leftAttributeTitle'>
+@time</td><td class='rightAttributeTitle'>
+Attribute of <a href='#wait'>wait</a>
+</td></tr></table>
+<p>When this command will be executed. Should be "BEFORE" "AFTER" or "MID". By default "BEFORE" parameter is used. This property is not case sensitive.</p><p><span class='inTextTitle'>Default value</span>: BEFORE</p><a name='wait_forceinstall'></a>
+<br /><table class='attributeTitle' summary="forceinstall"><tr><td class='leftAttributeTitle'>
+@forceinstall</td><td class='rightAttributeTitle'>
+Attribute of <a href='#wait'>wait</a>
+</td></tr></table>
+<p>If enabled, waiting is performed in any case (and installation information is displayed). For discussion about this parameter, see <a href="#file_forceinstall">forceinstall</a> under the <a href="#file">file</a> element.</p><p><span class='inTextTitle'>Default value</span>: false</p></body></html>
