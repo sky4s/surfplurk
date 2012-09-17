@@ -29,6 +29,7 @@ import org.sexydock.tabs.event.TabbedPaneEvent;
 import org.sexydock.tabs.jhrome.JhromeTabUI;
 import plurker.source.PlurkFormater;
 import plurker.ui.util.JTrayIcon;
+import plurker.ui.util.SheetableJFrameHelper;
 import shu.util.Persistence;
 
 /**
@@ -37,7 +38,7 @@ import shu.util.Persistence;
  * @author skyforce
  */
 public class PlurkerApplication extends javax.swing.JFrame implements AWTEventListener, ITabbedPaneListener {
-    
+
     @Override
     public void eventDispatched(AWTEvent event) {
     }
@@ -45,7 +46,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
     public final static boolean offlineMode = new File("offline.txt").exists();
     public final static boolean cacheImage = true;
     private ResponsePanel currentResponsePanel = new ResponsePanel();
-    
+
     private DefaultTab addToTabbedPane(String title, ResponsePanel responsePanel, boolean enableCloseButton) {
         title = (null == title) ? responsePanel.getTabTitle() : title;
         DefaultTab tab = new DefaultTab(title, responsePanel);
@@ -61,23 +62,23 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
      */
     public PlurkerApplication() {
         initComponents();
-        
+
         jLabel_NewPlurk.setVisible(false);
         jLabel_NewResponse.setVisible(false);
         jLabel_ShowAll.setVisible(false);
         jLabel_MarkAsRead.setVisible(false);
         jPanel_Toolbar.setVisible(false);
-        
+
         this.editMenu.setVisible(false);
         this.viewMenu.setVisible(false);
-        
+
         boolean useTabbedPane = true;
         if (useTabbedPane) {
             //jhrome的 tab
             tabbedPane = new TabbedPane();
             tabbedPane.addTabbedPaneListener(this);
             tabbedPane.setBackground(Color.white);
-            
+
             tabbedPane.setUseUniformWidth(false);
             tabbedPane.getNewTabButton().setVisible(false);
 
@@ -92,14 +93,14 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
 //            tabbedPane.setSelectedTab(currentPlurklTab);
             jPanel3.add(tabbedPane, java.awt.BorderLayout.CENTER);
         }
-        
+
         if (usePlurksPanel) {
             plurksPanel = new PlurksPanel(plurkPool, Timeline.Filter.None, true);
             plurksPanel.setPlurker(this);
             jPanel1.add(plurksPanel, java.awt.BorderLayout.CENTER);
             jPanel1.updateUI();
         }
-        
+
         boolean useSystemTray = true;
         if (useSystemTray && SystemTray.isSupported()) {
             SystemTray systemTray = SystemTray.getSystemTray();
@@ -115,9 +116,9 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             }
         }
     }
-    
+
     class CometChangeListener implements ChangeListener {
-        
+
         @Override
         public void stateChanged(ChangeEvent e) {
             PlurkPool pool = (PlurkPool) e.getSource();
@@ -388,7 +389,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
 
     public void scrollBarAdjustmentValueChanged(AdjustmentEvent e) {
     }
-    
+
     private void updateUnread() {
         UnreadCount unreadCount = plurkSourcer.getUnreadCount();
         try {
@@ -405,9 +406,9 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
     }
     private boolean usePlurksPanel = true;
     private PlurksPanel plurksPanel;
-    
+
     private void updatePlurks(int tabIndex) {
-        
+
         if (/*null == plurkPanels ||*/null == plurkPool) {
             return;
         }
@@ -416,10 +417,10 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             plurksPanel.updatePlurks();
             jPanel1.updateUI();
         }
-        
+
     }
     private Properties properties;
-    
+
     private static Properties loadProperties(File file) {
         Properties properties = null;
         try {
@@ -435,7 +436,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
         }
         return properties;
     }
-    
+
     private void storeProperties(File file, Properties properties) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -450,7 +451,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
     private final static String TOKEN_KEY = "token key";
     private final static String TOKEN_SECRET = "token secret";
     private final static File configFile = new File(CONFIG_FILENAME);
-    
+
     private static int getHTTPStatus(String message) {
         String httpStatus = "http status";
         int indexOfHttpStatus = message.indexOf(httpStatus);
@@ -459,7 +460,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
         status = status.trim();
         return Integer.parseInt(status);
     }
-    
+
     public static PlurkSourcer getPlurkSourcerInstance() {
         if (configFile.exists()) {
             Properties properties = loadProperties(configFile);
@@ -477,7 +478,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
         }
         return null;
     }
-    
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (configFile.exists()) {
             properties = loadProperties(configFile);
@@ -502,9 +503,9 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
                             JOptionPane.showMessageDialog(this, message);
                             break;
                         default:
-                        
+
                     }
-                    
+
                     plurkSourcer = null;
                     this.loginMenuItem.setText("登入Plurk");
                     loginMenuItemActionPerformed(null);
@@ -517,14 +518,14 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
         } else {
             loginMenuItemActionPerformed(null);
         }
-        
-        
+
+
     }//GEN-LAST:event_formWindowOpened
-    
+
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
-    
+
     private Point getCenterLocation(Dimension clientSize) {
         Dimension size = this.getSize();
         Point location = this.getLocation();
@@ -532,19 +533,22 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
         int y = location.y + size.height / 2 - clientSize.height / 2;
         return new Point(x, y);
     }
-    
+
     private void centerWindow(Window client) {
         Dimension clientSize = client.getSize();
         Point centerLocation = getCenterLocation(clientSize);
         client.setLocation(centerLocation);
     }
-    
+
     private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginMenuItemActionPerformed
         if (null == plurkSourcer) {
             //login
             OAuthDialog dialog = new OAuthDialog(this, true);
             centerWindow(dialog);
             dialog.setVisible(true);
+//            SheetableJFrameHelper helder = new SheetableJFrameHelper(this);
+//            helder.showJDialogAsSheet(dialog);
+            
             Token accessToken = dialog.accessToken;
             if (null != accessToken) {
                 properties = new Properties();
@@ -571,36 +575,36 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             this.loginMenuItem.setText("Login");
         }
     }//GEN-LAST:event_loginMenuItemActionPerformed
-    
+
     private void statusBarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusBarMenuItemActionPerformed
         this.statusBarLabel.setVisible(statusBarMenuItem.isSelected());
-        
+
     }//GEN-LAST:event_statusBarMenuItemActionPerformed
-    
+
     private void jLabel_NewResponseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_NewResponseMouseEntered
         JLabel source = (JLabel) evt.getSource();
         String text = source.getText();
         source.setText("<html><u>" + text + "</u></html>");
     }//GEN-LAST:event_jLabel_NewResponseMouseEntered
-    
+
     private static String removeItalicHTMLTag(String text) {
         int firstu = text.indexOf("<u>");
         int secondu = text.indexOf("</u>");
         return text.substring(firstu + 3, secondu);
     }
-    
+
     private void jLabel_NewResponseMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_NewResponseMouseExited
         JLabel source = (JLabel) evt.getSource();
         String text = source.getText();
         source.setText(removeItalicHTMLTag(text));
     }//GEN-LAST:event_jLabel_NewResponseMouseExited
-    
+
     private void jLabel_NewResponseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_NewResponseMouseClicked
         jLabel_MarkAsRead.setVisible(true);
         jLabel_ShowAll.setVisible(true);
         jLabel_NewResponse.setVisible(false);
     }//GEN-LAST:event_jLabel_NewResponseMouseClicked
-    
+
     private void jLabel_ShowAllMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_ShowAllMouseClicked
         jLabel_MarkAsRead.setVisible(false);
         jLabel_ShowAll.setVisible(false);
@@ -616,7 +620,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             about.setVisible(true);
         }
     }//GEN-LAST:event_aboutMenuItemActionPerformed
-    
+
     private void jMenuItem_ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_ExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jMenuItem_ExitActionPerformed
@@ -641,8 +645,8 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                    
-                    
+
+
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -674,8 +678,8 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
                 plurkerApplication.setVisible(true);
             }
         });
-        
-        
+
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
@@ -736,26 +740,26 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
 //    };
     private PlurkSourcer plurkSourcer = null;
     private PlurkPool plurkPool = null;
-    
+
     void setCurrentFollow(final ContentPanel contentPanel) {
         if (null == currentPlurklTab) {
             currentPlurklTab = addToTabbedPane(Current, currentResponsePanel, false);
         }
-        
+
         currentResponsePanel.setRootContentPanel(contentPanel);
         tabbedPane.setSelectedTab(currentPlurklTab);
         if (debugMode && !new File("plurk.obj").exists()) {
             Persistence.writeObjectAsXML(contentPanel.getPlurk(), "plurk.obj");
         }
     }
-    
+
     void addNewFollow(ContentPanel plurkPanel) {
         ResponsePanel responsePanel = new ResponsePanel();
         responsePanel.setRootContentPanel(plurkPanel);
         DefaultTab tab = addToTabbedPane(null, responsePanel, true);
         tabbedPane.setSelectedTab(tab);
     }
-    
+
     @Override
     public void onEvent(TabbedPaneEvent event) {
         TabbedPane tabbedPane1 = event.getTabbedPane();
@@ -764,7 +768,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             JhromeTabUI ui = new JhromeTabUI();
             DefaultTab defaultTab = (DefaultTab) selectedTab;
             defaultTab.setUI(ui);
-            
+
         }
     }
 }
