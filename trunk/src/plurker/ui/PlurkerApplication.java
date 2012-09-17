@@ -29,7 +29,7 @@ import org.sexydock.tabs.event.TabbedPaneEvent;
 import org.sexydock.tabs.jhrome.JhromeTabUI;
 import plurker.source.PlurkFormater;
 import plurker.ui.util.JTrayIcon;
-import plurker.ui.util.SheetableJFrameHelper;
+//import plurker.ui.util.SheetableJFrameHelper;
 import shu.util.Persistence;
 
 /**
