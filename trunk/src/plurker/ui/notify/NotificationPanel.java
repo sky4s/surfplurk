@@ -4,8 +4,11 @@
  */
 package plurker.ui.notify;
 
+import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JWindow;
 
 /**
  *
@@ -16,9 +19,28 @@ public class NotificationPanel extends javax.swing.JPanel {
     /**
      * Creates new form NotificationPanel
      */
-    public NotificationPanel(JComponent component) {
+    public NotificationPanel(JComponent component, int width) {
+        initComponents();
+        int contentHeight = getContentHeight(component, width);
+        Dimension dimension = new Dimension(width, contentHeight);
+        component.setSize(dimension);
+        component.setPreferredSize(dimension);
+        this.setSize(dimension);
+        this.setPreferredSize(dimension);
+
+        this.add(component, java.awt.BorderLayout.CENTER);
+    }
+
+    private NotificationPanel(JComponent component) {
         initComponents();
         this.add(component, java.awt.BorderLayout.CENTER);
+    }
+
+    private static int getContentHeight(JComponent component, int width) {
+        return 30;
+        /*NotificationPanel tmppanel = new NotificationPanel(component);
+         tmppanel.setSize(width, Short.MAX_VALUE);
+         return tmppanel.getPreferredSize().height;*/
     }
 
     /**
@@ -33,6 +55,7 @@ public class NotificationPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jButton_Close = new javax.swing.JButton();
 
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.BorderLayout());
 
         jButton_Close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/notify/dialog_close.png"))); // NOI18N

@@ -5,6 +5,7 @@
 package test;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -90,11 +91,18 @@ public class ScrollTestFrame extends javax.swing.JFrame {
         JViewport viewport = jScrollPane1.getViewport();
 //        System.out.println("scrollpanel: " + jScrollPane1.getSize());
 
-        for (int x = 0; x < 10; x++) {
-            JPanel panel = new JPanel();
+        for (int x = 0; x < 3; x++) {
+            JPanel panel = new JPanel() {
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+//                    System.out.println(g);
+//                    System.out.println(this.getVisibleRect());
+                    System.out.println(((JLabel) this.getComponent(0)).getText() + " " + this.getVisibleRect());
+                }
+            };
             panel.add(new JLabel(Integer.toString(index++)));
             panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-            panel.setPreferredSize(new Dimension(200, 50));
+            panel.setPreferredSize(new Dimension(200, 150));
 //
             jPanel1.add(panel);
 
@@ -117,7 +125,7 @@ public class ScrollTestFrame extends javax.swing.JFrame {
         //        jScrollPane1.updateUI();
         //        jScrollPane1.repaint();
         //        System.out.println("in"+verticalScrollBar1.getMaximum());
-        System.out.println(jPanel1.getPreferredSize() + " " + jPanel1.getSize());
+//        System.out.println(jPanel1.getPreferredSize() + " " + jPanel1.getSize());
         JViewport viewport1 = jScrollPane1.getViewport();
         viewport1.setViewPosition(new Point(0, jPanel1.getPreferredSize().height));
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -152,7 +160,7 @@ public class ScrollTestFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowActivated
 
     private void jScrollBar1AdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_jScrollBar1AdjustmentValueChanged
-        System.out.println(this.jScrollBar1.getMaximum());
+//        System.out.println(this.jScrollBar1.getMaximum());
     }//GEN-LAST:event_jScrollBar1AdjustmentValueChanged
 
     /**
