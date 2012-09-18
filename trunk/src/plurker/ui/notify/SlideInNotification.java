@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package plurker.ui.util;
+package plurker.ui.notify;
 
+import plurker.ui.notify.NotificationPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -34,6 +35,16 @@ public class SlideInNotification extends Object {
     public SlideInNotification(JComponent contents) {
         this();
         setContents(contents);
+    }
+
+    public SlideInNotification(NotificationPanel contents) {
+        this((JComponent) contents);
+        contents.getjButton_Close().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                window.getContentPane().removeAll();
+                window.setVisible(false);
+            }
+        });
     }
 
     protected void initDesktopBounds() {
@@ -88,12 +99,9 @@ public class SlideInNotification extends Object {
                     // calculate % done
                     float progress =
                             (float) elapsed / animationTime;
-//                    System.out.println(progress);
                     // get height to show
                     int animatingHeight =
                             (int) (progress * tempWindowSize.getHeight());
-//                    System.out.println ("animatingHeight " + 
-//                                        animatingHeight);
                     animatingHeight = Math.max(animatingHeight, 1);
                     animatingSheet.setAnimatingHeight(animatingHeight);
                     window.pack();
@@ -122,28 +130,17 @@ public class SlideInNotification extends Object {
                 if (elapsed > dispearTime) {
                     // put real contents in window and show
                     window.getContentPane().removeAll();
-//                 window.getContentPane().add(contents);
-//                 window.pack();
-//                 window.setLocation(showX,
-//                 startY - window.getSize().height);
                     window.setVisible(false);
-//                 window.repaint();
                     animationTimer.stop();
                     animationTimer = null;
                 } else {
                     // calculate % done
-//                    System.out.println(elapsed);
                     float progress =
                             1f - ((float) elapsed) / dispearTime;
-//                    System.out.println(progress);
                     // get height to show
                     int animatingHeight =
                             (int) (progress * tempWindowSize.getHeight());
-//                    System.out.println("animatingHeight "
-//                            + animatingHeight);
-//                    animatingHeight = Math.max(animatingHeight, 1);
                     animatingHeight = Math.max(animatingHeight, 0);
-//                    System.out.println(animatingHeight);
                     animatingSheet.setAnimatingHeight(animatingHeight);
 
                     window.getContentPane().removeAll();
@@ -238,9 +235,12 @@ public class SlideInNotification extends Object {
     public static void main(String[] args) throws InterruptedException {
         Icon errorIcon = UIManager.getIcon("OptionPane.errorIcon");
         JLabel label = new JLabel("Your application asplode");
+        NotificationPanel panel = new NotificationPanel(label);
+//        JFrame label = new JFrame();
+//        label.setSize(300,100);
 //        label.setBorder(Border.);
-        SlideInNotification slider = new SlideInNotification(label);
-        int preferwidth = label.getPreferredSize().width;
+        SlideInNotification slider = new SlideInNotification(panel);
+        int preferwidth = panel.getPreferredSize().width;
         int desktopwidth = slider.desktopBounds.width;
         int pos = desktopwidth - preferwidth;
 
@@ -250,7 +250,7 @@ public class SlideInNotification extends Object {
 
         slider.showAt(450);
         Thread.currentThread().sleep(2000);
-        slider.dispear();
+//        slider.dispear();
 //        slider2.showAt(preferwidth+5);
 
     }
