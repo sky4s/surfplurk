@@ -5,6 +5,9 @@
 package plurker.ui.notify;
 
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -15,6 +18,30 @@ import javax.swing.JWindow;
  * @author SkyforceShen
  */
 public class NotificationPanel extends javax.swing.JPanel {
+
+    private JWindow window;
+
+    public JWindow getJWindow() {
+        if (null == window) {
+            window = new JWindow();
+            window.addMouseMotionListener(new NotifyMouseMotionListener());
+        }
+        return window;
+    }
+
+    class NotifyMouseMotionListener extends MouseMotionAdapter {
+
+//        @Override
+//        public void mouseDragged(MouseEvent e) {
+//        }
+        @Override
+        public void mouseMoved(MouseEvent e) {
+//            if (null != dispearTimer) {
+//                dispearTimer.stop();
+//                dispearTimer = null;
+//            }
+        }
+    }
 
     /**
      * Creates new form NotificationPanel
