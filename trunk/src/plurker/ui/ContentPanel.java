@@ -77,8 +77,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     public Comment getComment() {
         return comment;
     }
-    private Plurk plurk;
-    private Comment comment;
+    protected Plurk plurk;
+    protected Comment comment;
     PlurkPool plurkPool;
     private int prefferedWidth;
 
@@ -214,13 +214,11 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 //        return false;
     }
 
-    private ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type) {
-        initComponents();
-        this.plurk = plurk;
-        this.comment = comment;
-        this.plurkPool = plurkPool;
-        this.prefferedWidth = width;
-        this.type = type;
+    /**
+     *
+     * @param content
+     */
+    protected void initContent(String content) {
         if (null == content) {
             try {
                 content = getContent();
@@ -230,9 +228,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             }
         }
         initLabel_Avatar();
-        initEditorPane1(content, width);
+        initEditorPane1(content, prefferedWidth);
         this.jLabel_Time.setVisible(false);
-        if (!isMuted()) {
+        if (!isMuted() && !notifyMode) {
             initLabel_Notify();
             initLabel_Time();
         }
@@ -244,6 +242,26 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.jEditorPane1.addHyperlinkListener(new PlurkerHyperlinkListener());
 
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
+    }
+
+    protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type) {
+        this(plurk, comment, plurkPool, width, content, type, false);
+    }
+
+    protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type, boolean notifyMode) {
+        initComponents();
+        this.plurk = plurk;
+        this.comment = comment;
+        this.plurkPool = plurkPool;
+        this.prefferedWidth = width;
+        this.type = type;
+        this.notifyMode = notifyMode;
+        initContent(content);
+    }
+    private boolean notifyMode = false;
+
+    public void setNotifyMode(boolean notifyMode) {
+        this.notifyMode = notifyMode;
     }
 
     public void setFloor(int floor) {
@@ -288,7 +306,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 //    public ContentPanel getFirstPanel() {
 //        return firstPanel;
 //    }
-    private String getContent() throws JSONException {
+    protected String getContent() throws JSONException {
         if (null != plurk) {
             return PlurkFormater.getInstance(plurkPool).getContent(plurk);
         } else if (null != comment) {
@@ -296,7 +314,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         } else {
             return "N/A";
         }
-
     }
 
     /**
@@ -502,19 +519,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         try {
             long responseCount = plurk.getResponseCount();
             setNofityLabelCount(responseCount + 1);
-
-            //        if (null != plurkPanel) {
-            //            plurkPanel.addNofityLabelCount();
-            //        }
-            //        if (Type.Plurk == type && null != plurk) {
-            //            try {
-            //                long responseCount = plurk.getResponseCount();
-            //                plurk.setResponseCount(responseCount + 1);
-            //            } catch (JSONException ex) {
-            //                Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
-            //            }
-            //        this.initLabel_Notify();
-            //        this.initLabel_Notify();
         } catch (JSONException ex) {
             Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
         }

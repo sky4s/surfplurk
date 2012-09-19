@@ -44,7 +44,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
     public void eventDispatched(AWTEvent event) {
         MouseEvent mouseevent = (MouseEvent) event;
         if (mouseevent.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(mouseevent)) {
-            if (SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
+            if (null != mouseevent.getComponent() && SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
                 Point point = mouseevent.getPoint();
                 Point convertPoint = SwingUtilities.convertPoint(mouseevent.getComponent(), point, this.jPanel1);
                 Component child = jPanel1.getComponentAt(convertPoint);
