@@ -4,8 +4,13 @@
  */
 package plurker.ui;
 
+import com.google.jplurk_oauth.module.Timeline;
+import java.awt.Component;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import plurker.source.PlurkPool;
+import plurker.source.PlurkSourcer;
 
 /**
  *
@@ -19,8 +24,23 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
     public TabbedPlurksPanel(PlurkPool plurkPool) {
         initComponents();
         this.plurkPool = plurkPool;
+
+        all = new PlurksPanel(plurkPool, Timeline.Filter.None, true);
+        my = new PlurksPanel(plurkPool, Timeline.Filter.only_user, false);
+        privates = new PlurksPanel(plurkPool, Timeline.Filter.only_responded, false);
+        response = new PlurksPanel(plurkPool, Timeline.Filter.only_responded, false);
+        liked = new PlurksPanel(plurkPool, Timeline.Filter.only_favorite, false);
+
+        this.jPanel_All.add(all, java.awt.BorderLayout.CENTER);
+        this.jPanel_Liked.add(liked, java.awt.BorderLayout.CENTER);
+        this.jPanel_My.add(my, java.awt.BorderLayout.CENTER);
+        this.jPanel_Private.add(privates, java.awt.BorderLayout.CENTER);
+        this.jPanel_Response.add(response, java.awt.BorderLayout.CENTER);
+
+//        all.updatePlurks();
     }
     private PlurkPool plurkPool;
+    private PlurksPanel all, my, privates, response, liked;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,74 +61,40 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel_AllLayout = new javax.swing.GroupLayout(jPanel_All);
-        jPanel_All.setLayout(jPanel_AllLayout);
-        jPanel_AllLayout.setHorizontalGroup(
-            jPanel_AllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        jPanel_AllLayout.setVerticalGroup(
-            jPanel_AllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
-        );
-
+        jPanel_All.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("所有", jPanel_All);
 
-        javax.swing.GroupLayout jPanel_MyLayout = new javax.swing.GroupLayout(jPanel_My);
-        jPanel_My.setLayout(jPanel_MyLayout);
-        jPanel_MyLayout.setHorizontalGroup(
-            jPanel_MyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        jPanel_MyLayout.setVerticalGroup(
-            jPanel_MyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
-        );
-
+        jPanel_My.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("我的", jPanel_My);
 
-        javax.swing.GroupLayout jPanel_PrivateLayout = new javax.swing.GroupLayout(jPanel_Private);
-        jPanel_Private.setLayout(jPanel_PrivateLayout);
-        jPanel_PrivateLayout.setHorizontalGroup(
-            jPanel_PrivateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        jPanel_PrivateLayout.setVerticalGroup(
-            jPanel_PrivateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
-        );
-
+        jPanel_Private.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("私人", jPanel_Private);
 
-        javax.swing.GroupLayout jPanel_ResponseLayout = new javax.swing.GroupLayout(jPanel_Response);
-        jPanel_Response.setLayout(jPanel_ResponseLayout);
-        jPanel_ResponseLayout.setHorizontalGroup(
-            jPanel_ResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        jPanel_ResponseLayout.setVerticalGroup(
-            jPanel_ResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
-        );
-
+        jPanel_Response.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("回應", jPanel_Response);
 
-        javax.swing.GroupLayout jPanel_LikedLayout = new javax.swing.GroupLayout(jPanel_Liked);
-        jPanel_Liked.setLayout(jPanel_LikedLayout);
-        jPanel_LikedLayout.setHorizontalGroup(
-            jPanel_LikedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        jPanel_LikedLayout.setVerticalGroup(
-            jPanel_LikedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
-        );
-
+        jPanel_Liked.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("讚", jPanel_Liked);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+//        System.out.println(evt);
+        JTabbedPane tab = (JTabbedPane) evt.getSource();
+        JPanel panel = (JPanel) tab.getSelectedComponent();
+        if (panel.getComponentCount() == 1) {
+            PlurksPanel plurksPanel = (PlurksPanel) panel.getComponent(0);
+            plurksPanel.updatePlurks();
+        }
+
+    }//GEN-LAST:event_jTabbedPane1StateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel_All;
     private javax.swing.JPanel jPanel_Liked;
@@ -119,8 +105,12 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public static void main(String[] args) {
+        PlurkSourcer.setDoValidToken(false);
+        PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
+        PlurkPool plurkpool = new PlurkPool(plurkSourcerInstance);
+
         JFrame frame = new JFrame();
-        frame.add(new TabbedPlurksPanel(null));
+        frame.add(new TabbedPlurksPanel(plurkpool));
         frame.pack();
         frame.setVisible(true);
     }
