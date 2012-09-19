@@ -103,6 +103,7 @@ public class PlurkFormater {
         if (isPlurk) {
             Plurk plurk = (Plurk) context;
             long replurkerId = plurk.getReplurkerId();
+            //檢查是不是轉噗
             if (-1 != replurkerId) {
                 UserInfo replurkUserinfo = plurkPool.getUserInfo(replurkerId);
                 String replurkPretext = getDisplayName(replurkUserinfo) + " " + Qualifier.Replurks.toHTMLString(" 轉噗<img src='http://replurker.png'>");
