@@ -98,7 +98,7 @@ public class PlurkFormater {
         Qualifier q = Qualifier.getQualifier(qualifier);
         String qualifierTranslated = null;
         qualifierTranslated = context.getQualifierTranslated();
-        qualifier = qualifierTranslated != null ? qualifierTranslated : qualifier;
+        qualifier = qualifierTranslated != null && qualifierTranslated.length() != 0 ? qualifierTranslated : qualifier;
         String pretext = getDisplayName(userInfo) + " " + q.toHTMLString(" " + qualifier + " ") + " ";
         if (isPlurk) {
             Plurk plurk = (Plurk) context;

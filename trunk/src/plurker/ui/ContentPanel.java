@@ -618,7 +618,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                             //plurk用的小視窗
                             //toolTipPanel = new PlurkToolTipPanel(this.plurkPool, this.plurk, this);
                         }
-                        if (null != this.comment) {
+                        if (null != this.comment && !this.notifyMode) {
                             //回噗的小視窗
                             toolTipPanel = new CommentToolTipPanel(this.plurkPool, this.comment, this, responseInput);
                         }
