@@ -28,6 +28,7 @@ import org.sexydock.tabs.event.ITabbedPaneListener;
 import org.sexydock.tabs.event.TabbedPaneEvent;
 import org.sexydock.tabs.jhrome.JhromeTabUI;
 import plurker.source.PlurkFormater;
+import plurker.ui.notify.NotificationManager;
 import plurker.ui.util.JTrayIcon;
 //import plurker.ui.util.SheetableJFrameHelper;
 import shu.util.Persistence;
@@ -108,7 +109,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
                     .getImage("image/plurk tray.png");
             trayicon = new JTrayIcon(image);
             trayicon.setJPopupMenu(this.jPopupMenu1);
-//            TrayIcon tray = new TrayIcon(image, "jPlurker", this.popupMenu_SystemTray);
+            trayicon.setToolTip("Surf Plurk");
             try {
                 systemTray.add(trayicon);
             } catch (AWTException ex) {
@@ -130,6 +131,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             trayicon.displayMessage(null, message, TrayIcon.MessageType.INFO);
         }
     }
+    private NotificationManager notifyManager = NotificationManager.getInstance();
     private JTrayIcon trayicon;
     public final static String Current = "目前";
     public final static String NewPlurk = "發噗";
@@ -548,7 +550,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             dialog.setVisible(true);
 //            SheetableJFrameHelper helder = new SheetableJFrameHelper(this);
 //            helder.showJDialogAsSheet(dialog);
-            
+
             Token accessToken = dialog.accessToken;
             if (null != accessToken) {
                 properties = new Properties();
