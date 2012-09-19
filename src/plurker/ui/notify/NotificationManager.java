@@ -32,7 +32,7 @@ public class NotificationManager {
     }
     private LinkedList<NotificationPanel> linkedList = new LinkedList<>();
     private HashMap<JWindow, NotificationPanel> map = new HashMap<>();
-    public final static int NotifyWidth = 200;
+    public final static int NotifyWidth = 300;
 
     class NotifyComponentListener extends ComponentAdapter {
 

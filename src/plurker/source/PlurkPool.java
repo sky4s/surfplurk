@@ -102,11 +102,13 @@ public class PlurkPool implements ChangeListener {
         UserInfo userInfo = userinfoMap.get(userid);
         if (null == userInfo) {
             UserProfile profile = sourcer.getProfile(userid);
-            try {
-                userInfo = profile.getUserInfo();
-                userinfoMap.put(userid, userInfo);
-            } catch (JSONException ex) {
-                Logger.getLogger(PlurkPool.class.getName()).log(Level.SEVERE, null, ex);
+            if (null != profile) {
+                try {
+                    userInfo = profile.getUserInfo();
+                    userinfoMap.put(userid, userInfo);
+                } catch (JSONException ex) {
+                    Logger.getLogger(PlurkPool.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         return userInfo;

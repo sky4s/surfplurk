@@ -84,7 +84,11 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     private void initEditorPane1(String content, int width) {
         jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
-        jEditorPane1.setFont(GUIUtil.font);
+        if (this.notifyMode) {
+            jEditorPane1.setFont(GUIUtil.smallfont);
+        } else {
+            jEditorPane1.setFont(GUIUtil.font);
+        }
 
         if (null != plurkPool && PlurkerApplication.cacheImage) {
             jEditorPane1.getDocument().putProperty("imageCache", plurkPool.getImageCache());

@@ -27,6 +27,7 @@ public class GUIUtil {
         GUIUtil.setUI(new FontUIResource(GUIUtil.font));
     }
     public static Font font = new Font("微軟正黑體", Font.PLAIN, 13);
+    public static Font smallfont = new Font("微軟正黑體", Font.PLAIN, 11);
     public static Font boldFont = new Font("微軟正黑體", Font.BOLD, 13);
     private static JEditorPane dummyEditorPane;//= null;
 

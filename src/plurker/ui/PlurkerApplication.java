@@ -129,6 +129,17 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             int responsesize = newResponseSet.size();
             String message = "有" + ((plurksize != 0) ? plurksize + "則新噗" : "") + " " + ((responsesize != 0) ? responsesize + "則回應" : "");
             trayicon.displayMessage(null, message, TrayIcon.MessageType.INFO);
+
+            for (Plurk plurk : newPlurkSet) {
+                NotifyPanel2 notify = new NotifyPanel2(plurk, plurkPool);
+                notify.updateWidth(NotificationManager.NotifyWidth);
+                notifyManager.addContent(notify);
+            }
+            for (Comment comment : newResponseSet) {
+                NotifyPanel2 notify = new NotifyPanel2(comment, plurkPool);
+                notify.updateWidth(NotificationManager.NotifyWidth);
+                notifyManager.addContent(notify);
+            }
         }
     }
     private NotificationManager notifyManager = NotificationManager.getInstance();

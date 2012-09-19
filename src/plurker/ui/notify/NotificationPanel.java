@@ -33,8 +33,8 @@ public class NotificationPanel extends javax.swing.JPanel {
         }
         return window;
     }
-    public static int DisappearWaitTime = 3000;
-    public static int DisappearLongWaitTime = 5000;
+    public static int DisappearWaitTime = 10000;
+    public static int DisappearLongWaitTime = 15000;
 
     public static void main(String[] args) {
         JLabel label = new JLabel("123");
@@ -67,12 +67,13 @@ public class NotificationPanel extends javax.swing.JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            removeAll();
+            setVisible(false);
             if (null != dispearTimer) {
                 dispearTimer.stop();
                 dispearTimer = null;
             }
-            removeAll();
-            setVisible(false);
 //            dispose();
         }
 
@@ -80,10 +81,11 @@ public class NotificationPanel extends javax.swing.JPanel {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-
-                dispearTimer.setDelay(DisappearLongWaitTime);
-                dispearTimer.setInitialDelay(DisappearLongWaitTime);
-                dispearTimer.restart();
+                if (null != dispearTimer) {
+                    dispearTimer.setDelay(DisappearLongWaitTime);
+                    dispearTimer.setInitialDelay(DisappearLongWaitTime);
+                    dispearTimer.restart();
+                }
 //                if (null != dispearTimer) {
 //                    dispearTimer.stop();
 //                    dispearTimer = null;
