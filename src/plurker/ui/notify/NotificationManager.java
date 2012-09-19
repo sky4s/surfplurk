@@ -21,9 +21,9 @@ import javax.swing.JWindow;
  * @author SkyforceShen
  */
 public class NotificationManager {
-
+    
     private static NotificationManager notificationManager;
-
+    
     public final static NotificationManager getInstance() {
         if (null == notificationManager) {
             notificationManager = new NotificationManager();
@@ -33,9 +33,9 @@ public class NotificationManager {
     private LinkedList<NotificationPanel> linkedList = new LinkedList<>();
     private HashMap<JWindow, NotificationPanel> map = new HashMap<>();
     public final static int NotifyWidth = 300;
-
+    
     class NotifyComponentListener extends ComponentAdapter {
-
+        
         @Override
         public void componentHidden(ComponentEvent e) {
             if (e.getComponent() instanceof JWindow) {
@@ -48,7 +48,7 @@ public class NotificationManager {
         }
     };
     private NotifyComponentListener notifyComponentListener = new NotifyComponentListener();
-
+    
     public void addContent(JComponent content) {
         NotificationPanel notity = new NotificationPanel(content, NotifyWidth);
         JWindow jWindow = notity.getJWindow();
@@ -56,14 +56,15 @@ public class NotificationManager {
         NotificationPanel last = linkedList.size() != 0 ? linkedList.getLast() : null;
         linkedList.add(notity);
         map.put(jWindow, notity);
-
+        
         int y = (null != last) ? last.getJWindow().getLocation().y - jWindow.getHeight()/*- last.getHeight()*/ : desktopBounds.y + desktopBounds.height - jWindow.getHeight();
         int x = desktopBounds.width - NotifyWidth;
         jWindow.setLocation(x, y);
+        jWindow.setAlwaysOnTop(true);
         jWindow.setVisible(true);
     }
     private static Rectangle desktopBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-
+    
     public static void main(String[] args) throws InterruptedException {
         NotificationManager instance = NotificationManager.getInstance();
         for (int x = 0; x < 15; x++) {
