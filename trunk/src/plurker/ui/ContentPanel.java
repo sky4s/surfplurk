@@ -156,14 +156,14 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     private boolean isReplurk() {
         long replurkerId = plurk.getReplurkerId();
-        return -1 != replurkerId;
+        return -1 != replurkerId && 0 != replurkerId;
     }
 
     private void initLabel_Avatar() {
         String profileImage = null;
         try {
             if ((Type.Plurk == type || Type.FirstOfResponse == type) && null != plurk) {
-                long replurkerId = plurk.getReplurkerId();
+//                long replurkerId = plurk.getReplurkerId();
                 long ownerId = isReplurk() ? plurk.getReplurkerId() : plurk.getOwnerId();
                 UserInfo userInfo = plurkPool.getUserInfo(ownerId);
                 UserInfo.ImageSize imageSize = isMuted() ? UserInfo.ImageSize.Medium.Small : UserInfo.ImageSize.Medium.Medium;

@@ -248,9 +248,11 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         Dimension size = viewport.getSize();
         if (lastViewportsize != null && size.width != lastViewportsize.width) {
             for (Component c : this.jPanel1.getComponents()) {
-                ContentPanel plurkPanel = (ContentPanel) c;
-                Rectangle bounds = plurkPanel.getBounds();
-                plurkPanel.updateWidth(size.width);
+                if (c instanceof ContentPanel) {
+                    ContentPanel plurkPanel = (ContentPanel) c;
+                    Rectangle bounds = plurkPanel.getBounds();
+                    plurkPanel.updateWidth(size.width);
+                }
             }
         }
         lastViewportsize = size;

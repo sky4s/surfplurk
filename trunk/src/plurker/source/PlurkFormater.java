@@ -104,7 +104,7 @@ public class PlurkFormater {
             Plurk plurk = (Plurk) context;
             long replurkerId = plurk.getReplurkerId();
             //檢查是不是轉噗
-            if (-1 != replurkerId) {
+            if (-1 != replurkerId && 0 != replurkerId) {
                 UserInfo replurkUserinfo = plurkPool.getUserInfo(replurkerId);
                 String replurkPretext = getDisplayName(replurkUserinfo) + " " + Qualifier.Replurks.toHTMLString(" 轉噗<img src='http://replurker.png'>");
                 pretext = replurkPretext + pretext;
