@@ -5,13 +5,18 @@
 package plurker.ui.notify;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.JLabel;
 import javax.swing.JWindow;
+import javax.swing.Timer;
 
 /**
  *
@@ -19,27 +24,89 @@ import javax.swing.JWindow;
  */
 public class NotificationPanel extends javax.swing.JPanel {
 
-    private JWindow window;
+    private NotificationWindow window;
 
     public JWindow getJWindow() {
         if (null == window) {
-            window = new JWindow();
-            window.addMouseMotionListener(new NotifyMouseMotionListener());
+            window = new NotificationWindow(this);
+            window.setSize(this.getSize());
         }
         return window;
     }
+    public static int DisappearWaitTime = 3000;
+    public static int DisappearLongWaitTime = 5000;
 
-    class NotifyMouseMotionListener extends MouseMotionAdapter {
+    public static void main(String[] args) {
+        JLabel label = new JLabel("123");
+        NotificationPanel panel = new NotificationPanel(label, 300);
+        JWindow jWindow = panel.getJWindow();
+//        jWindow.setBounds(0, 0, 100, 100);
+        jWindow.addComponentListener(new ComponentAdapter() {
+            public void componentHidden(ComponentEvent e) {
+                System.out.println(e);
+            }
+        });
 
-//        @Override
-//        public void mouseDragged(MouseEvent e) {
-//        }
+
+        jWindow.setVisible(true);
+    }
+
+    class NotificationWindow extends JWindow implements ActionListener {
+
+        Timer dispearTimer;
+
+        NotificationWindow(NotificationPanel panel) {
+            getContentPane().add(panel);
+            dispearTimer = new Timer(DisappearWaitTime, this);
+            dispearTimer.start();
+            panel.getjButton_Close().addActionListener(this);
+            this.addMouseMotionListener(new NotifyMouseMotionListener());
+//            this.addMouseListener(new NotifyMouseListener(this));
+
+        }
+
         @Override
-        public void mouseMoved(MouseEvent e) {
-//            if (null != dispearTimer) {
-//                dispearTimer.stop();
-//                dispearTimer = null;
-//            }
+        public void actionPerformed(ActionEvent e) {
+            if (null != dispearTimer) {
+                dispearTimer.stop();
+                dispearTimer = null;
+            }
+            removeAll();
+            setVisible(false);
+//            dispose();
+        }
+
+        class NotifyMouseMotionListener extends MouseMotionAdapter {
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+
+                dispearTimer.setDelay(DisappearLongWaitTime);
+                dispearTimer.setInitialDelay(DisappearLongWaitTime);
+                dispearTimer.restart();
+//                if (null != dispearTimer) {
+//                    dispearTimer.stop();
+//                    dispearTimer = null;
+//                }
+            }
+        }
+
+        class NotifyMouseListener extends MouseAdapter {
+
+            NotificationWindow parent;
+
+            NotifyMouseListener(NotificationWindow parent) {
+                this.parent = parent;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (parent == e.getSource() && null == parent.dispearTimer) {
+                    System.out.println("go exit");
+                    dispearTimer = new Timer(DisappearWaitTime, parent);
+                    dispearTimer.start();
+                }
+            }
         }
     }
 
@@ -64,10 +131,10 @@ public class NotificationPanel extends javax.swing.JPanel {
     }
 
     private static int getContentHeight(JComponent component, int width) {
-        return 30;
-        /*NotificationPanel tmppanel = new NotificationPanel(component);
-         tmppanel.setSize(width, Short.MAX_VALUE);
-         return tmppanel.getPreferredSize().height;*/
+//        return 30;
+        NotificationPanel tmppanel = new NotificationPanel(component);
+        tmppanel.setSize(width, Short.MAX_VALUE);
+        return tmppanel.getPreferredSize().height;
     }
 
     /**
@@ -89,18 +156,10 @@ public class NotificationPanel extends javax.swing.JPanel {
         jButton_Close.setBorder(null);
         jButton_Close.setName(""); // NOI18N
         jButton_Close.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/notify/dialog_cancel.png"))); // NOI18N
-        jButton_Close.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_CloseActionPerformed(evt);
-            }
-        });
         jPanel1.add(jButton_Close);
 
         add(jPanel1, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton_CloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_CloseActionPerformed
-    }//GEN-LAST:event_jButton_CloseActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Close;
     private javax.swing.JPanel jPanel1;

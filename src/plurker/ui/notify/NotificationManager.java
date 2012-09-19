@@ -5,22 +5,16 @@
 package plurker.ui.notify;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
 //import plurker.ui.FixedHTMLEditorKit;
-import plurker.ui.GUIUtil;
 
 /**
  *
@@ -36,55 +30,47 @@ public class NotificationManager {
         }
         return notificationManager;
     }
-    private LinkedList<SlideInNotification> linkedList = new LinkedList<>();
-    private HashMap<JWindow, SlideInNotification> map = new HashMap<>();
+    private LinkedList<NotificationPanel> linkedList = new LinkedList<>();
+    private HashMap<JWindow, NotificationPanel> map = new HashMap<>();
     public final static int NotifyWidth = 200;
 
     class NotifyComponentListener extends ComponentAdapter {
 
         @Override
         public void componentHidden(ComponentEvent e) {
-            Component component = e.getComponent();
-            SlideInNotification slide = map.get((JWindow) component);
-            linkedList.remove(slide);
-            //            linkedList.remove((SlideInNotification)  component);
+            if (e.getComponent() instanceof JWindow) {
+                JWindow window = (JWindow) e.getComponent();
+                NotificationPanel notify = map.get(window);
+                map.remove(window);
+                linkedList.remove(notify);
+                window.dispose();
+            }
         }
     };
     private NotifyComponentListener notifyComponentListener = new NotifyComponentListener();
 
-//    public static int getContentHeight(NotificationPanel panel, int width) {
-////        if (null == dummyEditorPane) {
-//        JWindow window = new JWindow();
-//
-//        window.setSize(width, Short.MAX_VALUE);
-////        dummyEditorPane.setText(content);
-//        window.getContentPane().add(panel);
-//        window.pack();
-// 
-//        return window.getPreferredSize().height;
-//    }
     public void addContent(JComponent content) {
         NotificationPanel notity = new NotificationPanel(content, NotifyWidth);
-        SlideInNotification slide = new SlideInNotification(notity);
+        JWindow jWindow = notity.getJWindow();
+        jWindow.addComponentListener(notifyComponentListener);
+        NotificationPanel last = linkedList.size() != 0 ? linkedList.getLast() : null;
+        linkedList.add(notity);
+        map.put(jWindow, notity);
 
-        JWindow window = slide.getWindow();
-        window.addComponentListener(notifyComponentListener);
-
-        SlideInNotification last = linkedList.size() != 0 ? linkedList.getLast() : null;
-        linkedList.add(slide);
-        map.put(window, slide);
-        Dimension lastsize = last != null ? last.getWindow().getSize() : null;
-
-        int starty = (null != last) ? last.getStartY() - lastsize.height : desktopBounds.y + desktopBounds.height;
-        int desktopwidth = desktopBounds.width;
-        int startx = desktopwidth - NotifyWidth;
-        slide.showAt(startx, starty);
+        int y = (null != last) ? last.getJWindow().getLocation().y - jWindow.getHeight()/*- last.getHeight()*/ : desktopBounds.y + desktopBounds.height - jWindow.getHeight();
+        int x = desktopBounds.width - NotifyWidth;
+        jWindow.setLocation(x, y);
+        jWindow.setVisible(true);
     }
     private static Rectangle desktopBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         NotificationManager instance = NotificationManager.getInstance();
-        for (int x = 0; x < 20; x++) {
+        for (int x = 0; x < 15; x++) {
+            instance.addContent(new JLabel(Integer.toString(x + 1)));
+        }
+        Thread.currentThread().sleep(5000);
+        for (int x = 10; x < 25; x++) {
             instance.addContent(new JLabel(Integer.toString(x + 1)));
         }
     }

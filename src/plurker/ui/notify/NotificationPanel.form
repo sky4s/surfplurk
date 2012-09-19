@@ -45,9 +45,6 @@
               <Image iconType="3" name="/plurker/ui/notify/dialog_cancel.png"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_CloseActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
