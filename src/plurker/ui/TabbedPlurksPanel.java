@@ -114,4 +114,12 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
     }
+
+    public void setPlurker(PlurkerApplication plurker) {
+        all.setPlurker(plurker);
+        my.setPlurker(plurker);
+        privates.setPlurker(plurker);
+        response.setPlurker(plurker);
+        liked.setPlurker(plurker);
+    }
 }

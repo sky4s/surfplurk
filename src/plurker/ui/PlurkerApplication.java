@@ -38,11 +38,8 @@ import shu.util.Persistence;
  *
  * @author skyforce
  */
-public class PlurkerApplication extends javax.swing.JFrame implements AWTEventListener, ITabbedPaneListener {
+public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPaneListener {
 
-    @Override
-    public void eventDispatched(AWTEvent event) {
-    }
     public final static boolean debugMode = new File("debug.txt").exists();
     public final static boolean offlineMode = new File("offline.txt").exists();
     public final static boolean cacheImage = true;
@@ -117,6 +114,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             }
         }
     }
+    private PlurkerApplication plurker = this;
 
     class CometChangeListener implements ChangeListener {
 
@@ -138,6 +136,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
             for (Comment comment : newResponseSet) {
                 NotifyPanel2 notify = new NotifyPanel2(comment, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
+                notify.setPlurker(plurker);
                 notifyManager.addContent(notify);
             }
         }
@@ -771,6 +770,9 @@ public class PlurkerApplication extends javax.swing.JFrame implements AWTEventLi
         responsePanel.setRootContentPanel(plurkPanel);
         DefaultTab tab = addToTabbedPane(null, responsePanel, true);
         tabbedPane.setSelectedTab(tab);
+    }
+
+    void addFollowComment(NotifyPanel2 notifyPanel) {
     }
 
     @Override

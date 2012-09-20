@@ -53,13 +53,21 @@ import plurker.util.Utils;
  */
 public class ContentPanel extends javax.swing.JPanel implements AWTEventListener, PlurkChangeListener {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         JFrame frame = new JFrame();
         String content = Utils.readContent(new File("b.html"));
         frame.setLayout(new java.awt.BorderLayout());
-        frame.add(new ContentPanel(content), java.awt.BorderLayout.CENTER);
-        frame.setSize(600, 600);
+        ContentPanel contentPanel = new ContentPanel(content);
+        frame.add(contentPanel, java.awt.BorderLayout.CENTER);
+        frame.setSize(300, 100);
+//        frame.pack();
         frame.setVisible(true);
+
+        contentPanel.setNofityLabelCount(8);
+        for (int x = 8; x < 20; x++) {
+            Thread.currentThread().sleep(500);
+            contentPanel.addNofityLabelCount();
+        }
     }
 
     public Plurk getPlurk() {
@@ -143,9 +151,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             try {
                 UnreadType unreadType = plurk.getUnreadType();
                 if (UnreadType.Unread == unreadType && Type.FirstOfResponse != type) {
-                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), HighLight, true);
+                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), HighLight, true, false);
                 } else {
-                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), Normal, true);
+                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), Normal, true, true);
                 }
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -364,7 +372,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
         jLabel_Notify.setBackground(new java.awt.Color(204, 0, 0));
         jLabel_Notify.setOpaque(true);
-        jLabel_Notify.setBounds(360, 0, 0, 0);
+        jLabel_Notify.setBounds(384, 0, 0, 0);
         jLayeredPane1.add(jLabel_Notify, javax.swing.JLayeredPane.PALETTE_LAYER);
 
         jEditorPane1.setEditable(false);
@@ -406,7 +414,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         jLabel_Floor.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         add(jLabel_Floor, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
-
+    private Border lineBorder = javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0));
     private void jLayeredPane1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jLayeredPane1ComponentResized
         Dimension size = this.jLayeredPane1.getSize();
         jEditorPane1.setSize(size);
@@ -428,7 +436,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     @SuppressWarnings("empty-statement")
-    void updateWidth(int width) {
+    public void updateWidth(int width) {
 //        Rectangle viewRect = getViewportViewRect();
         Rectangle bounds = this.getBounds();
         boolean seen = true;// viewRect != null ? viewRect.contains(bounds.x, bounds.y) : false;
@@ -495,10 +503,20 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         return jLabel_Time;
     }
 
-    public void setNotifyLabel(String text, Color background, boolean isOpaque) {
+    public void setNotifyLabel(String text, Color background, boolean isOpaque, boolean withBorder) {
         jLabel_Notify.setText(text);
+
         jLabel_Notify.setBackground(background);
         jLabel_Notify.setOpaque(isOpaque);
+        if (withBorder) {
+            jLabel_Notify.setBorder(lineBorder);
+        } else {
+            jLabel_Notify.setBorder(null);
+        }
+//        Dimension preferredSize = jLabel_Notify.getPreferredSize();
+//        System.out.println(preferredSize);
+//        jLabel_Notify.setSize(preferredSize);
+//        jLabel_Notify.setPreferredSize(preferredSize);
     }
     public final static Color HighLight = Color.red;
     public final static Color Normal = Color.white;
@@ -514,14 +532,20 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            this.jLabel_Notify.setText(Long.toString(count));
         }
         this.initLabel_Notify();
         this.setNotifyLabelNormal();
+
+        Dimension size = this.jLayeredPane1.getSize();
+        Dimension labelPreferredSize = this.jLabel_Notify.getPreferredSize();
+        jLabel_Notify.setBounds(size.width - labelPreferredSize.width, 0, labelPreferredSize.width, labelPreferredSize.height);
     }
 
     public void addNofityLabelCount() {
         try {
-            long responseCount = plurk.getResponseCount();
+            long responseCount = (null != plurk) ? plurk.getResponseCount() : Integer.parseInt(this.jLabel_Notify.getText());
             setNofityLabelCount(responseCount + 1);
         } catch (JSONException ex) {
             Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -553,6 +577,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     public void setNotifyLabelNormal() {
         jLabel_Notify.setBackground(Normal);
+        jLabel_Notify.setBorder(lineBorder);
         if (null != plurkPanel) {
             plurkPanel.setNotifyLabelNormal();
         }
@@ -604,7 +629,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     @Override
-    @SuppressWarnings("empty-statement")
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseevent = (MouseEvent) event;
@@ -638,8 +662,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                     //但是還要確保不是跑到別的component去
                 }
             } else if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
-                Point point = mouseevent.getPoint();
+//                Point point = mouseevent.getPoint();
                 if (null != tooltip && !SwingUtilities.isDescendingFrom(mouseevent.getComponent(), tooltip)) {
+                    //有tooltip且不是點在自己身上, 就把tooltip關掉
                     tooltip.setVisible(false);
                 }
             } else if (mouseevent.getID() == MouseEvent.MOUSE_WHEEL) {

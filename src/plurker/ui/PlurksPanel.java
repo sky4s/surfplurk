@@ -43,12 +43,13 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
     @Override
     public void eventDispatched(AWTEvent event) {
         MouseEvent mouseevent = (MouseEvent) event;
-        if (mouseevent.getID() == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(mouseevent)) {
+        if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(mouseevent)) {
             if (null != mouseevent.getComponent() && SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
                 Point point = mouseevent.getPoint();
                 Point convertPoint = SwingUtilities.convertPoint(mouseevent.getComponent(), point, this.jPanel1);
                 Component child = jPanel1.getComponentAt(convertPoint);
                 if (child instanceof ContentPanel && null != plurker) {
+                    //滑鼠點下去, 如果是contentpanel, 而且plurker不是空的, 就設定plurker的current follow
                     ContentPanel contentPanel = (ContentPanel) child;
                     plurker.setCurrentFollow(contentPanel);
                 }

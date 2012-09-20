@@ -4,7 +4,15 @@
  */
 package plurker.ui.notify;
 
+import com.google.jplurk_oauth.data.Plurk;
+import java.awt.AWTEvent;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -16,7 +24,13 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import plurker.source.PlurkPool;
+import plurker.source.PlurkSourcer;
+import plurker.ui.NotifyPanel2;
+import plurker.ui.PlurkerApplication;
+import shu.util.Persistence;
 
 /**
  *
@@ -34,80 +48,103 @@ public class NotificationPanel extends javax.swing.JPanel {
         return window;
     }
     public static int DisappearWaitTime = 10000;
-    public static int DisappearLongWaitTime = 15000;
+//    public static int DisappearShortWaitTime = 1000;
 
     public static void main(String[] args) {
-        JLabel label = new JLabel("123");
-        NotificationPanel panel = new NotificationPanel(label, 300);
+        PlurkSourcer.setDoValidToken(false);
+        PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
+        PlurkPool plurkpool = new PlurkPool(plurkSourcerInstance);
+        Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
+//        NotifyPanel2 notifyPanel2 = new NotifyPanel2("1234", 300);
+        NotifyPanel2 notifyPanel2 = new NotifyPanel2(plurk, plurkpool);
+        notifyPanel2.updateWidth(300);
+
+//        JLabel label = new JLabel("123");
+        NotificationPanel panel = new NotificationPanel(notifyPanel2, 300);
         JWindow jWindow = panel.getJWindow();
 //        jWindow.setBounds(0, 0, 100, 100);
-        jWindow.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                System.out.println(e);
-            }
-        });
+//        jWindow.addComponentListener(new ComponentAdapter() {
+//            public void componentHidden(ComponentEvent e) {
+//                System.out.println(e);
+//            }
+//        });
 
 
         jWindow.setVisible(true);
     }
 
-    class NotificationWindow extends JWindow implements ActionListener {
+//    @Override
+//    public void eventDispatched(AWTEvent event) {
+//        if (event instanceof MouseEvent) {
+//            MouseEvent mouseevent = (MouseEvent) event;
+//            if (mouseevent.getID() == MouseEvent.MOUSE_EXITED) {
+//                Component component = mouseevent.getComponent();
+//                System.out.println(mouseevent);
+//            }
+//        }
+//    }
+    class NotificationWindow extends JWindow implements ActionListener, AWTEventListener {
 
         Timer dispearTimer;
+        NotificationPanel notifyPanel;
 
         NotificationWindow(NotificationPanel panel) {
+            this.notifyPanel = panel;
             getContentPane().add(panel);
             dispearTimer = new Timer(DisappearWaitTime, this);
             dispearTimer.start();
             panel.getjButton_Close().addActionListener(this);
-            this.addMouseMotionListener(new NotifyMouseMotionListener());
+//            this.addMouseMotionListener(new NotifyMouseMotionListener());
 //            this.addMouseListener(new NotifyMouseListener(this));
+            Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        }
 
+        private boolean isMouseInWindow() {
+            PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+            Point location = pointerInfo.getLocation();
+            SwingUtilities.convertPointFromScreen(location, this);
+            Component component = this.getComponentAt(location);
+            boolean mouseInWindow = (null != component) ? SwingUtilities.isDescendingFrom(component, this) : false;
+            return mouseInWindow;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            removeAll();
-            setVisible(false);
-            if (null != dispearTimer) {
-                dispearTimer.stop();
-                dispearTimer = null;
-            }
-//            dispose();
-        }
-
-        class NotifyMouseMotionListener extends MouseMotionAdapter {
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
+//            System.out.println(e + " " + e.getSource());
+            boolean fromCloseButton = notifyPanel.getjButton_Close() == e.getSource();
+            //執行關閉的動作
+            if (!isMouseInWindow() || fromCloseButton) {
+                removeAll();
+                setVisible(false);
                 if (null != dispearTimer) {
-                    dispearTimer.setDelay(DisappearLongWaitTime);
-                    dispearTimer.setInitialDelay(DisappearLongWaitTime);
-                    dispearTimer.restart();
+                    dispearTimer.stop();
+                    dispearTimer = null;
                 }
-//                if (null != dispearTimer) {
-//                    dispearTimer.stop();
-//                    dispearTimer = null;
-//                }
+            } else {
+                dispearTimer.restart();
             }
         }
 
-        class NotifyMouseListener extends MouseAdapter {
-
-            NotificationWindow parent;
-
-            NotifyMouseListener(NotificationWindow parent) {
-                this.parent = parent;
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (parent == e.getSource() && null == parent.dispearTimer) {
-                    System.out.println("go exit");
-                    dispearTimer = new Timer(DisappearWaitTime, parent);
-                    dispearTimer.start();
+        @Override
+        public void eventDispatched(AWTEvent event) {
+            if (event instanceof MouseEvent) {
+                MouseEvent mouseevent = (MouseEvent) event;
+                if (mouseevent.getID() == MouseEvent.MOUSE_EXITED) {
+                    if (!isMouseInWindow()) {
+                        //若離開了視窗
+                        notifyPanel.jPanel1.setVisible(false);
+//                        if (null != dispearTimer) {
+//                            dispearTimer.setInitialDelay(DisappearShortWaitTime);
+//                            dispearTimer.setDelay(DisappearShortWaitTime);
+//                            dispearTimer.restart();
+//                        }
+                    }
+                } else if (mouseevent.getID() == MouseEvent.MOUSE_ENTERED) {
+                    if (SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
+                        notifyPanel.jPanel1.setVisible(true);
+                    }
                 }
+
             }
         }
     }
@@ -123,8 +160,10 @@ public class NotificationPanel extends javax.swing.JPanel {
         component.setPreferredSize(dimension);
         this.setSize(dimension);
         this.setPreferredSize(dimension);
-
         this.add(component, java.awt.BorderLayout.CENTER);
+//        this.jButton_Close.setVisible(false);
+        this.jPanel1.setVisible(false);
+//        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
     private NotificationPanel(JComponent component) {
@@ -133,7 +172,6 @@ public class NotificationPanel extends javax.swing.JPanel {
     }
 
     private static int getContentHeight(JComponent component, int width) {
-//        return 30;
         NotificationPanel tmppanel = new NotificationPanel(component);
         tmppanel.setSize(width, Short.MAX_VALUE);
         return tmppanel.getPreferredSize().height;
