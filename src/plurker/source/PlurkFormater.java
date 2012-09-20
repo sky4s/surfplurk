@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -156,15 +157,16 @@ public class PlurkFormater {
 //    private Parser parser = new Parser();
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        FileReader reader = new FileReader("b.html");
-        BufferedReader breader = new BufferedReader(reader);
-        String html = "";
-        while (breader.ready()) {
-            html += breader.readLine();
-        }
-//        System.out.println(html);
-        System.out.println(_filterConten(html));
-//        _filterConten(html);
+//        FileReader reader = new FileReader("b.html");
+//        BufferedReader breader = new BufferedReader(reader);
+//        String html = "";
+//        while (breader.ready()) {
+//            html += breader.readLine();
+//        }
+//        System.out.println(_filterConten(html));
+
+        URL url = new URL(encodeToUTF8("http://搞冰友.的專家.tw/c/CJCXBMN.gif"));
+        url.openStream();
     }
 
     public static String _filterConten(String content) {
@@ -239,7 +241,7 @@ public class PlurkFormater {
         return false;
     }
 
-    private String encodeToUTF8(String src) {
+    private static String encodeToUTF8(String src) {
         URL url = null;
         try {
             url = new URL(src);
@@ -249,14 +251,16 @@ public class PlurkFormater {
         }
         String newurl = null;
         try {
+
             String host = java.net.URLEncoder.encode(url.getHost(), "UTF-8");
+//            host = java.net.URLEncoder.encode(host, "UTF-8");
 //            String path = java.net.URLEncoder.encode(url.getPath(), "UTF-8");
             newurl = url.getProtocol() + "://" + host + url.getPath();
 
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+//        return src;
         return newurl;
     }
 
@@ -273,7 +277,9 @@ public class PlurkFormater {
         //僅處理 gif
         if (-1 != src.indexOf(".gif") || -1 != src.indexOf(".GIF")) {
             try {
-                gifFrame = GIFFrame.getGIFFrame(url.openStream());
+                InputStream inputStream = url.openConnection().getInputStream();
+                gifFrame = GIFFrame.getGIFFrame(inputStream);
+//                gifFrame = GIFFrame.getGIFFrame(url.openStream());
             } catch (IOException ex) {
                 Logger.getLogger(PlurkFormater.class
                         .getName()).log(Level.SEVERE, null, ex);
