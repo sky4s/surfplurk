@@ -371,8 +371,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         });
 
         jLabel_Notify.setBackground(new java.awt.Color(204, 0, 0));
+        jLabel_Notify.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         jLabel_Notify.setOpaque(true);
-        jLabel_Notify.setBounds(384, 0, 0, 0);
+        jLabel_Notify.setBounds(384, 0, 0, 2);
         jLayeredPane1.add(jLabel_Notify, javax.swing.JLayeredPane.PALETTE_LAYER);
 
         jEditorPane1.setEditable(false);
@@ -414,7 +415,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         jLabel_Floor.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         add(jLabel_Floor, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
-    private Border lineBorder = javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0));
+//    private Border lineBorder = javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0));
     private void jLayeredPane1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jLayeredPane1ComponentResized
         Dimension size = this.jLayeredPane1.getSize();
         jEditorPane1.setSize(size);
@@ -508,11 +509,11 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
         jLabel_Notify.setBackground(background);
         jLabel_Notify.setOpaque(isOpaque);
-        if (withBorder) {
-            jLabel_Notify.setBorder(lineBorder);
-        } else {
-            jLabel_Notify.setBorder(null);
-        }
+//        if (withBorder) {
+//            jLabel_Notify.setBorder(lineBorder);
+//        } else {
+//            jLabel_Notify.setBorder(null);
+//        }
 //        Dimension preferredSize = jLabel_Notify.getPreferredSize();
 //        System.out.println(preferredSize);
 //        jLabel_Notify.setSize(preferredSize);
@@ -577,7 +578,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     public void setNotifyLabelNormal() {
         jLabel_Notify.setBackground(Normal);
-        jLabel_Notify.setBorder(lineBorder);
+//        jLabel_Notify.setBorder(lineBorder);
         if (null != plurkPanel) {
             plurkPanel.setNotifyLabelNormal();
         }
