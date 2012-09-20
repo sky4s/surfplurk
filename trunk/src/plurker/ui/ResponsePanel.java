@@ -155,7 +155,12 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         firstPanel.updateWidth(getWidth());
 
         jPanel_Plurk.add(firstPanel, java.awt.BorderLayout.CENTER);
-        updateUI();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                updateUI();
+            }
+        });
+
 
 
         //接著去抓comment, 因為費時, 所以要用thread
@@ -523,10 +528,18 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             }
             jPanel_Comments.add(noResponsePanel);
         }
-        jPanel_Comments.updateUI();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                updateUI();
+            }
+        });
         JViewport viewport = jScrollPane2.getViewport();
         viewport.setViewPosition(new Point(0, jPanel_Comments.getPreferredSize().height));
-        jPanel_Comments.updateUI();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                updateUI();
+            }
+        });
     }
 
     /**
@@ -568,7 +581,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
             jPanel_Comments.add(jlayer);
             layerUI.start();
-            jPanel_Comments.updateUI();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    updateUI();
+                }
+            });
 
 
 
@@ -603,7 +620,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
             layerUI.stop();
             jPanel_Comments.remove(jlayer);
-            jPanel_Comments.updateUI();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    updateUI();
+                }
+            });
         }
 
         private void updateCommentCountToPlurk(java.util.List<Comment> commentList) {
@@ -699,6 +720,10 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             }
 
             String text = jEditorPane_ResponseInput.getText();
+            if (text.length() == 0) {
+                return;
+            }
+
             int selectedIndex = jComboBox_Qualifier1.getSelectedIndex();
             Qualifier qualifier = Qualifier.values()[selectedIndex];
             try {
@@ -747,7 +772,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         @Override
         public void actionPerformed(ActionEvent e) {
             defaultAction.actionPerformed(e);
-            updateUI();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    updateUI();
+                }
+            });
         }
     };
 
