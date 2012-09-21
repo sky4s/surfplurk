@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.AWTEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -53,11 +55,44 @@ import plurker.util.Utils;
  */
 public class ContentPanel extends javax.swing.JPanel implements AWTEventListener, PlurkChangeListener {
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (newBie) {
+            newBie = false;
+            newBieTimer = new Timer(16, new NewBieActionListener());
+            newBieTimer.start();
+        }
+    }
+    private ContentPanel contentPanel = this;
+
+    class NewBieActionListener implements ActionListener {
+
+        private int blue = 187;
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Color c = new Color(255, 255, blue++);
+            contentPanel.jEditorPane1.setBackground(c);
+            if (255 == blue) {
+                newBieTimer.stop();
+            }
+
+        }
+    }
+    private Timer newBieTimer;
+    private boolean newBie = false;
+
+    public void setNewBie(boolean newBie) {
+        this.newBie = newBie;
+    }
+
     public static void main(String[] args) throws InterruptedException {
         JFrame frame = new JFrame();
         String content = Utils.readContent(new File("b.html"));
         frame.setLayout(new java.awt.BorderLayout());
         ContentPanel contentPanel = new ContentPanel(content);
+        contentPanel.setNewBie(true);
         frame.add(contentPanel, java.awt.BorderLayout.CENTER);
         frame.setSize(300, 100);
 //        frame.pack();
