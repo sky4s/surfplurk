@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.IDN;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -28,6 +29,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
+//import org.jivesoftware.stringprep.Punycode;
 
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -39,6 +41,8 @@ import plurker.image.GIFFrame;
 import plurker.image.ImageUtils;
 import plurker.ui.PlurkerApplication;
 import plurker.ui.Qualifier;
+import sun.net.idn.Punycode;
+//import org.jivesoftware.stringprep.*;
 
 /**
  *
@@ -166,7 +170,9 @@ public class PlurkFormater {
 //        System.out.println(_filterConten(html));
 
         URL url = new URL(encodeToUTF8("http://搞冰友.的專家.tw/c/CJCXBMN.gif"));
-        url.openStream();
+        System.out.println(url);
+//        URL url = new URL(encodeToUTF8("http://xn--37q24cf7z.xn--fct5g966e.tw/c/CJDDNUH.gif"));
+//        url.openStream();
     }
 
     public static String _filterConten(String content) {
@@ -250,16 +256,38 @@ public class PlurkFormater {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         String newurl = null;
-        try {
+//        try {
 
-            String host = java.net.URLEncoder.encode(url.getHost(), "UTF-8");
+        String host = url.getHost();
+        //            System.out.println(host);
+        //            try {
+        //                host = java.net.URLEncoder.encode(url.getHost(), "Unicode");
+        //            } catch (UnsupportedEncodingException ex) {
+        //                Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
+        //            }
+        //            String host = url.getHost();
+        //            org.jivesoftware.stringprep.
+        //            Punycode.encode(null, blns)
+        //            host = org.jivesoftware.stringprep.Punycode.encode(host);
+        host = IDN.toASCII(host);
+
+
+        String path = url.getPath();
+//        try {
+//            path = java.net.URLEncoder.encode(path, "UTF-8");
+//        } catch (UnsupportedEncodingException ex) {
+//            Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+//            StringBuffer punyurl = Punycode.encode(new StringBuffer(host), null);
+//            host = punyurl.toString();
 //            host = java.net.URLEncoder.encode(host, "UTF-8");
 //            String path = java.net.URLEncoder.encode(url.getPath(), "UTF-8");
-            newurl = url.getProtocol() + "://" + host + url.getPath();
+        newurl = url.getProtocol() + "://" + host + path;
 
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        } catch (PunycodeException ex) {
+//            Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 //        return src;
         return newurl;
     }
