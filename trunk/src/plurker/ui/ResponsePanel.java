@@ -691,26 +691,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         }
     }
 
-//    private ContentPanel addToCommentPanel(String content) {
-//        ContentPanel contentPanel = new ContentPanel(content);
-////        contentPanel.addComponentListener(contentPanelComponentListenr);
-//        int width = jPanel_Comments.getWidth();
-//        contentPanel.updateWidth(width);
-//        jPanel_Comments.add(contentPanel);
-//        return contentPanel;
-//    }
     private ContentPanel initContentPanel(Comment comment, int width) {
         ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
         contentPanel.updateWidth(width);
         return contentPanel;
     }
-//    private ContentPanel addToCommentPanel(Comment comment) {
-//        ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
-//        int width = jPanel_Comments.getWidth();
-//        contentPanel.updateWidth(width);
-//        jPanel_Comments.add(contentPanel);
-//        return contentPanel;
-//    }
     private ResponsePanel thisObject = this;
     private AbstractAction enterAction = new AbstractAction() {
         @Override
@@ -794,6 +779,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         actionMap.put("Enter", enterAction);
 
     }
+   
 }
 
 class PlurkerDocumentListener implements DocumentListener {

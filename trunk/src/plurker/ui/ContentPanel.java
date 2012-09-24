@@ -277,6 +277,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         initLabel_Avatar();
         initEditorPane1(content, prefferedWidth);
         this.jLabel_Time.setVisible(false);
+        this.jLabel_Notify.setVisible(false);
         if (!isMuted() && !notifyMode) {
             initLabel_Notify();
             initLabel_Time();
@@ -541,6 +542,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     public void setNotifyLabel(String text, Color background, boolean isOpaque, boolean withBorder) {
         jLabel_Notify.setText(text);
+        this.jLabel_Notify.setVisible(true);
 
         jLabel_Notify.setBackground(background);
         jLabel_Notify.setOpaque(isOpaque);
@@ -563,7 +565,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
         if (Type.Plurk == type && null != plurk) {
             try {
-//                long responseCount = plurk.getResponseCount();
                 plurk.setResponseCount(count);
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -698,8 +699,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                     //但是還要確保不是跑到別的component去
                 }
             } else if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
-//                Point point = mouseevent.getPoint();
-                if (null != tooltip && !SwingUtilities.isDescendingFrom(mouseevent.getComponent(), tooltip)) {
+                //                Point point = mouseevent.getPoint();
+                Component component = mouseevent.getComponent();
+                if (null != tooltip && null != component && !SwingUtilities.isDescendingFrom(mouseevent.getComponent(), tooltip)) {
                     //有tooltip且不是點在自己身上, 就把tooltip關掉
                     tooltip.setVisible(false);
                 }

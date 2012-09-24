@@ -72,10 +72,21 @@ public class CometListener {
     };
     private boolean stop = false;
     private LinkedList<ChangeListener> listenerList = new LinkedList<>();
-    private TreeSet<Plurk> newPlurkSet = new TreeSet<>(plurkComparator);
+    private TreeSet<Plurk> newPlurkSet;//= new TreeSet<>(plurkComparator);
+    private TreeSet<Plurk> oldPlurkSet;
+    private TreeSet<Plurk> stackPlurkSet = new TreeSet<>(plurkComparator);
     private TreeSet<Comment> newResponseSet;// = new TreeSet<>(responseComparator);
     private TreeSet<Comment> oldResponseSet;
+    private TreeSet<Comment> stackResponseSet = new TreeSet<>(responseComparator);
     private List<UserInfo[]> userInfoList;
+
+    public TreeSet<Plurk> getStackPlurkSet() {
+        return stackPlurkSet;
+    }
+
+    public TreeSet<Comment> getStackResponseSet() {
+        return stackResponseSet;
+    }
 
     public List<UserInfo[]> getUserInfoList() {
         return userInfoList;
@@ -113,7 +124,8 @@ public class CometListener {
                     offset = comet.getNewOffset();
                     if (comet.isDataAvailable()) {
 
-                        newPlurkSet.clear();
+//                        newPlurkSet.clear();
+                        newPlurkSet = new TreeSet<>(plurkComparator);
                         newResponseSet = new TreeSet<>(responseComparator);
                         userInfoList = new ArrayList<>();
 
@@ -121,7 +133,11 @@ public class CometListener {
                         for (int x = 0; x < size; x++) {
                             if (comet.isNewPlurk(x)) {
                                 Plurk plurk = comet.getPlurk(x);
-                                newPlurkSet.add(plurk);
+
+                                boolean addPlurk = (null != oldPlurkSet && !newPlurkSet.contains(plurk)) || (null == newPlurkSet);
+                                if (addPlurk) {
+                                    newPlurkSet.add(plurk);
+                                }
 
                             } else if (comet.isNewResponse(x)) {
                                 Comment comment = comet.getComment(x);
@@ -134,24 +150,20 @@ public class CometListener {
                                     userInfoList.add(userInfoOfComment);
                                 }
 
-//                                if (null != oldResponseSet) {
-//                                    if (!oldResponseSet.contains(comment)) {
-//                                        newResponseSet.add(comment);
-//                                        UserInfo[] userInfoOfComment = comet.getUserInfoOfComment(x);
-//                                        userInfoList.add(userInfoOfComment);
-//                                    }
-//                                } else {
-//                                    newResponseSet.add(comment);
-//                                }
-
-
                             }
+                        }
+
+                        oldResponseSet = newResponseSet;
+                        oldPlurkSet = newPlurkSet;
+                        if (!newResponseSet.isEmpty()) {
+                            stackResponseSet = newResponseSet;
+                        }
+                        if (!newPlurkSet.isEmpty()) {
+                            stackPlurkSet = newPlurkSet;
                         }
                         if (!newPlurkSet.isEmpty() || !newResponseSet.isEmpty()) {
                             fireCometChange();
                         }
-                        oldResponseSet = newResponseSet;
-
                     }
                 }
             } catch (JSONException | RequestException ex) {
@@ -169,7 +181,6 @@ public class CometListener {
     public static void main(String[] args) throws RequestException, JSONException {
         PlurkSourcer source = PlurkerApplication.getPlurkSourcerInstance();
         final PlurkPool pool = new PlurkPool(source);
-//        final CometListener comet = new CometListener(source);
         pool.addCometChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent ce) {

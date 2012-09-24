@@ -36,6 +36,10 @@ public class WaitLayerUI extends LayerUI<JPanel> implements ActionListener {
     private int mFadeLimit = 15;
     public final static int MaxSize = 15;
 
+    public boolean isRunning() {
+        return mIsRunning;
+    }
+
     @Override
     public void paint(Graphics g, JComponent c) {
         int w = c.getWidth();

@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,6 +69,21 @@ public class Comment extends Data implements ContextIF {
 
     public long getId() throws JSONException {
         return json.getLong("id");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Comment) {
+            Comment that = (Comment) obj;
+            try {
+                return this.getId() == that.getId();
+            } catch (JSONException ex) {
+                Logger.getLogger(Plurk.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        } else {
+            return super.equals(obj);
+        }
     }
 
     @Override

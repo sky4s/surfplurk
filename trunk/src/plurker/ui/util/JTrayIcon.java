@@ -22,17 +22,23 @@ package plurker.ui.util;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import plurker.ui.PlurkerApplication;
 
 public class JTrayIcon extends TrayIcon {
 
@@ -95,5 +101,23 @@ public class JTrayIcon extends TrayIcon {
         }
         this.menu = menu;
         menu.addPopupMenuListener(popupListener);
+    }
+
+    public static void main(String[] args) {
+        boolean useSystemTray = true;
+        if (useSystemTray && SystemTray.isSupported()) {
+            SystemTray systemTray = SystemTray.getSystemTray();
+            Image image = Toolkit.getDefaultToolkit()
+                    .getImage("image/plurk tray.png");
+            JTrayIcon trayicon = new JTrayIcon(image);
+//            trayicon.setJPopupMenu(this.jPopupMenu1);
+            trayicon.setToolTip("Surf Plurk");
+//            trayicon.addMouseListener(null);
+            try {
+                systemTray.add(trayicon);
+            } catch (AWTException ex) {
+                Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
