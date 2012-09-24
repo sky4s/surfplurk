@@ -65,17 +65,28 @@ public class PlurkPool implements ChangeListener {
     public void addCometChangeListener(ChangeListener listener) {
         cometListener.addChangeListener(listener);
     }
-    private Map<Long, PlurkChangeListener> plurkChangeListenerMap = new HashMap<>();
+    private Map<Long, List<PlurkChangeListener>> plurkChangeListenerMap = new HashMap<>();
 
     public void addPlurkChangeListener(long plurkID, PlurkChangeListener listener) {
-        plurkChangeListenerMap.put(plurkID, listener);
+        List<PlurkChangeListener> list = plurkChangeListenerMap.get(plurkID);
+        if (null == list) {
+            list = new LinkedList<>();
+            plurkChangeListenerMap.put(plurkID, list);
+        }
+        list.add(listener);
     }
 
     private void firePlurkChange(long plurkId, PlurkChangeListener.Type type, Data data) {
-        PlurkChangeListener listener = plurkChangeListenerMap.get(plurkId);
-        if (null != listener) {
-            listener.plurkChange(type, data);
+        List<PlurkChangeListener> list = plurkChangeListenerMap.get(plurkId);
+        if (null != list) {
+            for (PlurkChangeListener listener : list) {
+                listener.plurkChange(type, data);
+            }
         }
+//        PlurkChangeListener listener = plurkChangeListenerMap.get(plurkId);
+//        if (null != listener) {
+//            listener.plurkChange(type, data);
+//        }
     }
 
 //    public void removeCometChangeListener(ChangeListener listener) {
@@ -92,6 +103,22 @@ public class PlurkPool implements ChangeListener {
     public TreeSet<Comment> getNewResponseSet() {
         if (null != cometListener) {
             return cometListener.getNewCommentSet();
+        } else {
+            return null;
+        }
+    }
+
+    public TreeSet<Plurk> getStackPlurkSet() {
+        if (null != cometListener) {
+            return cometListener.getStackPlurkSet();
+        } else {
+            return null;
+        }
+    }
+
+    public TreeSet<Comment> getStackResponseSet() {
+        if (null != cometListener) {
+            return cometListener.getStackResponseSet();
         } else {
             return null;
         }

@@ -27,9 +27,10 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
 
         all = new PlurksPanel(plurkPool, Timeline.Filter.None, true);
         my = new PlurksPanel(plurkPool, Timeline.Filter.only_user, false);
-        privates = new PlurksPanel(plurkPool, Timeline.Filter.only_responded, false);
+        privates = new PlurksPanel(plurkPool, Timeline.Filter.only_private, false);
         response = new PlurksPanel(plurkPool, Timeline.Filter.only_responded, false);
         liked = new PlurksPanel(plurkPool, Timeline.Filter.only_favorite, false);
+        plurksPanel = new PlurksPanel[]{all, my, privates, response, liked};
 
         this.jPanel_All.add(all, java.awt.BorderLayout.CENTER);
         this.jPanel_Liked.add(liked, java.awt.BorderLayout.CENTER);
@@ -39,8 +40,21 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
 
 //        all.updatePlurks();
     }
+
+    public void setPlurkPool(PlurkPool plurkPool) {
+        this.plurkPool = plurkPool;
+        for(PlurksPanel panel: plurksPanel){
+            panel.setPlurkPool(plurkPool);
+        }
+    }
+    
+    private PlurksPanel[] plurksPanel;
     private PlurkPool plurkPool;
     private PlurksPanel all, my, privates, response, liked;
+
+    public void updatePlurks(int tabIndex) {
+        plurksPanel[tabIndex].updatePlurks();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -58,6 +72,7 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
         jPanel_Response = new javax.swing.JPanel();
         jPanel_Liked = new javax.swing.JPanel();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);

@@ -4,30 +4,22 @@
  */
 package plurker.ui.notify;
 
-import com.google.jplurk_oauth.data.Plurk;
-import java.awt.Component;
 import java.awt.GraphicsEnvironment;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JWindow;
 import javax.swing.Timer;
-import plurker.source.PlurkPool;
-import plurker.source.PlurkSourcer;
-import plurker.ui.NotifyPanel2;
 import plurker.ui.PlurkerApplication;
-import shu.util.Persistence;
-//import plurker.ui.FixedHTMLEditorKit;
 
 /**
  *
@@ -43,25 +35,15 @@ public class NotificationManager {
         }
         return notificationManager;
     }
-//    private LinkedList<NotificationPanel> linkedList = new LinkedList<>();
     private LinkedList<NotificationWindow> linkedList = new LinkedList<>();
-//    private HashMap<JWindow, NotificationPanel> map = new HashMap<>();
+    private ArrayList<JComponent> contentList = new ArrayList<>();
     public final static int NotifyWidth = 300;
-//    class NotifyComponentListener extends ComponentAdapter {
-//
-//        @Override
-//        public void componentHidden(ComponentEvent e) {
-//            if (e.getComponent() instanceof JWindow) {
-//                JWindow window = (JWindow) e.getComponent();
-//                NotificationPanel notify = map.get(window);
-//                map.remove(window);
-//                linkedList.remove(notify);
-//                window.dispose();
-//            }
-//        }
-//    };
-//    private NotifyComponentListener notifyComponentListener = new NotifyComponentListener();
     public static int DisappearWaitTime = 10000;
+//    private PlurkerApplication plurker;
+//
+//    public void setPlurker(PlurkerApplication plurker) {
+//        this.plurker = plurker;
+//    }
 
     public void addContent(JComponent content) {
         if (null == closeTimer) {
@@ -70,21 +52,19 @@ public class NotificationManager {
         } else {
             closeTimer.restart();
         }
+        if (contentList.contains(content)) {
+            return;
+        }
+        contentList.add(content);
 
 
         NotificationPanel notity = new NotificationPanel(content, NotifyWidth);
         NotificationWindow window = notity.getWindow();
         window.addWindowListener(closeWindowListener);
 
-        //        jWindow.addComponentListener(notifyComponentListener);
-//        NotificationPanel last = linkedList.size() != 0 ? linkedList.getLast() : null;
-//        linkedList.add(notity);
-//        map.put(jWindow, notity);
-        //        int y = (null != last) ? last.getJWindow().getLocation().y - jWindow.getHeight()/*- last.getHeight()*/ : desktopBounds.y + desktopBounds.height - jWindow.getHeight();
         NotificationWindow last = (linkedList.size() != 0) ? linkedList.getLast() : null;
         linkedList.add(window);
         int y = (null != last) ? last.getLocation().y - window.getHeight()/*- last.getHeight()*/ : desktopBounds.y + desktopBounds.height - window.getHeight();
-//        System.out.println(y);
         int x = desktopBounds.width - NotifyWidth;
         window.setLocation(x, y);
         window.setAlwaysOnTop(true);
@@ -106,22 +86,38 @@ public class NotificationManager {
                 }
             }
             linkedList.clear();
+            contentList.clear();
             listen = true;
         }
     };
-    Timer closeTimer;
-    ActionListener closeActionListener = new ActionListener() {
+    private Timer closeTimer;
+    private ActionListener closeActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-//            for (NotificationWindow window : linkedList) {
-////                windows.
-//                window.actionPerformed(e);
-//            }
-            if (linkedList.size() != 0) {
+
+            if (linkedList.size() == 0) {
+                closeTimer.stop();
+            } else if (!isMouseInWindow()) {
+                //滑鼠不在視窗裡 就進行關閉
                 linkedList.getFirst().actionPerformed(e);
             }
+
+
         }
     };
+
+    public boolean isMouseInWindow() {
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        Point location = pointerInfo.getLocation();
+        for (NotificationWindow window : linkedList) {
+            Rectangle bounds = window.getBounds();
+            boolean contains = bounds.contains(location);
+            if (contains) {
+                return true;
+            }
+        }
+        return false;
+    }
     private static Rectangle desktopBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 
     public static void main(String[] args) throws InterruptedException {

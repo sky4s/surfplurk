@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 //import plurker.sourcer.*;
@@ -57,6 +59,21 @@ public class Plurk extends Data implements ContextIF {
 
     public long getPlurkId() throws JSONException {
         return json.getLong("plurk_id");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Plurk) {
+            Plurk that = (Plurk) obj;
+            try {
+                return this.getPlurkId() == that.getPlurkId();
+            } catch (JSONException ex) {
+                Logger.getLogger(Plurk.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        } else {
+            return super.equals(obj);
+        }
     }
 
     public PlurkType getPlurkType() throws JSONException {
@@ -114,6 +131,12 @@ public class Plurk extends Data implements ContextIF {
             result[x] = Integer.parseInt(t);
         }
         return result;
+    }
+
+    public boolean isFavorite() throws JSONException {
+        String favorite = get("favorite");
+        return favorite.equals("true");
+        //        return json.getLong("response_count");
     }
 
     public static enum PlurkType {

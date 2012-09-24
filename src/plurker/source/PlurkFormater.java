@@ -4,6 +4,7 @@
  */
 package plurker.source;
 
+import com.google.jplurk_oauth.data.Comment;
 import com.google.jplurk_oauth.data.ContextIF;
 import com.google.jplurk_oauth.data.Plurk;
 import com.google.jplurk_oauth.data.UserInfo;
@@ -23,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -32,6 +34,7 @@ import javax.net.ssl.HttpsURLConnection;
 //import org.jivesoftware.stringprep.Punycode;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -73,11 +76,26 @@ public class PlurkFormater {
         return content;
     }
 
-    public String getContent(ContextIF context) throws JSONException {
-        long ownderid = context.getOwnerId();
+    public String getContent(Comment comment) throws JSONException {
+        return getContent(comment, false);
+    }
+
+    public String getContent(Comment comment, boolean isNotify) throws JSONException {
+//        comment.getPlurkId();
+        long ownderid = comment.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
-        String pretext = getPreText(userinfo, context);
-        String content = pretext + filterConten(context.getContent());
+        String pretext = getPreText(userinfo, comment, false, isNotify);
+//        String middle = "";
+//        if (isNotify) {
+//            JSONObject parent = comment.getParent();
+//            Plurk plurk = new Plurk(parent.getJSONObject("plurk"));
+//            long ownerId = plurk.getOwnerId();
+//            String displayName = getDisplayName(plurkPool.getUserInfo(ownerId));
+//            middle = "回應了 " + displayName + " 的噗 ";
+//        }
+
+
+        String content = pretext + filterConten(comment.getContent());
         return content;
     }
 
@@ -94,17 +112,28 @@ public class PlurkFormater {
         precache("http://replurker.png", "./image/f82b1fb13b0692732212b8d112aa9a14.png");
     }
 
-    public String getPreText(UserInfo userInfo, ContextIF context) throws JSONException {
-        return getPreText(userInfo, context, false);
-    }
-
-    public String getPreText(UserInfo userInfo, ContextIF context, boolean isPlurk) throws JSONException {
+//    public String getPreText(UserInfo userInfo, ContextIF context) throws JSONException {
+//        return getPreText(userInfo, context, false);
+//    }
+    public String getPreText(UserInfo userInfo, ContextIF context, boolean isPlurk, boolean isNotify) throws JSONException {
         String qualifier = context.getQualifier();
         Qualifier q = Qualifier.getQualifier(qualifier);
         String qualifierTranslated = null;
         qualifierTranslated = context.getQualifierTranslated();
-        qualifier = qualifierTranslated != null && qualifierTranslated.length() != 0 ? qualifierTranslated : qualifier;
-        String pretext = getDisplayName(userInfo) + " " + q.toHTMLString(" " + qualifier + " ") + " ";
+        qualifier = qualifierTranslated != null && qualifierTranslated.length() != 0 ? qualifierTranslated : getTranslatedQualifier(qualifier);
+        String middle = "";
+        if (isNotify) {
+//            Comment comment = (context instanceof Comment) ? (Comment) context : null;
+            if (context instanceof Comment) {
+                Comment comment = (Comment) context;
+                JSONObject parent = comment.getParent();
+                Plurk plurk = new Plurk(parent.getJSONObject("plurk"));
+                String displayName = getDisplayName(plurkPool.getUserInfo(plurk.getUserId()));
+                middle = " 回應 " + displayName + " 的噗";
+            }
+        }
+
+        String pretext = getDisplayName(userInfo) + middle + " " + q.toHTMLString(" " + qualifier + " ") + " ";
         if (isPlurk) {
             Plurk plurk = (Plurk) context;
             long replurkerId = plurk.getReplurkerId();
@@ -120,7 +149,7 @@ public class PlurkFormater {
     }
 
     public String getPreText(UserInfo userInfo, Plurk plurk) throws JSONException {
-        return getPreText(userInfo, plurk, true);
+        return getPreText(userInfo, plurk, true, false);
     }
 
     public static String getName(UserInfo userInfo, boolean withHTMLColor) throws JSONException {
@@ -222,14 +251,7 @@ public class PlurkFormater {
             }
         }
 
-        Elements atag = doc.select("a");
-//        for (int x = 0; x < atag.size(); x++) {
-//            Element e = atag.get(x);
-//            String text = e.text();
-//            e.html("<u>" + text + "</u>");
-//            Element child = e.child(0);
-//            e.appendChild(child);
-//        }
+//        Elements atag = doc.select("a");
 
         return doc.body().html();
 
@@ -503,4 +525,32 @@ public class PlurkFormater {
         }
         return timeText;
     }
+
+    public static String getTranslatedQualifier(String qualifier) {
+        if (null == QualifierStrings) {
+            Qualifier[] qualifierValues = Qualifier.values();
+            int size = qualifierValues.length;
+            QualifierStrings = new String[size];
+            for (int x = 0; x < size; x++) {
+                QualifierStrings[x] = qualifierValues[x].text;
+            }
+
+        }
+//        Arrays.
+        int length = QualifierStrings.length;
+        int index = 0;
+        for (; index < length; index++) {
+            if (QualifierStrings[index].equals(qualifier)) {
+                break;
+            }
+        }
+//        int index = Arrays.binarySearch(QualifierStrings, qualifier);
+        return TranslatedQualifier[index];
+    }
+//    private static Qualifier[] QualifierValues;
+    private static String[] QualifierStrings;
+    /**
+     *
+     */
+    public final static String[] TranslatedQualifier = new String[]{":", "愛", "喜歡", "分享", "給", "討厭", "想要", "期待", "需要", "打算", "希望", "問", "已經", "曾經", "好奇", "覺得", "想", "說", "正在"};
 }

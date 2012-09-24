@@ -10,6 +10,8 @@ import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -34,7 +36,7 @@ public class NotifyPanel2 extends ContentPanel {
             if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
                 Point point = mouseevent.getPoint();
                 Component component = mouseevent.getComponent();
-                if (null == component && (SwingUtilities.isDescendingFrom(component, this) || SwingUtilities.isDescendingFrom(component, this.getParent())) && SwingUtilities.isLeftMouseButton(mouseevent)) {
+                if (null != component && (SwingUtilities.isDescendingFrom(component, this) || SwingUtilities.isDescendingFrom(component, this.getParent())) && SwingUtilities.isLeftMouseButton(mouseevent)) {
                     //點到, 就應該設定到current
 //                    System.out.println("click");
                     if (null != plurker) {
@@ -62,11 +64,33 @@ public class NotifyPanel2 extends ContentPanel {
         super(null, null, null, width, content, Type.Unknow, true);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        try {
+            if (obj instanceof NotifyPanel2) {
+                NotifyPanel2 that = (NotifyPanel2) obj;
+                if (null != this.plurk && null != that.plurk) {
+                    return this.plurk.getPlurkId() == that.plurk.getPlurkId();
+                } else if (null != this.comment && null != that.comment) {
+                    return this.comment.getId() == that.comment.getId();
+                } else {
+                    return false;//super.equals(obj);
+                }
+            } else {
+                return super.equals(obj);
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(NotifyPanel2.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+//        return super.equals(obj);
+    }
+
     protected String getContent() throws JSONException {
         if (null != plurk) {
             return PlurkFormater.getInstance(plurkPool).getContent(plurk);
         } else if (null != comment) {
-            return PlurkFormater.getInstance(plurkPool).getContent(comment);
+            return PlurkFormater.getInstance(plurkPool).getContent(comment, true);
         } else {
             return "N/A";
         }
