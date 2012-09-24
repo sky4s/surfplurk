@@ -118,9 +118,13 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
     }
     private MouseListener trayIconMouseListener = new MouseAdapter() {
         public void mouseClicked(MouseEvent e) {
-            cometChangeListener.displayMessage = false;
-            cometChangeListener.stateChanged(null);
-            cometChangeListener.displayMessage = true;
+            if (notifyManager.isShowing()) {
+                notifyManager.stopShowing();
+            } else {
+                cometChangeListener.displayMessage = false;
+                cometChangeListener.stateChanged(null);
+                cometChangeListener.displayMessage = true;
+            }
         }
     };
     private PlurkerApplication plurker = this;
@@ -135,8 +139,8 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 //            PlurkPool pool = (PlurkPool) e.getSource();
 //            TreeSet<Plurk> newPlurkSet = plurkPool.getNewPlurkSet();
 //            TreeSet<Comment> newResponseSet = plurkPool.getNewResponseSet();
-            TreeSet<Plurk> newPlurkSet =  plurkPool.getStackPlurkSet();
-             TreeSet<Comment> newResponseSet = plurkPool.getStackResponseSet();
+            TreeSet<Plurk> newPlurkSet = plurkPool.getStackPlurkSet();
+            TreeSet<Comment> newResponseSet = plurkPool.getStackResponseSet();
 
             if (displayMessage) {
                 int plurksize = newPlurkSet.size();

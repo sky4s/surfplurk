@@ -163,7 +163,7 @@ class NotificationWindow extends JWindow implements ActionListener, AWTEventList
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean fromCloseButton = notifyPanel.getjButton_Close() == e.getSource();
+        boolean fromCloseButton = null != e ? notifyPanel.getjButton_Close() == e.getSource() : false;
         //執行關閉的動作
         if (!isMouseInWindow() || fromCloseButton) {
             removeAll();

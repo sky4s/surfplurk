@@ -36,7 +36,7 @@ public class NotificationManager {
         return notificationManager;
     }
     private LinkedList<NotificationWindow> linkedList = new LinkedList<>();
-    private ArrayList<JComponent> contentList = new ArrayList<>();
+    private ArrayList<JComponent> nowShowingList = new ArrayList<>();
     public final static int NotifyWidth = 300;
     public static int DisappearWaitTime = 10000;
 //    private PlurkerApplication plurker;
@@ -45,6 +45,10 @@ public class NotificationManager {
 //        this.plurker = plurker;
 //    }
 
+    public boolean isShowing() {
+        return nowShowingList.size() != 0;
+    }
+
     public void addContent(JComponent content) {
         if (null == closeTimer) {
             closeTimer = new Timer(DisappearWaitTime, closeActionListener);
@@ -52,11 +56,10 @@ public class NotificationManager {
         } else {
             closeTimer.restart();
         }
-        if (contentList.contains(content)) {
+        if (nowShowingList.contains(content)) {
             return;
         }
-        contentList.add(content);
-
+        nowShowingList.add(content);
 
         NotificationPanel notity = new NotificationPanel(content, NotifyWidth);
         NotificationWindow window = notity.getWindow();
@@ -86,10 +89,14 @@ public class NotificationManager {
                 }
             }
             linkedList.clear();
-            contentList.clear();
+            nowShowingList.clear();
             listen = true;
         }
     };
+
+    public void stopShowing() {
+        closeActionListener.actionPerformed(null);
+    }
     private Timer closeTimer;
     private ActionListener closeActionListener = new ActionListener() {
         @Override
