@@ -69,6 +69,9 @@ public class PlurkFormater {
     }
 
     public String getContent(Plurk plurk) throws JSONException {
+        if (null == plurkPool) {
+            return plurk.getContent();
+        }
         long ownderid = plurk.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
         String pretext = getPreText(userinfo, plurk);
@@ -100,6 +103,9 @@ public class PlurkFormater {
     }
 
     private void precache(String url, String path) {
+        if (null == plurkPool) {
+            return;
+        }
         try {
             BufferedImage loadImage = ImageUtils.loadImage(path);
             plurkPool.imageCache.put(new URL(url), loadImage);

@@ -203,6 +203,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     private void initLabel_Avatar() {
+        if (null == plurkPool) {
+            return;
+        }
         String profileImage = null;
         try {
             if ((Type.Plurk == type || Type.FirstOfResponse == type) && null != plurk) {

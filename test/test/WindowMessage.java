@@ -56,8 +56,8 @@ public class WindowMessage extends JWindow implements HyperlinkListener, Runnabl
 
     private void initValue(String width, String height, String title, String msg) {
         this.messageWindowState = MESSAGE_WINDOW_STATE.NOINIT;
-//      this.mouseOverType=MOUSEOVER_TYPE.FAST;//默认是极速效果    `P  
-        this.mouseOverType = MOUSEOVER_TYPE.SLOWLY;//默认是滑出效果  
+        this.mouseOverType = MOUSEOVER_TYPE.FAST;//默认是极速效果    `P  
+//        this.mouseOverType = MOUSEOVER_TYPE.SLOWLY;//默认是滑出效果  
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();//获取屏幕大小  
         this.screenWidth = dimension.width;//屏幕宽度  
@@ -72,7 +72,7 @@ public class WindowMessage extends JWindow implements HyperlinkListener, Runnabl
     /**
      * 初始化window
      */
-    private void initWindow() {
+    private void initWindow(int x) {
         this.setSize(this.msgWindowWidth, this.msgWindowHeight);//设置窗口大小  
         this.setLayout(new BorderLayout());//设置布局  
 
@@ -102,7 +102,7 @@ public class WindowMessage extends JWindow implements HyperlinkListener, Runnabl
 
         this.getContentPane().add(jEditorPane, BorderLayout.CENTER);//将jEditorPane加入window中  
         this.setAlwaysOnTop(true);//设置窗体总在最前  
-        this.setLocation(this.screenWidth - this.msgWindowWidth, this.screenHeight);//初始化窗体位置  
+        this.setLocation(x, this.screenHeight);//初始化窗体位置  
     }
 
     private void addListener() {
@@ -110,7 +110,6 @@ public class WindowMessage extends JWindow implements HyperlinkListener, Runnabl
          * 为jEditorPane加事件监听，实现鼠标进入后暂时还原消息窗体的功能
          */
         jEditorPane.addMouseListener(new MouseAdapter() {
-
             public void mouseEntered(MouseEvent e) {
                 if (mouseOverType == MOUSEOVER_TYPE.FAST) {//根据配置快速显示消息窗体  
                     System.err.println("mouse in");
@@ -132,11 +131,21 @@ public class WindowMessage extends JWindow implements HyperlinkListener, Runnabl
     }
 
     public WindowMessage(String width, String height, String title, String msg) {
+//        this(width, height, this.screenWidth - this.msgWindowWidth, title, msg);
         initValue(width, height, title, msg);
-        initWindow();
+        initWindow(this.screenWidth - this.msgWindowWidth);
         addListener();
         this.setVisible(true);
         new Thread(this).run();
+    }
+
+    public WindowMessage(String width, String height, int x, String title, String msg) {
+        initValue(width, height, title, msg);
+        initWindow(x);
+        addListener();
+        this.setVisible(true);
+//        new Thread(this).run();
+        new Thread(this).start();
     }
 
     public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -159,9 +168,9 @@ public class WindowMessage extends JWindow implements HyperlinkListener, Runnabl
         while (true) {
             //窗体显示  
             while (this.getLocation().y > this.screenHeight - this.msgWindowHeight - this.stateBarHeight) {
-                this.setLocation(this.getLocation().x, this.getLocation().y - 1);
+                this.setLocation(this.getLocation().x, this.getLocation().y - 2);
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -175,23 +184,27 @@ public class WindowMessage extends JWindow implements HyperlinkListener, Runnabl
             messageWindowState = MESSAGE_WINDOW_STATE.CLOSING;
             while (this.getLocation().y < this.screenHeight) {
                 if (canHidden) {
-                    this.setLocation(this.getLocation().x, this.getLocation().y + 1);
+                    this.setLocation(this.getLocation().x, this.getLocation().y + 2);
                 } else {//如果canHidden窗体隐藏条件不成立，就把窗体还原  
                     continue begin;
                 }
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             messageWindowState = MESSAGE_WINDOW_STATE.CLOSED;
-            System.exit(0);
+//            System.exit(0);
             break;
         }
     }
 
     public static void main(String[] args) {
-        new WindowMessage("250", "150", "标题", "消息:来自消息窗体的提示信息，你可以定义自己的消息体(包括HTML代码体，将会将代码解析到table中。)");
+        for (int x = 0; x < 3; x++) {
+            new WindowMessage("200", "100", 200 * x, "标题", "消息:来自消息窗体的提示信息，你可以定义自己的消息体(包括HTML代码体，将会将代码解析到table中。)");
+            System.out.println("xx");
+        }
+
     }
 }

@@ -150,16 +150,16 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             }
 
             for (Plurk plurk : newPlurkSet) {
-                NotifyPanel2 notify = new NotifyPanel2(plurk, plurkPool);
+                NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
-                notifyManager.addContent(notify);
+                notifyManager.addToTinyWindow(notify);
             }
             for (Comment comment : newResponseSet) {
-                NotifyPanel2 notify = new NotifyPanel2(comment, plurkPool);
+                NotifyPanel notify = new NotifyPanel(comment, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
-                notifyManager.addContent(notify);
+                notifyManager.addToTinyWindow(notify);
             }
         }
     }
@@ -827,7 +827,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         tabbedPane.setSelectedTab(tab);
     }
 
-    void addFollowComment(NotifyPanel2 notifyPanel) {
+    void addFollowComment(NotifyPanel notifyPanel) {
     }
 
     @Override

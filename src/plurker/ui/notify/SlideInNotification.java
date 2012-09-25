@@ -4,7 +4,7 @@
  */
 package plurker.ui.notify;
 
-import plurker.ui.notify.NotificationPanel;
+import plurker.ui.notify.TinyNotificationPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -56,7 +56,7 @@ public class SlideInNotification extends Object {
         setContents(contents);
     }
 
-    public SlideInNotification(NotificationPanel contents) {
+    public SlideInNotification(TinyNotificationPanel contents) {
         this((JComponent) contents);
         contents.getjButton_Close().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -312,7 +312,7 @@ public class SlideInNotification extends Object {
     public static void main(String[] args) throws InterruptedException {
         Icon errorIcon = UIManager.getIcon("OptionPane.errorIcon");
         JLabel label = new JLabel("Your application asplode");
-        NotificationPanel panel = new NotificationPanel(label, 300);
+        TinyNotificationPanel panel = new TinyNotificationPanel(label, 300);
 //        JFrame label = new JFrame();
 //        label.setSize(300,100);
 //        label.setBorder(Border.);
