@@ -32,6 +32,9 @@ import plurker.ui.notify.NotificationManager;
 import plurker.ui.util.JTrayIcon;
 //import plurker.ui.util.SheetableJFrameHelper;
 import shu.util.Persistence;
+import com.panayotis.jupidator.UpdatedApplication;
+import com.panayotis.jupidator.Updater;
+import com.panayotis.jupidator.UpdaterException;
 
 /**
  * Plurker分為以下模組, 依照開發優先順序如下 訊息同步 聊天介面 易用介面 Content處理
@@ -841,4 +844,6 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         }
     }
+    
+    
 }
