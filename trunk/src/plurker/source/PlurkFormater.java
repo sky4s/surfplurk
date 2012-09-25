@@ -44,7 +44,7 @@ import plurker.image.GIFFrame;
 import plurker.image.ImageUtils;
 import plurker.ui.PlurkerApplication;
 import plurker.ui.Qualifier;
-import sun.net.idn.Punycode;
+//import sun.net.idn.Punycode;
 //import org.jivesoftware.stringprep.*;
 
 /**
