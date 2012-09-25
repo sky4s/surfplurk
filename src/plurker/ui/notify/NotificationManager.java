@@ -45,7 +45,7 @@ public class NotificationManager {
         return nowShowingList.size() != 0;
     }
 
-    public void addtToNotificationsWindow(JComponent content) {
+    public void addtToNotificationsFrame(JComponent content) {
     }
 
     public void addToTinyWindow(JComponent content) {
