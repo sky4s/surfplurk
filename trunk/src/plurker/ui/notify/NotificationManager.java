@@ -35,21 +35,20 @@ public class NotificationManager {
         }
         return notificationManager;
     }
-    private LinkedList<NotificationWindow> linkedList = new LinkedList<>();
+    private LinkedList<TinyNotificationWindow> linkedList = new LinkedList<>();
     private ArrayList<JComponent> nowShowingList = new ArrayList<>();
     public final static int NotifyWidth = 300;
+    public final static int NotifyXOffset = 20;
     public static int DisappearWaitTime = 10000;
-//    private PlurkerApplication plurker;
-//
-//    public void setPlurker(PlurkerApplication plurker) {
-//        this.plurker = plurker;
-//    }
 
     public boolean isShowing() {
         return nowShowingList.size() != 0;
     }
 
-    public void addContent(JComponent content) {
+    public void addtToNotificationsWindow(JComponent content) {
+    }
+
+    public void addToTinyWindow(JComponent content) {
         if (null == closeTimer) {
             closeTimer = new Timer(DisappearWaitTime, closeActionListener);
             closeTimer.start();
@@ -61,14 +60,14 @@ public class NotificationManager {
         }
         nowShowingList.add(content);
 
-        NotificationPanel notity = new NotificationPanel(content, NotifyWidth);
-        NotificationWindow window = notity.getWindow();
+        TinyNotificationPanel notity = new TinyNotificationPanel(content, NotifyWidth);
+        TinyNotificationWindow window = notity.getWindow();
         window.addWindowListener(closeWindowListener);
 
-        NotificationWindow last = (linkedList.size() != 0) ? linkedList.getLast() : null;
+        TinyNotificationWindow last = (linkedList.size() != 0) ? linkedList.getLast() : null;
         linkedList.add(window);
         int y = (null != last) ? last.getLocation().y - window.getHeight()/*- last.getHeight()*/ : desktopBounds.y + desktopBounds.height - window.getHeight();
-        int x = desktopBounds.width - NotifyWidth;
+        int x = desktopBounds.width - NotifyWidth - NotifyXOffset;
         window.setLocation(x, y);
         window.setAlwaysOnTop(true);
         window.setVisible(true);
@@ -81,7 +80,7 @@ public class NotificationManager {
                 return;
             }
             listen = false;
-            for (NotificationWindow window : linkedList) {
+            for (TinyNotificationWindow window : linkedList) {
                 if (window.isVisible()) {
                     Object source = e.getSource();
                     ActionEvent ae = new ActionEvent(source, e.getID(), null);
@@ -116,7 +115,7 @@ public class NotificationManager {
     public boolean isMouseInWindow() {
         PointerInfo pointerInfo = MouseInfo.getPointerInfo();
         Point location = pointerInfo.getLocation();
-        for (NotificationWindow window : linkedList) {
+        for (TinyNotificationWindow window : linkedList) {
             Rectangle bounds = window.getBounds();
             boolean contains = bounds.contains(location);
             if (contains) {
@@ -130,11 +129,11 @@ public class NotificationManager {
     public static void main(String[] args) throws InterruptedException {
         NotificationManager instance = NotificationManager.getInstance();
         for (int x = 0; x < 15; x++) {
-            instance.addContent(new JLabel(Integer.toString(x + 1)));
+            instance.addToTinyWindow(new JLabel(Integer.toString(x + 1)));
         }
 //        Thread.currentThread().sleep(5000);
 //        for (int x = 15; x < 25; x++) {
-//            instance.addContent(new JLabel(Integer.toString(x + 1)));
+//            instance.addToTinyWindow(new JLabel(Integer.toString(x + 1)));
 //        }
 
 //        PlurkSourcer.setDoValidToken(false);
@@ -145,6 +144,6 @@ public class NotificationManager {
 //        NotifyPanel2 notifyPanel2 = new NotifyPanel2(plurk, plurkpool);
 //        notifyPanel2.updateWidth(300);
 //        
-//        instance.addContent(notifyPanel2);
+//        instance.addToTinyWindow(notifyPanel2);
     }
 }

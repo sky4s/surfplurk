@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 import org.json.JSONException;
 import plurker.source.PlurkSourcer;
 import plurker.ui.PlurkerApplication;
@@ -71,7 +72,8 @@ public class CometListener {
         }
     };
     private boolean stop = false;
-    private LinkedList<ChangeListener> listenerList = new LinkedList<>();
+//    private LinkedList<ChangeListener> listenerList = new LinkedList<>();
+    private EventListenerList listenerList = new EventListenerList();
     private TreeSet<Plurk> newPlurkSet;//= new TreeSet<>(plurkComparator);
     private TreeSet<Plurk> oldPlurkSet;
     private TreeSet<Plurk> stackPlurkSet = new TreeSet<>(plurkComparator);
@@ -100,17 +102,18 @@ public class CometListener {
         return newResponseSet;
     }
 
-    public void addChangeListener(ChangeListener listener) {
-        listenerList.add(listener);
+    public synchronized void addChangeListener(ChangeListener listener) {
+        listenerList.add(ChangeListener.class, listener);
     }
 
-    public void removeChangeListenerr(ChangeListener listener) {
-        listenerList.remove(listener);
+    public synchronized void removeChangeListenerr(ChangeListener listener) {
+        listenerList.remove(ChangeListener.class, listener);
     }
 
     private void fireCometChange() {
         ChangeEvent e = new ChangeEvent(plurkPool);
-        for (ChangeListener listenr : listenerList) {
+        ChangeListener[] listeners = listenerList.getListeners(ChangeListener.class);
+        for (ChangeListener listenr : listeners) {
             listenr.stateChanged(e);
         }
     }

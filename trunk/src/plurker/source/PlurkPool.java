@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 import org.json.JSONException;
 import plurker.image.ImageUtils;
 import plurker.ui.Qualifier;
@@ -62,24 +63,30 @@ public class PlurkPool implements ChangeListener {
         cometListener.start();
     }
 
-    public void addCometChangeListener(ChangeListener listener) {
+    public synchronized void addCometChangeListener(ChangeListener listener) {
         cometListener.addChangeListener(listener);
     }
-    private Map<Long, List<PlurkChangeListener>> plurkChangeListenerMap = new HashMap<>();
+//    private Map<Long, List<PlurkChangeListener>> plurkChangeListenerMap = new HashMap<>();
+    private Map<Long, EventListenerList> plurkChangeListenerMap = new HashMap<>();
 
-    public void addPlurkChangeListener(long plurkID, PlurkChangeListener listener) {
-        List<PlurkChangeListener> list = plurkChangeListenerMap.get(plurkID);
+    public synchronized void addPlurkChangeListener(long plurkID, PlurkChangeListener listener) {
+//        List<PlurkChangeListener> list = plurkChangeListenerMap.get(plurkID);
+        EventListenerList list = plurkChangeListenerMap.get(plurkID);
         if (null == list) {
-            list = new LinkedList<>();
+//            list = new LinkedList<>();
+            list = new EventListenerList();
             plurkChangeListenerMap.put(plurkID, list);
         }
-        list.add(listener);
+//        list.add(listener);
+        list.add(PlurkChangeListener.class, listener);
     }
 
     private void firePlurkChange(long plurkId, PlurkChangeListener.Type type, Data data) {
-        List<PlurkChangeListener> list = plurkChangeListenerMap.get(plurkId);
+//        List<PlurkChangeListener> list = plurkChangeListenerMap.get(plurkId);
+        EventListenerList list = plurkChangeListenerMap.get(plurkId);
         if (null != list) {
-            for (PlurkChangeListener listener : list) {
+            PlurkChangeListener[] listeners = list.getListeners(PlurkChangeListener.class);
+            for (PlurkChangeListener listener : listeners) {
                 listener.plurkChange(type, data);
             }
         }
