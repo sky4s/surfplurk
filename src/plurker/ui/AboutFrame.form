@@ -7,7 +7,7 @@
       <ResourceString bundle="plurker/ui/Bundle.properties" key="AboutFrame.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[300, 150]"/>
+      <Dimension value="[350, 150]"/>
     </Property>
   </Properties>
   <SyntheticProperties>
