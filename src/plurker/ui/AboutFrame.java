@@ -4,13 +4,19 @@
  */
 package plurker.ui;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import plurker.source.PlurkFormater;
 
 /**
  *
@@ -18,12 +24,34 @@ import java.util.logging.Logger;
  */
 public class AboutFrame extends javax.swing.JFrame {
 
+    public final static String Version = "0.3 (Build 20120926)";
+
     /**
      * Creates new form AboutFrame
      */
     public AboutFrame() {
         initComponents();
-        this.jTextArea1.setText("Plurker (2012) Version: " + Version);
+        this.jEditorPane1.setText(
+                "<html>SurfPlurk (2012) Version: " + Version + "\n"
+                + "<a href=\"http://code.google.com/p/surfplurk/\">http://code.google.com/p/surfplurk/</a>"
+                + "</html>");
+        this.jEditorPane1.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+
+                try {
+                    URI uri = e.getURL().toURI();
+                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                        Desktop.getDesktop().browse(uri);
+                    }
+                } catch (URISyntaxException | IOException ex) {
+                    Logger.getLogger(AboutFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+
+            }
+        });
+
 //        File versionFile = new File(VersionFilename);
 //        if (versionFile.exists()) {
 //            try {
@@ -39,7 +67,6 @@ public class AboutFrame extends javax.swing.JFrame {
 //        }
     }
 //    public final static String VersionFilename = "version.txt";
-    public final static String Version = "0.1.20120913";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -53,12 +80,13 @@ public class AboutFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("plurker/ui/Bundle"); // NOI18N
         setTitle(bundle.getString("AboutFrame.title")); // NOI18N
+        setPreferredSize(new java.awt.Dimension(300, 150));
 
         jButton1.setText(bundle.getString("AboutFrame.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -72,12 +100,11 @@ public class AboutFrame extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jEditorPane1.setEditable(false);
+        jEditorPane1.setContentType("text/html"); // NOI18N
+        jScrollPane2.setViewportView(jEditorPane1);
 
-        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
@@ -124,9 +151,9 @@ public class AboutFrame extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }
