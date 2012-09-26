@@ -5,6 +5,7 @@
 package plurker.ui;
 
 import com.google.jplurk_oauth.module.Timeline;
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -37,17 +38,20 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
         this.jPanel_My.add(my, java.awt.BorderLayout.CENTER);
         this.jPanel_Private.add(privates, java.awt.BorderLayout.CENTER);
         this.jPanel_Response.add(response, java.awt.BorderLayout.CENTER);
-
+        for (int x = 0; x > jTabbedPane1.getTabCount(); x++) {
+            jTabbedPane1.setBackgroundAt(x, Color.white);
+        }
+//        
+//        jTabbedPane1.setb
 //        all.updatePlurks();
     }
 
     public void setPlurkPool(PlurkPool plurkPool) {
         this.plurkPool = plurkPool;
-        for(PlurksPanel panel: plurksPanel){
+        for (PlurksPanel panel : plurksPanel) {
             panel.setPlurkPool(plurkPool);
         }
     }
-    
     private PlurksPanel[] plurksPanel;
     private PlurkPool plurkPool;
     private PlurksPanel all, my, privates, response, liked;

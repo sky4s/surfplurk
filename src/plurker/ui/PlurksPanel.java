@@ -56,7 +56,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 Point point = mouseevent.getPoint();
                 Point convertPoint = SwingUtilities.convertPoint(mouseevent.getComponent(), point, this.jPanel1);
                 Component child = jPanel1.getComponentAt(convertPoint);
-                System.out.println(mouseevent.getWhen() + " " + mouseevent);
+//                System.out.println(mouseevent.getWhen() + " " + mouseevent);
                 if (child instanceof ContentPanel) {
                     System.out.println("inHyperlink: " + ((ContentPanel) child).isInHyperlink(mouseevent));
                 }
