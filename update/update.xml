@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<updatelist application="SurfPlurk" baseurl="http://www.jubler.org/files" icon="icons/jubler.png">
+<updatelist application="SurfPlurk" baseurl="http://code.google.com/p/surfplurk/source/browse/trunk/update/files/" icon="icons/jubler.png">
 
     <architect tag="any" os="" arch="">
-				<launcher exec="${APPHOME}\surfplurk.exe"/>
+				<launcher exec="surfplurk.exe"/>
     </architect>
     
     <!--architect tag="win32" os="Windows" arch="x86">
