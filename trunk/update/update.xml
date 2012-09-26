@@ -2,7 +2,7 @@
 <updatelist application="SurfPlurk" baseurl="http://surfplurk.googlecode.com/svn/trunk/update/files/" icon="icons/jubler.png">
 
     <architect tag="any" os="" arch="">
-				<launcher exec="surfplurk.exe"/>
+				<launcher exec="${APPHOME}\surfplurk.exe"/>
     </architect>
     
     <!--architect tag="win32" os="Windows" arch="x86">
