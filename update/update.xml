@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<updatelist application="SurfPlurk" baseurl="http://surfplurk.googlecode.com/svn/trunk/update/files/" icon="icons/jubler.png">
+<updatelist application="SurfPlurk" baseurl="http://surfplurk.googlecode.com/svn/trunk/update/files" icon="icons/jubler.png">
 
     <architect tag="any" os="" arch="">
 				<launcher exec="${APPHOME}\surfplurk.exe"/>
@@ -32,7 +32,7 @@
     <version release="3" version="0.3">
         <description>Minor updates</description>
         <arch name="any">
-            <file name="surfplurk.exe" sourcedir="0.3" destdir="./" size="464782"/>
+            <file name="surfplurk.exe" sourcedir="0.3" destdir=".\" size="464782"/>
         </arch>
     </version>
 
