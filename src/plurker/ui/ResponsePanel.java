@@ -65,9 +65,10 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     @Override
     public void trigger(boolean topProcess, JPanel panel, CallBack callBack) {
         if (!topProcess) {
-            if (isThreadRunning()) {
-                callBack.callback();
-                return;
+            if (isFetchThreadRunning()) {
+                commentsFetchThread.interrupt();
+//                callBack.callback();
+//                return;
             }
 //            System.out.println("trigger");
             //接著去抓comment, 因為費時, 所以要用thread
@@ -77,8 +78,9 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         }
     }
 
-    private boolean isThreadRunning() {
-        return null != commentsFetchThread && !commentsFetchThread.ending;
+    public boolean isFetchThreadRunning() {
+//        commentsFetchThread.isAlive();
+        return null != commentsFetchThread && commentsFetchThread.isAlive();
     }
 
     private class NewResponseListener implements ChangeListener {
@@ -141,8 +143,10 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     }
 
     final void setRootContentPanel(final ContentPanel rootContentPanel) {
-        if (isThreadRunning()) {
-            return;
+//        System.out.println("set");
+        if (isFetchThreadRunning()) {
+            commentsFetchThread.interrupt();
+//            return;
         }
 
         this.reset();
@@ -166,6 +170,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         //接著去抓comment, 因為費時, 所以要用thread
         commentsFetchThread = new CommentsFetchThread();
         commentsFetchThread.start();
+//         System.out.println("thread start");
 
     }
     private ContentPanel loadingPane;
@@ -268,8 +273,9 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     class UpdateMouseListener extends MouseAdapter {
 
         public void mouseClicked(MouseEvent e) {
-            if (isThreadRunning()) {
-                return;
+            if (isFetchThreadRunning()) {
+                commentsFetchThread.interrupt();
+//                return;
             }
             //接著去抓comment, 因為費時, 所以要用thread
 //            if (jPanel_Comments.contains(whitePanel)) {
@@ -564,7 +570,10 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             this(false);
         }
         boolean fetchFromPlurkSourcer = false;
-        boolean ending = false;
+//        boolean ending = false;
+
+        public void terminate() {
+        }
 
         @Override
         public void run() {
@@ -601,7 +610,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             } catch (java.lang.IllegalArgumentException ex) {
             }
             if (null == commentList/* || true == stopFetch*/) {
-                ending = true;
+//                ending = true;
                 return;
             }
 
@@ -616,7 +625,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             if (null != triggerCallBack) {
                 triggerCallBack.callback();
             }
-            ending = true;
+
 
             layerUI.stop();
             jPanel_Comments.remove(jlayer);
@@ -625,6 +634,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                     updateUI();
                 }
             });
+//            ending = true;
         }
 
         private void updateCommentCountToPlurk(java.util.List<Comment> commentList) {
@@ -779,7 +789,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         actionMap.put("Enter", enterAction);
 
     }
-   
 }
 
 class PlurkerDocumentListener implements DocumentListener {

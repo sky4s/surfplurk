@@ -93,6 +93,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         frame.setLayout(new java.awt.BorderLayout());
         ContentPanel contentPanel = new ContentPanel(content);
         contentPanel.setNewBie(true);
+        contentPanel.getTimeLabel().setText("今天");
+        contentPanel.getAvatarLabel().setText("1234");
         frame.add(contentPanel, java.awt.BorderLayout.CENTER);
         frame.setSize(300, 100);
 //        frame.pack();
@@ -702,6 +704,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                     //但是還要確保不是跑到別的component去
                 }
             } else if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
+//                System.out.println(mouseevent);
                 //                Point point = mouseevent.getPoint();
                 Component component = mouseevent.getComponent();
                 if (null != tooltip && null != component && !SwingUtilities.isDescendingFrom(mouseevent.getComponent(), tooltip)) {
@@ -751,6 +754,64 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     @Override
     public void plurkChange(PlurkChangeListener.Type type, Data data) {
         if (type == PlurkChangeListener.Type.CommentAdd && data instanceof Comment) {
+        }
+
+    }
+//    boolean inHyperlink = false;
+
+//    boolean isInHyperlink() {
+//        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+//        Point location = pointerInfo.getLocation();
+//        SwingUtilities.convertPointFromScreen(location, this);
+//
+//        Component componentAt = this.getComponentAt(location);
+//        System.out.println(componentAt);
+//        if (null != componentAt && componentAt == this.jEditorPane1) {
+//            return this.jEditorPane1.getCursor().getType() == Cursor.HAND_CURSOR;
+//        } else {
+//            return false;
+//        }
+//        return false;
+//        Cursor cursor = getCursor();
+//        Cursor cursor1 = this.jEditorPane1.getCursor();
+//        System.out.println(cursor + " " + " " + cursor.getType() + " " + Cursor.HAND_CURSOR);
+//        System.out.println(cursor1 + " " + " " + cursor1.getType() + " " + Cursor.HAND_CURSOR);
+//        return cursor1.getType() == Cursor.HAND_CURSOR;
+//        return cursor == Cursor.HAND_CURSOR;
+//        return false;
+//    }
+    boolean isInHyperlink(MouseEvent mouseevent) {
+        if (mouseevent.getSource() == this.jEditorPane1) {
+            return inHyperlink;
+        } else {
+            return false;
+        }
+    }
+    private boolean inHyperlink;
+
+    class PlurkerHyperlinkListener implements HyperlinkListener {
+
+        @Override
+        public void hyperlinkUpdate(HyperlinkEvent e) {
+            EventType eventType = e.getEventType();
+            URL url = e.getURL();
+            //        System.out.println("d: "+e.getDescription());
+            //        System.out.println(e.getInputEvent());
+            //        System.out.println(e.getSourceElement());
+            //        System.out.println("u: "+e.getURL());
+
+            if (EventType.ACTIVATED == eventType) {
+//            System.out.println(e);
+            } else if (EventType.ENTERED == eventType) {
+//                System.out.println("enter");
+                inHyperlink = true;
+            } else if (EventType.EXITED == eventType) {
+//                System.out.println("exit");
+                inHyperlink = false;
+            }
+
+//        System.out.println(e.getEventType());
+//        System.out.println(e);
         }
     }
 }
@@ -824,26 +885,5 @@ class FixedHTMLEditorKit extends HTMLEditorKit {
             }
             return v;
         }
-    }
-}
-
-class PlurkerHyperlinkListener implements HyperlinkListener {
-
-    @Override
-    public void hyperlinkUpdate(HyperlinkEvent e) {
-        EventType eventType = e.getEventType();
-        URL url = e.getURL();
-        //        System.out.println("d: "+e.getDescription());
-        //        System.out.println(e.getInputEvent());
-        //        System.out.println(e.getSourceElement());
-        //        System.out.println("u: "+e.getURL());
-
-        if (EventType.ACTIVATED == eventType) {
-        } else if (EventType.ENTERED == eventType) {
-        } else if (EventType.EXITED == eventType) {
-        }
-
-//        System.out.println(e.getEventType());
-//        System.out.println(e);
     }
 }
