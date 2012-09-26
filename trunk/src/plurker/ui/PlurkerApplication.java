@@ -884,4 +884,5 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         }
     }
+
 }
