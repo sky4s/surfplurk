@@ -52,7 +52,7 @@ public class OAuthDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Plurk授權");
-        setUndecorated(true);
+        setModal(true);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
         jLabel1.setText("取得Plurk授權需要三個步驟:");
@@ -116,7 +116,7 @@ public class OAuthDialog extends javax.swing.JDialog {
         service = new OAuth10aServiceImpl(api, config);
         requestToken = service.getRequestToken();
         String authorizationUrl = service.getAuthorizationUrl(requestToken);
-
+        
         try {
             URI uri = new URI(authorizationUrl);
             Desktop.getDesktop().browse(uri);
@@ -124,7 +124,7 @@ public class OAuthDialog extends javax.swing.JDialog {
             Logger.getLogger(OAuthDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String code = jTextField1.getText();
         Verifier verifier = new Verifier(code);
@@ -133,7 +133,7 @@ public class OAuthDialog extends javax.swing.JDialog {
             this.setVisible(false);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    
     /**
      * @param args the command line arguments
      */
@@ -169,11 +169,9 @@ public class OAuthDialog extends javax.swing.JDialog {
          * Create and display the dialog
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
                 OAuthDialog dialog = new OAuthDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);

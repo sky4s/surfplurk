@@ -86,7 +86,7 @@ public class AboutFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("plurker/ui/Bundle"); // NOI18N
         setTitle(bundle.getString("AboutFrame.title")); // NOI18N
-        setPreferredSize(new java.awt.Dimension(300, 150));
+        setPreferredSize(new java.awt.Dimension(350, 150));
 
         jButton1.setText(bundle.getString("AboutFrame.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {

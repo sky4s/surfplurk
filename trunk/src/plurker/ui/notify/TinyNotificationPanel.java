@@ -118,10 +118,10 @@ public class TinyNotificationPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.BorderLayout());
 
-        jButton_Close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/notify/dialog_close.png"))); // NOI18N
+        jButton_Close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/resource/dialog_close.png"))); // NOI18N
         jButton_Close.setBorder(null);
         jButton_Close.setName(""); // NOI18N
-        jButton_Close.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/notify/dialog_cancel.png"))); // NOI18N
+        jButton_Close.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/resource/dialog_cancel.png"))); // NOI18N
         jPanel1.add(jButton_Close);
 
         add(jPanel1, java.awt.BorderLayout.EAST);

@@ -35,14 +35,14 @@
         <Component class="javax.swing.JButton" name="jButton_Close">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/plurker/ui/notify/dialog_close.png"/>
+              <Image iconType="3" name="/plurker/ui/resource/dialog_close.png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
             <Property name="name" type="java.lang.String" value="" noResource="true"/>
             <Property name="rolloverIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/plurker/ui/notify/dialog_cancel.png"/>
+              <Image iconType="3" name="/plurker/ui/resource/dialog_cancel.png"/>
             </Property>
           </Properties>
         </Component>

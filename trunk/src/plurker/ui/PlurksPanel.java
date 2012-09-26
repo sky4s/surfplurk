@@ -11,6 +11,7 @@ import com.google.jplurk_oauth.module.Timeline;
 import com.google.jplurk_oauth.skeleton.DateTime;
 import com.google.jplurk_oauth.skeleton.RequestException;
 import java.awt.AWTEvent;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -66,28 +67,28 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                     plurker.setCurrentFollow(contentPanel);
                 }
             }
-
+            
         }
     }
-
+    
     public void updatePlurks() {
-
+        
         if (null == plurkPool && !PlurkerApplication.offlineMode) {
             return;
         }
-
+        
         if (PlurkerApplication.offlineMode) {
             List<Plurk> debugPlurkList = readPlurkList();
             if (null == debugPlurkList) {
                 String content = "1233";
-
+                
                 content =
                         "<html><head></head><body>"
                         + "wenbao.icm :  Michelle "
                         + "Jenneke (complete race, no 80s music)</a> Michelle Jenneke<br>&#36229;&#27491;. &#36229;&#19978;&#30456;."
                         + "&#32780;&#19988;&#36229;&#24375;....&#28459;&#30059;&#35201;&#26159;&#26377;&#35282;&#33394;&#36889;&#40636;&#23436;&#32654;&#20854;&#20182;&#20154;&#36996;&#35201;&#28436;&#21861;  "
                         + "</body></html>";
-
+                
                 ContentPanel pane = new ContentPanel(content);
                 pane.updateWidth(jPanel1.getWidth());
                 pane.setComponentPopupMenu(jPopupMenu1);
@@ -98,20 +99,20 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 } catch (JSONException ex) {
                     Logger.getLogger(PlurksPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                
             }
         } else {
             retrievePlurkProcess(!newPlurkAtTop, null);
         }
-
+        
     }
-
+    
     private void storePlurkList(List<Plurk> plurkList) {
         if (PlurkerApplication.debugMode && !new File("plurks.obj").exists()) {
             Persistence.writeObjectAsXML(plurkList, "plurks.obj");
         }
     }
-
+    
     private List<Plurk> readPlurkList() {
         if (PlurkerApplication.debugMode && new File("plurks.obj").exists()) {
             return (List<Plurk>) Persistence.readObjectAsXML("plurks.obj");
@@ -120,7 +121,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         }
     }
     private DirectScroll.PopupMenuListener popupMenuListener;
-
+    
     private List<ContentPanel> addToPanel(final List<Plurk> plurkList, final boolean addToTop) throws JSONException {
         /*
          * 預設為list順向 add to top New @ Top: list順向 T!=T Old @ Top: list逆向 F!=T O
@@ -131,14 +132,14 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             Collections.reverse(plurkList);
         }
         List<ContentPanel> contentPanelList = new ArrayList<ContentPanel>();
-
+        
         for (Plurk p : plurkList) {
             ContentPanel pane = new ContentPanel(p, plurkPool);
 //            pane.setNewBie(true);
             pane.setPopupMenuListener(popupMenuListener);
             pane.updateWidth(jPanel1.getWidth());
             contentPanelList.add(pane);
-
+            
         }
         for (ContentPanel pane : contentPanelList) {
             if (addToTop) {
@@ -150,40 +151,40 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             }
         }
         return contentPanelList;
-
+        
     }
     private PlurkPool plurkPool = null;
     private Timeline.Filter filter = null;
     private int plurkPanelWidth = -1;
     private boolean newerProcess;
     private boolean newPlurkAtTop = true;
-
+    
     public void setNewPlurkAtTop(boolean newPlurkAtTop) {
         this.newPlurkAtTop = newPlurkAtTop;
     }
-
+    
     public void setPlurkPool(PlurkPool plurkPool) {
         this.plurkPool = plurkPool;
         if (null != plurkPool) {
             plurkPool.addCometChangeListener(new CometChangeListener());
         }
     }
-
+    
     private class CometChangeListener implements ChangeListener {
-
+        
         private void addToPanel0(Plurk plurk) throws JSONException {
             List<Plurk> list = new ArrayList<>();
             list.add(plurk);
             addToPanel(list, true);
         }
-
+        
         @Override
         @SuppressWarnings("empty-statement")
         public void stateChanged(ChangeEvent e) {
             PlurkPool pool = (PlurkPool) e.getSource();
             TreeSet<Plurk> newPlurkSet = pool.getNewPlurkSet();
             TreeSet<Comment> newResponseSet = pool.getNewResponseSet();
-
+            
             try {
                 for (Plurk plurk : newPlurkSet) {
                     switch (filter) {
@@ -210,7 +211,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                             }
                             break;
                     }
-
+                    
                 }
             } catch (JSONException ex) {
                 Logger.getLogger(PlurksPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -242,20 +243,21 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 ScrollBarAdjustmentListener adjustmentListener = new ScrollBarAdjustmentListener(jPanel1, newerProcess, this);
                 verticalScrollBar.addAdjustmentListener(adjustmentListener);
                 verticalScrollBar.setUnitIncrement(GUIUtil.DefaultUnitIncrement);
+                verticalScrollBar.setBackground(Color.white);
             }
-
+            
             this.jMenuItem_CopyPlurk.setVisible(PlurkerApplication.debugMode);
             this.jMenuItem_CopyContent.setVisible(PlurkerApplication.debugMode);
             this.jMenuItem_CopyContentRaw.setVisible(PlurkerApplication.debugMode);
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
-
+            
             popupMenuListener = new DirectScroll.PopupMenuListener(jPopupMenu1);
             DirectScroll.initDirectScroll(this.jScrollPane1.getVerticalScrollBar(), true);
         }
-
+        
     }
     private PlurkerApplication plurker;
-
+    
     public void setPlurker(PlurkerApplication plurker) {
         this.plurker = plurker;
     }
@@ -301,6 +303,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         setMinimumSize(new java.awt.Dimension(399, 544));
         setLayout(new java.awt.BorderLayout());
 
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         jScrollPane1.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -395,14 +398,14 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             plurkPanel.copyPlurkToClipboard();
         }
     };
-
+    
     public static void main(String[] args) throws RequestException, JSONException {
         GUIUtil.initGUI();
         PlurkSourcer.setDoValidToken(false);
         PlurkSourcer plurkSourcer = new PlurkSourcer(PlurkSourcer.API_KEY, PlurkSourcer.APP_SECRET, "GIRLiuAIdINH", "79aUVlCqRw4GzU04kiRIkfzHTSwonWBR");
         PlurkPool plurkPool = new PlurkPool(plurkSourcer);
         plurkPool.startComet();
-
+        
         JFrame frame = new JFrame();
         PlurksPanel panel = new PlurksPanel(plurkPool, Timeline.Filter.None, true);
 //        panel.setNewPlurkAtTop(false);
@@ -411,7 +414,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         frame.setVisible(true);
         panel.updatePlurks();
         panel.updateUI();
-
+        
     }
     public final static String OffLine = "Off-line mode...";
     public final static String Loading = "Loading...";
@@ -420,11 +423,11 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
     private JLayer<JPanel> jlayer;
     private WaitLayerUI layerUI = new WaitLayerUI();
     private boolean topProcess;
-
+    
     public boolean isUpdating() {
         return (null != layerUI) ? layerUI.isRunning() : false;
     }
-
+    
     private void retrievePlurkProcess(boolean topProcess, CallBack callBack) {
         this.topProcess = topProcess;
         //用來判斷是抓新的還是舊的
@@ -435,7 +438,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             }
             return;
         }
-
+        
         int componentCount = jPanel1.getComponentCount();
         //======================================================================
         //show出loading訊息
@@ -452,7 +455,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         ContentPanel targetpane = (component instanceof ContentPanel) ? (ContentPanel) component : null;
         Plurk offsetPlurk = null != targetpane ? targetpane.getPlurk() : null;
         DateTime offset = (null == offsetPlurk) ? DateTime.now() : DateTime.create(offsetPlurk.getPosted());
-
+        
         plurkRetriever = new PlurkRetriever(offset, getNewer, new PlurkRetrieverCallback());
         if (null != callBack) {
             plurkRetriever.addCallBack(callBack);
@@ -460,18 +463,18 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         plurkRetriever.execute();
     }
     private PlurkRetriever plurkRetriever;
-
+    
     @Override
     public void trigger(boolean topProcess, JPanel panel, CallBack callBack) {
         this.retrievePlurkProcess(topProcess, callBack);
     }
-
+    
     private class PlurkRetrieverCallback implements CallBack {
-
+        
         PlurkRetrieverCallback() {
         }
         private PlurkRetriever plurkRetriever;
-
+        
         @Override
         public void callback() {
             if (null == plurkRetriever) {
@@ -496,28 +499,28 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             jPanel1.updateUI();
         }
     }
-
+    
     class PlurkRetriever extends SwingWorker<  List<Plurk>, Void> {
-
+        
         private DateTime offset;
         private boolean getNewer;
         private PlurkRetrieverCallback retrieverCallback;
         private List<CallBack> callBackList;
-
+        
         public void addCallBack(CallBack callback) {
             if (null == callBackList) {
                 callBackList = new ArrayList<>();
             }
             callBackList.add(callback);
         }
-
+        
         PlurkRetriever(DateTime offset, boolean getNewer, PlurkRetrieverCallback retrieverCallback) {
             this.offset = offset;
             this.getNewer = getNewer;
             this.retrieverCallback = retrieverCallback;
             retrieverCallback.plurkRetriever = this;
         }
-
+        
         protected void done() {
             new Thread() {
                 public void run() {
@@ -530,7 +533,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 }
             }.start();
         }
-
+        
         @Override
         protected List<Plurk> doInBackground() throws Exception {
             List<Plurk> plurkList = null;

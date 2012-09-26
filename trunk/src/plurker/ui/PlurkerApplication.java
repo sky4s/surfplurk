@@ -109,7 +109,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             Image image = Toolkit.getDefaultToolkit()
                     .getImage("image/plurk tray.png");
             trayicon = new JTrayIcon(image);
-            trayicon.setJPopupMenu(this.jPopupMenu1);
+            trayicon.setJPopupMenu(this.jPopupMenu_TrayIcon);
             trayicon.setToolTip("Surf Plurk");
             trayicon.addMouseListener(trayIconMouseListener);
             try {
@@ -192,10 +192,24 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         jButton1 = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel_NewPlurkNotify = new javax.swing.JLabel();
-        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jPopupMenu_TrayIcon = new javax.swing.JPopupMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_Exit = new javax.swing.JMenuItem();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        editMenu = new javax.swing.JMenu();
+        cutMenuItem = new javax.swing.JMenuItem();
+        copyMenuItem = new javax.swing.JMenuItem();
+        pasteMenuItem = new javax.swing.JMenuItem();
+        deleteMenuItem = new javax.swing.JMenuItem();
+        viewMenu = new javax.swing.JMenu();
+        helpMenu = new javax.swing.JMenu();
+        jPopupMenu_Configure = new javax.swing.JPopupMenu();
+        loginMenuItem = new javax.swing.JMenuItem();
+        statusBarMenuItem = new javax.swing.JCheckBoxMenuItem();
+        aboutMenuItem = new javax.swing.JMenuItem();
+        exitMenuItem = new javax.swing.JMenuItem();
         statusBarLabel = new javax.swing.JLabel();
         statusBarLabel.setVisible(false);
         jPanel8 = new javax.swing.JPanel();
@@ -208,19 +222,9 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         jLabel_ShowAll = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        loginMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
-        viewMenu = new javax.swing.JMenu();
-        statusBarMenuItem = new javax.swing.JCheckBoxMenuItem();
-        helpMenu = new javax.swing.JMenu();
-        aboutMenuItem = new javax.swing.JMenuItem();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel_Configure = new javax.swing.JLabel();
+        jLabel_Avatar = new javax.swing.JLabel();
 
         jPanel2.setLayout(new java.awt.BorderLayout());
         jPanel2.add(jEditorPane_NewPlurk, java.awt.BorderLayout.CENTER);
@@ -249,8 +253,8 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         jScrollPane_NewPlurk.setViewportView(jPanel2);
 
         jMenuItem1.setText(bundle.getString("PlurkerApplication.jMenuItem1.text")); // NOI18N
-        jPopupMenu1.add(jMenuItem1);
-        jPopupMenu1.add(jSeparator1);
+        jPopupMenu_TrayIcon.add(jMenuItem1);
+        jPopupMenu_TrayIcon.add(jSeparator1);
 
         jMenuItem_Exit.setText(bundle.getString("PlurkerApplication.jMenuItem_Exit.text")); // NOI18N
         jMenuItem_Exit.addActionListener(new java.awt.event.ActionListener() {
@@ -258,7 +262,73 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
                 jMenuItem_ExitActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem_Exit);
+        jPopupMenu_TrayIcon.add(jMenuItem_Exit);
+
+        fileMenu.setMnemonic('f');
+        fileMenu.setText(bundle.getString("PlurkerApplication.fileMenu.text")); // NOI18N
+        menuBar.add(fileMenu);
+
+        editMenu.setMnemonic('e');
+        editMenu.setText(bundle.getString("PlurkerApplication.editMenu.text")); // NOI18N
+
+        cutMenuItem.setMnemonic('t');
+        cutMenuItem.setText(bundle.getString("PlurkerApplication.cutMenuItem.text")); // NOI18N
+        editMenu.add(cutMenuItem);
+
+        copyMenuItem.setMnemonic('y');
+        copyMenuItem.setText(bundle.getString("PlurkerApplication.copyMenuItem.text")); // NOI18N
+        editMenu.add(copyMenuItem);
+
+        pasteMenuItem.setMnemonic('p');
+        pasteMenuItem.setText(bundle.getString("PlurkerApplication.pasteMenuItem.text")); // NOI18N
+        editMenu.add(pasteMenuItem);
+
+        deleteMenuItem.setMnemonic('d');
+        deleteMenuItem.setText(bundle.getString("PlurkerApplication.deleteMenuItem.text")); // NOI18N
+        editMenu.add(deleteMenuItem);
+
+        menuBar.add(editMenu);
+
+        viewMenu.setText(bundle.getString("PlurkerApplication.viewMenu.text")); // NOI18N
+        menuBar.add(viewMenu);
+
+        helpMenu.setMnemonic('h');
+        helpMenu.setText(bundle.getString("PlurkerApplication.helpMenu.text")); // NOI18N
+        menuBar.add(helpMenu);
+
+        loginMenuItem.setText(bundle.getString("PlurkerApplication.loginMenuItem.text")); // NOI18N
+        loginMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginMenuItemActionPerformed(evt);
+            }
+        });
+        jPopupMenu_Configure.add(loginMenuItem);
+
+        statusBarMenuItem.setText(bundle.getString("PlurkerApplication.statusBarMenuItem.text")); // NOI18N
+        statusBarMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusBarMenuItemActionPerformed(evt);
+            }
+        });
+        jPopupMenu_Configure.add(statusBarMenuItem);
+
+        aboutMenuItem.setMnemonic('a');
+        aboutMenuItem.setText(bundle.getString("PlurkerApplication.aboutMenuItem.text")); // NOI18N
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
+        jPopupMenu_Configure.add(aboutMenuItem);
+
+        exitMenuItem.setMnemonic('x');
+        exitMenuItem.setText(bundle.getString("PlurkerApplication.exitMenuItem.text")); // NOI18N
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuItemActionPerformed(evt);
+            }
+        });
+        jPopupMenu_Configure.add(exitMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(bundle.getString("PlurkerApplication.title")); // NOI18N
@@ -275,6 +345,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         jPanel8.setLayout(new java.awt.BorderLayout());
 
+        jSplitPane3.setBackground(new java.awt.Color(255, 255, 255));
         jSplitPane3.setDividerLocation(400);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -357,76 +428,23 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         getContentPane().add(jPanel8, java.awt.BorderLayout.CENTER);
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText(bundle.getString("PlurkerApplication.fileMenu.text")); // NOI18N
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setLayout(new java.awt.BorderLayout());
 
-        loginMenuItem.setText(bundle.getString("PlurkerApplication.loginMenuItem.text")); // NOI18N
-        loginMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginMenuItemActionPerformed(evt);
+        jLabel_Configure.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/resource/tool_16.png"))); // NOI18N
+        jLabel_Configure.setText(bundle.getString("PlurkerApplication.text")); // NOI18N
+        jLabel_Configure.setName(""); // NOI18N
+        jLabel_Configure.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel_ConfigureMousePressed(evt);
             }
         });
-        fileMenu.add(loginMenuItem);
+        jPanel4.add(jLabel_Configure, java.awt.BorderLayout.EAST);
 
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.setText(bundle.getString("PlurkerApplication.exitMenuItem.text")); // NOI18N
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
+        jLabel_Avatar.setText(bundle.getString("PlurkerApplication.jLabel_Avatar.text")); // NOI18N
+        jPanel4.add(jLabel_Avatar, java.awt.BorderLayout.CENTER);
 
-        menuBar.add(fileMenu);
-
-        editMenu.setMnemonic('e');
-        editMenu.setText(bundle.getString("PlurkerApplication.editMenu.text")); // NOI18N
-
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText(bundle.getString("PlurkerApplication.cutMenuItem.text")); // NOI18N
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText(bundle.getString("PlurkerApplication.copyMenuItem.text")); // NOI18N
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText(bundle.getString("PlurkerApplication.pasteMenuItem.text")); // NOI18N
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText(bundle.getString("PlurkerApplication.deleteMenuItem.text")); // NOI18N
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
-
-        viewMenu.setText(bundle.getString("PlurkerApplication.viewMenu.text")); // NOI18N
-
-        statusBarMenuItem.setText(bundle.getString("PlurkerApplication.statusBarMenuItem.text")); // NOI18N
-        statusBarMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                statusBarMenuItemActionPerformed(evt);
-            }
-        });
-        viewMenu.add(statusBarMenuItem);
-
-        menuBar.add(viewMenu);
-
-        helpMenu.setMnemonic('h');
-        helpMenu.setText(bundle.getString("PlurkerApplication.helpMenu.text")); // NOI18N
-
-        aboutMenuItem.setMnemonic('a');
-        aboutMenuItem.setText(bundle.getString("PlurkerApplication.aboutMenuItem.text")); // NOI18N
-        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aboutMenuItemActionPerformed(evt);
-            }
-        });
-        helpMenu.add(aboutMenuItem);
-
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
+        getContentPane().add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -684,6 +702,17 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         System.exit(0);
     }//GEN-LAST:event_jMenuItem_ExitActionPerformed
 
+    private void jLabel_ConfigureMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_ConfigureMousePressed
+        Point locationOnScreen = jLabel_Configure.getLocationOnScreen();
+
+        int x = locationOnScreen.x;
+        int y = locationOnScreen.y + jLabel_Configure.getHeight();
+
+        jPopupMenu_Configure.setLocation(x, y);
+        jPopupMenu_Configure.setInvoker(this);
+        jPopupMenu_Configure.setVisible(true);
+    }//GEN-LAST:event_jLabel_ConfigureMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -753,6 +782,8 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
     private javax.swing.JComboBox jComboBox_Qualifier;
     private javax.swing.JEditorPane jEditorPane_NewPlurk;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel_Avatar;
+    private javax.swing.JLabel jLabel_Configure;
     private javax.swing.JLabel jLabel_MarkAsRead;
     private javax.swing.JLabel jLabel_NewPlurk;
     private javax.swing.JLabel jLabel_NewPlurkNotify;
@@ -764,12 +795,14 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel_Toolbar;
-    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu_Configure;
+    private javax.swing.JPopupMenu jPopupMenu_TrayIcon;
     private javax.swing.JScrollPane jScrollPane_NewPlurk;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane3;
@@ -817,7 +850,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 //        if (currentResponsePanel.isFetchThreadRunning()) {
 //            return;
 //        }
-        
+
         currentResponsePanel.setRootContentPanel(contentPanel);
         tabbedPane.setSelectedTab(currentPlurklTab);
         if (debugMode && !new File("plurk.obj").exists()) {
