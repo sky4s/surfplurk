@@ -55,9 +55,14 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 Point point = mouseevent.getPoint();
                 Point convertPoint = SwingUtilities.convertPoint(mouseevent.getComponent(), point, this.jPanel1);
                 Component child = jPanel1.getComponentAt(convertPoint);
-                if (child instanceof ContentPanel && null != plurker) {
+                System.out.println(mouseevent.getWhen() + " " + mouseevent);
+                if (child instanceof ContentPanel) {
+                    System.out.println("inHyperlink: " + ((ContentPanel) child).isInHyperlink(mouseevent));
+                }
+                if (child instanceof ContentPanel && !((ContentPanel) child).isInHyperlink(mouseevent) && null != plurker) {
                     //滑鼠點下去, 如果是contentpanel, 而且plurker不是空的, 就設定plurker的current follow
                     ContentPanel contentPanel = (ContentPanel) child;
+//                    System.out.println("set from plurks panel");
                     plurker.setCurrentFollow(contentPanel);
                 }
             }

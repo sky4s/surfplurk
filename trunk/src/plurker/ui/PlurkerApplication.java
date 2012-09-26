@@ -802,6 +802,9 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
     private PlurkPool plurkPool = null;
 
     void setCurrentFollow(final ContentPanel contentPanel) {
+//        if (isThreadRunning()) {
+//            return;
+//        }
         if (!jPanel3.isAncestorOf(tabbedPane)) {
             jPanel3.removeAll();
             jPanel3.add(tabbedPane, java.awt.BorderLayout.CENTER);
@@ -811,6 +814,10 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             currentPlurklTab = addToTabbedPane(Current, currentResponsePanel, false);
         }
 
+//        if (currentResponsePanel.isFetchThreadRunning()) {
+//            return;
+//        }
+        
         currentResponsePanel.setRootContentPanel(contentPanel);
         tabbedPane.setSelectedTab(currentPlurklTab);
         if (debugMode && !new File("plurk.obj").exists()) {
@@ -844,6 +851,4 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         }
     }
-    
-    
 }

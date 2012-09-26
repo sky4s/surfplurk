@@ -158,12 +158,16 @@ public class CometListener {
 
                         oldResponseSet = newResponseSet;
                         oldPlurkSet = newPlurkSet;
-                        if (!newResponseSet.isEmpty()) {
+                        if (!newResponseSet.isEmpty() || !newPlurkSet.isEmpty()) {
                             stackResponseSet = newResponseSet;
-                        }
-                        if (!newPlurkSet.isEmpty()) {
                             stackPlurkSet = newPlurkSet;
                         }
+//                        if (!newResponseSet.isEmpty()) {
+//                            stackResponseSet = newResponseSet;
+//                        }
+//                        if (!newPlurkSet.isEmpty()) {
+//                            stackPlurkSet = newPlurkSet;
+//                        }
                         if (!newPlurkSet.isEmpty() || !newResponseSet.isEmpty()) {
                             fireCometChange();
                         }
