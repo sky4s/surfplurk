@@ -83,18 +83,23 @@ public class TabbedPlurksPanel extends javax.swing.JPanel {
             }
         });
 
+        jPanel_All.setBackground(new java.awt.Color(255, 255, 255));
         jPanel_All.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("所有", jPanel_All);
 
+        jPanel_My.setBackground(new java.awt.Color(255, 255, 255));
         jPanel_My.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("我的", jPanel_My);
 
+        jPanel_Private.setBackground(new java.awt.Color(255, 255, 255));
         jPanel_Private.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("私人", jPanel_Private);
 
+        jPanel_Response.setBackground(new java.awt.Color(255, 255, 255));
         jPanel_Response.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("回應", jPanel_Response);
 
+        jPanel_Liked.setBackground(new java.awt.Color(255, 255, 255));
         jPanel_Liked.setLayout(new java.awt.BorderLayout());
         jTabbedPane1.addTab("讚", jPanel_Liked);
 
