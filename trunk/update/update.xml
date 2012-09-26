@@ -32,7 +32,7 @@
     <version release="3" version="0.3">
         <description>Minor updates</description>
         <arch name="any">
-            <file name="surfplurk.exe" sourcedir="0.3" destdir="${APPHOME}" size="464782"/>
+            <file name="surfplurk.exe" sourcedir="0.3" destdir="./" size="464782"/>
         </arch>
     </version>
 
