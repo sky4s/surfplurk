@@ -29,6 +29,7 @@ public class OAuthDialog extends javax.swing.JDialog {
     public OAuthDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+//        this.jPanel3.action(null, this);
     }
 
     /**
@@ -40,6 +41,8 @@ public class OAuthDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -49,6 +52,7 @@ public class OAuthDialog extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Plurk授權");
@@ -56,11 +60,13 @@ public class OAuthDialog extends javax.swing.JDialog {
         setResizable(false);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
+
         jLabel1.setText("取得Plurk授權需要三個步驟:");
-        getContentPane().add(jLabel1);
+        jPanel2.add(jLabel1);
 
         jLabel2.setText("1. 登入Plurk(若已登入則可略過)");
-        getContentPane().add(jLabel2);
+        jPanel2.add(jLabel2);
 
         jButton1.setText("登入Plurk");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -68,10 +74,10 @@ public class OAuthDialog extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1);
+        jPanel2.add(jButton1);
 
         jLabel3.setText("2. 授權 \"衝噗浪\" 應用服務存取你的噗浪帳號");
-        getContentPane().add(jLabel3);
+        jPanel2.add(jLabel3);
 
         jButton2.setText("同意授權");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -79,10 +85,10 @@ public class OAuthDialog extends javax.swing.JDialog {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2);
+        jPanel2.add(jButton2);
 
         jLabel4.setText("3. 輸入認證碼");
-        getContentPane().add(jLabel4);
+        jPanel2.add(jLabel4);
 
         jTextField1.setPreferredSize(new java.awt.Dimension(100, 25));
         jPanel1.add(jTextField1);
@@ -95,7 +101,14 @@ public class OAuthDialog extends javax.swing.JDialog {
         });
         jPanel1.add(jButton3);
 
-        getContentPane().add(jPanel1);
+        jPanel2.add(jPanel1);
+
+        jTabbedPane1.addTab("授權", jPanel2);
+
+        jPanel3.setLayout(new java.awt.BorderLayout());
+        jTabbedPane1.addTab("tab2", jPanel3);
+
+        getContentPane().add(jTabbedPane1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -123,6 +136,7 @@ public class OAuthDialog extends javax.swing.JDialog {
             Desktop.getDesktop().browse(uri);
         } catch (IOException | URISyntaxException ex) {
             Logger.getLogger(OAuthDialog.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
     }//GEN-LAST:event_jButton2ActionPerformed
     
@@ -191,6 +205,9 @@ public class OAuthDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

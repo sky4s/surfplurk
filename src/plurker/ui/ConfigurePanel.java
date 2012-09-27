@@ -4,11 +4,21 @@
  */
 package plurker.ui;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author SkyforceShen
  */
 public class ConfigurePanel extends javax.swing.JPanel {
+
+    public static void main(String[] args) {
+        
+        JFrame frame = new JFrame();
+        frame.add(new ConfigurePanel());
+        frame.pack();
+        frame.setVisible(true);
+    }
 
     /**
      * Creates new form ConfigurePanel
@@ -25,20 +35,27 @@ public class ConfigurePanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton_NoProxy = new javax.swing.JRadioButton();
+        jRadioButton_SystemProxy = new javax.swing.JRadioButton();
+        jRadioButton_CustomProxy = new javax.swing.JRadioButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jCheckBox_ProxyWithAuth = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
 
@@ -57,63 +74,143 @@ public class ConfigurePanel extends javax.swing.JPanel {
         add(jPanel1);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("網路"));
-        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jRadioButton1.setText("沒用代理");
-        jPanel2.add(jRadioButton1);
+        buttonGroup1.add(jRadioButton_NoProxy);
+        jRadioButton_NoProxy.setText("沒用代理");
+        jPanel2.add(jRadioButton_NoProxy, new java.awt.GridBagConstraints());
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setSelected(true);
-        jRadioButton2.setText("IE代理");
-        jPanel2.add(jRadioButton2);
+        buttonGroup1.add(jRadioButton_SystemProxy);
+        jRadioButton_SystemProxy.setSelected(true);
+        jRadioButton_SystemProxy.setText("IE代理");
+        jPanel2.add(jRadioButton_SystemProxy, new java.awt.GridBagConstraints());
 
-        jRadioButton3.setText("使用下面設置的代理伺服器");
-        jPanel2.add(jRadioButton3);
+        buttonGroup1.add(jRadioButton_CustomProxy);
+        jRadioButton_CustomProxy.setText("使用下面設置的代理伺服器");
+        jPanel2.add(jRadioButton_CustomProxy, new java.awt.GridBagConstraints());
 
-        jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        java.awt.GridBagLayout jPanel4Layout = new java.awt.GridBagLayout();
+        jPanel4Layout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0};
+        jPanel4Layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0};
+        jPanel4.setLayout(jPanel4Layout);
 
         jLabel2.setText("IP 位址");
-        jPanel4.add(jLabel2);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        jPanel4.add(jLabel2, gridBagConstraints);
 
-        jTextField1.setEnabled(false);
         jTextField1.setPreferredSize(new java.awt.Dimension(250, 21));
-        jPanel4.add(jTextField1);
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jRadioButton_CustomProxy, org.jdesktop.beansbinding.ELProperty.create("${selected}"), jTextField1, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        jPanel4.add(jTextField1, gridBagConstraints);
 
         jLabel3.setText("通訊埠");
-        jPanel4.add(jLabel3);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        jPanel4.add(jLabel3, gridBagConstraints);
 
         jTextField2.setText("80");
-        jTextField2.setEnabled(false);
         jTextField2.setPreferredSize(new java.awt.Dimension(40, 21));
-        jPanel4.add(jTextField2);
 
-        jPanel2.add(jPanel4);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jRadioButton_CustomProxy, org.jdesktop.beansbinding.ELProperty.create("${selected}"), jTextField2, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        jPanel4.add(jTextField2, gridBagConstraints);
+
+        jLabel4.setText("帳號");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        jPanel4.add(jLabel4, gridBagConstraints);
+
+        jTextField3.setPreferredSize(new java.awt.Dimension(250, 21));
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jCheckBox_ProxyWithAuth, org.jdesktop.beansbinding.ELProperty.create("${selected}&&${enabled}"), jTextField3, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        jPanel4.add(jTextField3, gridBagConstraints);
+
+        jLabel5.setText("密碼");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        jPanel4.add(jLabel5, gridBagConstraints);
+
+        jTextField4.setPreferredSize(new java.awt.Dimension(250, 21));
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jCheckBox_ProxyWithAuth, org.jdesktop.beansbinding.ELProperty.create("${selected}&&${enabled}"), jTextField4, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        jPanel4.add(jTextField4, gridBagConstraints);
+
+        jCheckBox_ProxyWithAuth.setText("代理伺服器需要授權");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jRadioButton_CustomProxy, org.jdesktop.beansbinding.ELProperty.create("${selected}"), jCheckBox_ProxyWithAuth, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanel4.add(jCheckBox_ProxyWithAuth, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        jPanel2.add(jPanel4, gridBagConstraints);
 
         add(jPanel2);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("自動升級"));
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
+        jCheckBox1.setSelected(true);
         jCheckBox1.setText(" 啟用Surf Plurk的自動升級");
         jPanel3.add(jCheckBox1);
 
         add(jPanel3);
+
+        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox_ProxyWithAuth;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton_CustomProxy;
+    private javax.swing.JRadioButton jRadioButton_NoProxy;
+    private javax.swing.JRadioButton jRadioButton_SystemProxy;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
