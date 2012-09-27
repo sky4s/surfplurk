@@ -5,7 +5,6 @@
 package plurker.ui;
 
 import com.google.jplurk_oauth.data.*;
-import com.google.jplurk_oauth.module.Timeline;
 import com.google.jplurk_oauth.skeleton.RequestException;
 import java.awt.event.*;
 import java.io.*;
@@ -27,14 +26,9 @@ import org.sexydock.tabs.TabbedPane;
 import org.sexydock.tabs.event.ITabbedPaneListener;
 import org.sexydock.tabs.event.TabbedPaneEvent;
 import org.sexydock.tabs.jhrome.JhromeTabUI;
-import plurker.source.PlurkFormater;
 import plurker.ui.notify.NotificationManager;
 import plurker.ui.util.JTrayIcon;
-//import plurker.ui.util.SheetableJFrameHelper;
 import shu.util.Persistence;
-import com.panayotis.jupidator.UpdatedApplication;
-import com.panayotis.jupidator.Updater;
-import com.panayotis.jupidator.UpdaterException;
 
 /**
  * Plurker分為以下模組, 依照開發優先順序如下 訊息同步 聊天介面 易用介面 Content處理
@@ -83,21 +77,10 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             tabbedPane.setUseUniformWidth(false);
             tabbedPane.getNewTabButton().setVisible(false);
 
-
-//            currentPlurklTab = addToTabbedPane(Current, currentResponsePanel, false);
-
-//            DefaultTab secondTab = new DefaultTab(NewPlurk, jScrollPane_NewPlurk);
-//            secondTab.getCloseButton().setVisible(false);
-//            int tabCount = tabbedPane.getTabCount();
-//            tabbedPane.addTab(tabCount, secondTab, false);
-
-//            tabbedPane.setSelectedTab(currentPlurklTab);
-//            jPanel3.add(tabbedPane, java.awt.BorderLayout.CENTER);
         }
 
         if (usePlurksPanel) {
             plurksPanel = new TabbedPlurksPanel(plurkPool);
-//            plurksPanel = new PlurksPanel(plurkPool, Timeline.Filter.None, true);
             plurksPanel.setPlurker(this);
             jPanel1.add(plurksPanel, java.awt.BorderLayout.CENTER);
             jPanel1.updateUI();
@@ -139,9 +122,6 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         @Override
         public void stateChanged(ChangeEvent e) {
-//            PlurkPool pool = (PlurkPool) e.getSource();
-//            TreeSet<Plurk> newPlurkSet = plurkPool.getNewPlurkSet();
-//            TreeSet<Comment> newResponseSet = plurkPool.getNewResponseSet();
             TreeSet<Plurk> newPlurkSet = plurkPool.getStackPlurkSet();
             TreeSet<Comment> newResponseSet = plurkPool.getStackResponseSet();
 
@@ -476,8 +456,6 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             return;
         }
         if (usePlurksPanel) {
-//            plurksPanel.setPlurkPool(plurkPool);
-//            plurksPanel.updatePlurks();
             plurksPanel.updatePlurks(tabIndex);
             jPanel1.updateUI();
         }
@@ -578,11 +556,6 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             String tokenSecret = properties.getProperty(TOKEN_SECRET);
             if (null != tokenKey) {
                 try {
-//                    PlurkSourcer.setDoValidToken(!offlineMode);
-//                    plurkSourcer = new PlurkSourcer(PlurkSourcer.API_KEY, PlurkSourcer.APP_SECRET, tokenKey, tokenSecret);
-//                    plurkPool = new PlurkPool(plurkSourcer);
-//                    plurkPool.addCometChangeListener(new CometChangeListener());
-//                    plurkPool.startComet();
                     initPlurkSourcer(tokenKey, tokenSecret);
                 } catch (RequestException ex) {
                     Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
@@ -884,5 +857,4 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         }
     }
-
 }
