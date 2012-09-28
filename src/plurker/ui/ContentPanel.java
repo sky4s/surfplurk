@@ -37,6 +37,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 import javax.swing.text.html.ParagraphView;
@@ -136,6 +137,12 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     private void initEditorPane1(String content, int width) {
 //        jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
         jEditorPane1.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+//        Font font = UIManager.getFont("Label.font");
+//        String bodyRule = "body { font-family: " + font.getFamily() + "; "
+//                + "font-size: " + font.getSize() + "pt; }";
+//        ((HTMLDocument) jEditorPane1.getDocument()).getStyleSheet().addRule(bodyRule);
+
+
         if (this.notifyMode) {
             jEditorPane1.setFont(GUIUtil.smallfont);
         } else {
