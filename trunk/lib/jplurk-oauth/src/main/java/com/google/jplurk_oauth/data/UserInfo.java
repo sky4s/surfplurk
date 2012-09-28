@@ -81,10 +81,11 @@ public class UserInfo extends Data {
     public String getProfileImage(ImageSize size) throws JSONException {
         if (this.hasProfileImage()) {
             String avatar = getAvatar();
+            String extfilename = (ImageSize.Big == size) ? ".jpg" : ".gif";
             if ("null".equals(avatar)) {
-                return "http://avatars.plurk.com/" + id + "-" + size + ".gif";
+                return "http://avatars.plurk.com/" + id + "-" + size + extfilename;
             } else {
-                return "http://avatars.plurk.com/" + id + "-" + size + avatar + ".gif";
+                return "http://avatars.plurk.com/" + id + "-" + size + avatar + extfilename;
             }
         } else {
             return "http://www.plurk.com/static/default_" + size + ".gif";

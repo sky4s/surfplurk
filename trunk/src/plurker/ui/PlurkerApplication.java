@@ -18,6 +18,7 @@ import plurker.source.PlurkPool;
 import plurker.source.PlurkSourcer;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.sexydock.tabs.DefaultTab;
@@ -205,6 +206,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         jPanel4 = new javax.swing.JPanel();
         jLabel_Configure = new javax.swing.JLabel();
         jLabel_Avatar = new javax.swing.JLabel();
+        jLabel_Displayname = new javax.swing.JLabel();
 
         jPanel2.setLayout(new java.awt.BorderLayout());
         jPanel2.add(jEditorPane_NewPlurk, java.awt.BorderLayout.CENTER);
@@ -313,7 +315,6 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(bundle.getString("PlurkerApplication.title")); // NOI18N
         setMinimumSize(new java.awt.Dimension(900, 600));
-        setPreferredSize(new java.awt.Dimension(900, 600));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -413,6 +414,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
         jLabel_Configure.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/resource/tool_16.png"))); // NOI18N
         jLabel_Configure.setText(bundle.getString("PlurkerApplication.text")); // NOI18N
+        jLabel_Configure.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel_Configure.setName(""); // NOI18N
         jLabel_Configure.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -422,7 +424,11 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         jPanel4.add(jLabel_Configure, java.awt.BorderLayout.EAST);
 
         jLabel_Avatar.setText(bundle.getString("PlurkerApplication.jLabel_Avatar.text")); // NOI18N
-        jPanel4.add(jLabel_Avatar, java.awt.BorderLayout.CENTER);
+        jLabel_Avatar.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jPanel4.add(jLabel_Avatar, java.awt.BorderLayout.WEST);
+
+        jLabel_Displayname.setText(bundle.getString("PlurkerApplication.jLabel_Displayname.text")); // NOI18N
+        jPanel4.add(jLabel_Displayname, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
@@ -521,6 +527,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         return null;
     }
 
+    @SuppressWarnings("empty-statement")
     private void initPlurkSourcer(String tokenKey, String tokenSecret) throws RequestException {
         try {
             PlurkSourcer.setDoValidToken(!offlineMode);
@@ -528,8 +535,25 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             plurkPool = new PlurkPool(plurkSourcer);
             plurkPool.addCometChangeListener(cometChangeListener);
             plurkPool.startComet();
+            initUserInfomation();
             this.plurksPanel.setPlurkPool(plurkPool);
         } catch (JSONException ex) {
+            Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void initUserInfomation() {
+        try {
+            long userID = plurkSourcer.getUserID();
+            UserInfo userInfo = plurkPool.getUserInfo(userID);
+//            String displayName = userInfo.getDisplayName();
+            String fullName = userInfo.getFullName();
+            String profileImage = userInfo.getProfileImage(UserInfo.ImageSize.Medium);
+            BufferedImage image = plurkPool.getImage(new URL(profileImage));
+            this.jLabel_Avatar.setIcon(new ImageIcon(image));
+            this.jLabel_Avatar.setText(fullName);
+//            this.jLabel_Displayname
+        } catch (IOException | JSONException ex) {
             Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -757,6 +781,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel_Avatar;
     private javax.swing.JLabel jLabel_Configure;
+    private javax.swing.JLabel jLabel_Displayname;
     private javax.swing.JLabel jLabel_MarkAsRead;
     private javax.swing.JLabel jLabel_NewPlurk;
     private javax.swing.JLabel jLabel_NewPlurkNotify;
