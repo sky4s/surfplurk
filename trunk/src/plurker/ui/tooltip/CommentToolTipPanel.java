@@ -144,7 +144,7 @@ public class CommentToolTipPanel extends ToolTipPanel {
 
     private void jLabel_ReplyMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_ReplyMouseExited
         JLabel source = (JLabel) evt.getSource();
-        source.setFont(GUIUtil.font);
+//        source.setFont(GUIUtil.font);
     }//GEN-LAST:event_jLabel_ReplyMouseExited
 
     private void jLabel_DeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_DeleteMouseClicked
