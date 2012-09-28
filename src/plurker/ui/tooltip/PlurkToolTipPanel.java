@@ -133,7 +133,7 @@ public class PlurkToolTipPanel extends ToolTipPanel {
 
     private void jLabel_MuteMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_MuteMouseExited
         JLabel source = (JLabel) evt.getSource();
-        source.setFont(GUIUtil.font);
+//        source.setFont(GUIUtil.font);
     }//GEN-LAST:event_jLabel_MuteMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel_Delete;

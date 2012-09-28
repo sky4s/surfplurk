@@ -30,6 +30,8 @@ import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.TextUI;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
@@ -38,6 +40,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 import javax.swing.text.html.ParagraphView;
+import org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI;
 import org.json.JSONException;
 import plurker.source.PlurkChangeListener;
 import plurker.source.PlurkFormater;
@@ -88,6 +91,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     public static void main(String[] args) throws InterruptedException {
+        GUIUtil.initGUI();
         JFrame frame = new JFrame();
         String content = Utils.readContent(new File("b.html"));
         frame.setLayout(new java.awt.BorderLayout());
@@ -101,10 +105,12 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         frame.setVisible(true);
 
         contentPanel.setNofityLabelCount(8);
-        for (int x = 8; x < 20; x++) {
-            Thread.currentThread().sleep(500);
-            contentPanel.addNofityLabelCount();
-        }
+//        for (int x = 8; x < 20; x++) {
+//            Thread.currentThread().sleep(500);
+//            contentPanel.addNofityLabelCount();
+//        }
+//        System.out.println(contentPanel.jEditorPane1.getFont());
+//        contentPanel.jEditorPane1.setFont(GUIUtil.font);
     }
 
     public Plurk getPlurk() {
@@ -128,7 +134,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     private int prefferedWidth;
 
     private void initEditorPane1(String content, int width) {
-        jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
+//        jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
+        jEditorPane1.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         if (this.notifyMode) {
             jEditorPane1.setFont(GUIUtil.smallfont);
         } else {
@@ -310,6 +317,13 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.type = type;
         this.notifyMode = notifyMode;
         initContent(content);
+        //        ComponentUI createUI = BEEditorPaneUI.createUI(this.jEditorPane1);
+        //        createUI.installUI(this.jEditorPane1);
+        //        jEditorPane1.setcom
+        TextUI uI = jEditorPane1.getUI();
+//        org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI b = (org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI)ui;
+//        BEEditorPaneUI beui = (BEEditorPaneUI)ui;
+//        System.out.println(uI.getEditorKit(this.jEditorPane1).);
     }
     private boolean notifyMode = false;
 

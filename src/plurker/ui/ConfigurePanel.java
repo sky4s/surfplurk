@@ -59,6 +59,7 @@ public class ConfigurePanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("字型"));
