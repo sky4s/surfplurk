@@ -106,7 +106,7 @@ public class OAuthDialog extends javax.swing.JDialog {
         jTabbedPane1.addTab("授權", jPanel2);
 
         jPanel3.setLayout(new java.awt.BorderLayout());
-        jTabbedPane1.addTab("tab2", jPanel3);
+        jTabbedPane1.addTab("網路", jPanel3);
 
         getContentPane().add(jTabbedPane1);
 
