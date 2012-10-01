@@ -4,6 +4,7 @@
  */
 package plurker.ui;
 
+import plurker.ui.util.GUIUtil;
 import com.google.jplurk_oauth.data.*;
 import com.google.jplurk_oauth.skeleton.HttpRequestException;
 import java.awt.*;

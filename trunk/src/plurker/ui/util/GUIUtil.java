@@ -2,11 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package plurker.ui;
+package plurker.ui.util;
 
 import com.ctreber.aclib.image.ico.ICOFile;
-import com.jtattoo.plaf.AbstractLookAndFeel;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 import java.util.Dictionary;
@@ -16,11 +14,12 @@ import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.LookAndFeel;
 import javax.swing.ToolTipManager;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.FontUIResource;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
+//import plurker.ui.FixedHTMLEditorKit;
+import plurker.ui.PlurkerApplication;
 //import org.fit.cssbox.swingbox.BrowserPane;
 
 /**
@@ -113,7 +112,7 @@ public class GUIUtil {
     public static int getContentHeight(String content, int width, Dictionary imageCache) {
 //        if (null == dummyEditorPane) {
         JEditorPane dummyEditorPane = new JEditorPane();
-        dummyEditorPane.setEditorKit(FixedHTMLEditorKit.getInstance());
+//        dummyEditorPane.setEditorKit(FixedHTMLEditorKit.getInstance());
         dummyEditorPane.setContentType("text/html");
 //        dummyEditorPane.setFont(GUIUtil.font);
         dummyEditorPane.getDocument().putProperty("imageCache", imageCache);
