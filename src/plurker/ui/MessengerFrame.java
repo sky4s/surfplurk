@@ -4,6 +4,7 @@
  */
 package plurker.ui;
 
+import plurker.ui.util.GUIUtil;
 import java.awt.Window;
 import java.io.IOException;
 import java.util.List;

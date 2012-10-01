@@ -13,7 +13,7 @@ import org.json.JSONException;
 import plurker.source.PlurkPool;
 import plurker.source.PlurkSourcer;
 import plurker.ui.ContentPanel;
-import plurker.ui.GUIUtil;
+import plurker.ui.util.GUIUtil;
 
 /**
  *

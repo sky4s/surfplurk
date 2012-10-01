@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
 import javax.swing.Timer;
-import plurker.ui.GUIUtil;
+import plurker.ui.util.GUIUtil;
 
 /**
  *

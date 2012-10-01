@@ -4,6 +4,7 @@
  */
 package plurker.ui;
 
+import plurker.ui.util.GUIUtil;
 import com.google.jplurk_oauth.data.Comment;
 import com.google.jplurk_oauth.data.Data;
 import com.google.jplurk_oauth.data.Plurk;
