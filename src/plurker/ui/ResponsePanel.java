@@ -36,6 +36,7 @@ import plurker.ui.util.WaitLayerUI;
 //import shu.image.ImageUtils;
 import shu.util.Persistence;
 
+
 /**
  *
  * @author Egg Hsu
@@ -242,6 +243,10 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     private ContentPanel rootContentPanel;
     private ContentPanel firstPanel;
 
+    public ContentPanel getRootContentPanel() {
+        return rootContentPanel;
+    }
+
     public ResponsePanel(ContentPanel rootContentPanel) {
         try {
 //            ImageIO.read(new File("./image/595fd1c19cbfa3545c4268d1c2e4056b.png"))
@@ -326,6 +331,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel_Comments = new javax.swing.JPanel();
 
+        setPreferredSize(new java.awt.Dimension(400, 600));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -603,7 +609,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             try {
                 if (PlurkerApplication.offlineMode && new File("comments.obj").exists()) {
                     commentList = (java.util.List<Comment>) Persistence.readObjectAsXML("comments.obj");
-                } else {
+                } else if (null != plurkPool) {
                     commentList = plurkPool.getComments(plurk, 0, fetchFromPlurkSourcer);
                 }
             } catch (JSONException ex) {
@@ -791,7 +797,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
     }
 }
-
 class PlurkerDocumentListener implements DocumentListener {
 
     public final static int MaxInputCharCount = 140;

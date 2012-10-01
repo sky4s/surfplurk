@@ -5,7 +5,10 @@
 package plurker.ui.util;
 
 import com.ctreber.aclib.image.ico.ICOFile;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Window;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -145,4 +148,18 @@ public class GUIUtil {
         java.util.List list = ico.getImages();
         return list;
     }
+    
+//        public static  void centerWindow(Window client) {
+//        Dimension clientSize = client.getSize();
+//        Point centerLocation = getCenterLocation(clientSize);
+//        client.setLocation(centerLocation);
+//    }
+//
+//    public static  Point getCenterLocation(Dimension clientSize,Bounds bounds) {
+//        Dimension size = this.getSize();
+//        Point location = this.getLocation();
+//        int x = location.x + size.width / 2 - clientSize.width / 2;
+//        int y = location.y + size.height / 2 - clientSize.height / 2;
+//        return new Point(x, y);
+//    }
 }
