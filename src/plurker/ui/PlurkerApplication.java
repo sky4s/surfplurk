@@ -22,22 +22,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.sexydock.tabs.DefaultTab;
-import org.sexydock.tabs.ITab;
-import org.sexydock.tabs.TabbedPane;
-import org.sexydock.tabs.event.ITabbedPaneListener;
-import org.sexydock.tabs.event.TabbedPaneEvent;
-import org.sexydock.tabs.jhrome.JhromeTabUI;
 import plurker.ui.notify.NotificationManager;
 import plurker.ui.util.JTrayIcon;
-import shu.util.Persistence;
 
 /**
  * Plurker分為以下模組, 依照開發優先順序如下 訊息同步 聊天介面 易用介面 Content處理
  *
  * @author skyforce
  */
-public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPaneListener {
+public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedPaneListener*/ {
 
     public final static boolean debugMode = new File("debug.txt").exists();
     public final static boolean offlineMode = new File("offline.txt").exists();
@@ -98,6 +91,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             trayicon.setJPopupMenu(this.jPopupMenu_TrayIcon);
             trayicon.setToolTip("Surf Plurk");
             trayicon.addMouseListener(trayIconMouseListener);
+//            trayicon.addMouseMotionListener(trayIconMouseListener);
             try {
                 systemTray.add(trayicon);
             } catch (AWTException ex) {
@@ -105,15 +99,27 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
             }
         }
     }
-    private MouseListener trayIconMouseListener = new MouseAdapter() {
+    private MouseAdapter trayIconMouseListener = new MouseAdapter() {
         public void mouseClicked(MouseEvent e) {
             if (notifyManager.isShowing()) {
                 notifyManager.stopShowing();
             } else {
-                trayICONHandler.displayMessage = false;
-                trayICONHandler.stateChanged(null);
-                trayICONHandler.displayMessage = true;
+//                trayICONHandler.displayMessage = false;
+//                trayICONHandler.stateChanged(null);
+//                trayICONHandler.displayMessage = true;
+                trayICONHandler.showTinyWindow();
             }
+        }
+
+        public void mouseEntered(MouseEvent e) {
+            System.out.println("enter");
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void mouseExited(MouseEvent e) {
+            System.out.println("exit");
         }
     };
     private PlurkerApplication plurker = this;
@@ -121,9 +127,28 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
     private class TrayICONHandler implements ChangeListener {
 
+        void showTinyWindow() {
+            TreeSet<Plurk> newPlurkSet = plurkPool.getStackPlurkSet();
+            TreeSet<Comment> newResponseSet = plurkPool.getStackResponseSet();
+
+            for (Plurk plurk : newPlurkSet) {
+                NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
+                notify.updateWidth(NotificationManager.NotifyWidth);
+                notify.setPlurker(plurker);
+                notifyManager.addToTinyWindow(notify);
+//                notifyManager.addtToNotificationsWindow(notify);
+            }
+            for (Comment comment : newResponseSet) {
+                NotifyPanel notify = new NotifyPanel(comment, plurkPool);
+                notify.updateWidth(NotificationManager.NotifyWidth);
+                notify.setPlurker(plurker);
+                notifyManager.addToTinyWindow(notify);
+//                notifyManager.addtToNotificationsWindow(notify);
+            }
+        }
         boolean displayMessage = true;
-        boolean displayTinyWindow = true;
-        boolean displayNotifyFrame = true;
+//        boolean displayTinyWindow = true;
+//        boolean displayNotifyFrame = true;
 
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -139,23 +164,17 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 
             for (Plurk plurk : newPlurkSet) {
                 NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
-                notify.updateWidth(NotificationManager.NotifyWidth);
+//                notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
-                if (displayTinyWindow) {
-                    notifyManager.addToTinyWindow(notify);
-                }
-                if (displayNotifyFrame) {
-                }
+//                notifyManager.addToTinyWindow(notify);
+                notifyManager.addtToNotificationsWindow(notify);
             }
             for (Comment comment : newResponseSet) {
                 NotifyPanel notify = new NotifyPanel(comment, plurkPool);
-                notify.updateWidth(NotificationManager.NotifyWidth);
+//                notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
-                if (displayTinyWindow) {
-                    notifyManager.addToTinyWindow(notify);
-                }
-                if (displayNotifyFrame) {
-                }
+//                notifyManager.addToTinyWindow(notify);
+                notifyManager.addtToNotificationsWindow(notify);
             }
         }
     }
@@ -257,8 +276,8 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         });
         jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_DisplayMessage);
 
-        jCheckBoxMenuItem_DisplayTinyWindow.setSelected(true);
         jCheckBoxMenuItem_DisplayTinyWindow.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_DisplayTinyWindow.text")); // NOI18N
+        jCheckBoxMenuItem_DisplayTinyWindow.setEnabled(false);
         jCheckBoxMenuItem_DisplayTinyWindow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(evt);
@@ -604,6 +623,7 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
         int status = getHTTPStatus(message);
         switch (status) {
             case HttpURLConnection.HTTP_PROXY_AUTH:
+                //idel 4:30?
                 JOptionPane.showMessageDialog(this, "407 Error");
                 return;
             case HttpURLConnection.HTTP_BAD_REQUEST:
@@ -757,11 +777,11 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
     }//GEN-LAST:event_jCheckBoxMenuItem_DisplayMessageActionPerformed
 
     private void jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
-        trayICONHandler.displayTinyWindow = jCheckBoxMenuItem_DisplayTinyWindow.isSelected();
+        notifyManager.setDisplayTinyWindow(jCheckBoxMenuItem_DisplayTinyWindow.isSelected());
     }//GEN-LAST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
 
     private void jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed
-        trayICONHandler.displayNotifyFrame = jCheckBoxMenuItem_DisplayNotifyFrame.isSelected();
+        notifyManager.setDisplayNotifyWindow(jCheckBoxMenuItem_DisplayNotifyFrame.isSelected());
     }//GEN-LAST:event_jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed
 
     /**
@@ -920,19 +940,18 @@ public class PlurkerApplication extends javax.swing.JFrame implements ITabbedPan
 //        DefaultTab tab = addToTabbedPane(null, responsePanel, true);
 //        tabbedPane.setSelectedTab(tab);
     }
-
 //    void addFollowComment(NotifyPanel notifyPanel) {
 //    }
-    @Override
-    public void onEvent(TabbedPaneEvent event) {
-//        System.out.println(event);
-        TabbedPane tabbedPane1 = event.getTabbedPane();
-        ITab selectedTab = tabbedPane1.getSelectedTab();
-        if (selectedTab instanceof DefaultTab) {
-            DefaultTab defaultTab = (DefaultTab) selectedTab;
-            //做reset
-            defaultTab.setUI(new JhromeTabUI());
-
-        }
-    }
+//    @Override
+//    public void onEvent(TabbedPaneEvent event) {
+////        System.out.println(event);
+//        TabbedPane tabbedPane1 = event.getTabbedPane();
+//        ITab selectedTab = tabbedPane1.getSelectedTab();
+//        if (selectedTab instanceof DefaultTab) {
+//            DefaultTab defaultTab = (DefaultTab) selectedTab;
+//            //做reset
+//            defaultTab.setUI(new JhromeTabUI());
+//
+//        }
+//    }
 }

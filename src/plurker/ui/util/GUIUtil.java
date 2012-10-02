@@ -7,7 +7,10 @@ package plurker.ui.util;
 import com.ctreber.aclib.image.ico.ICOFile;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.PointerInfo;
+import java.awt.Rectangle;
 import java.awt.Window;
 import java.io.IOException;
 import java.util.Dictionary;
@@ -30,6 +33,14 @@ import plurker.ui.PlurkerApplication;
  * @author SkyforceShen
  */
 public class GUIUtil {
+
+    public static boolean isMouseInWindow(Rectangle bounds) {
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        Point location = pointerInfo.getLocation();
+//        Rectangle bounds = this.getBounds();
+        boolean mouseInWindow = bounds.contains(location);
+        return mouseInWindow;
+    }
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException {
 //        initGUI();
@@ -148,7 +159,6 @@ public class GUIUtil {
         java.util.List list = ico.getImages();
         return list;
     }
-    
 //        public static  void centerWindow(Window client) {
 //        Dimension clientSize = client.getSize();
 //        Point centerLocation = getCenterLocation(clientSize);

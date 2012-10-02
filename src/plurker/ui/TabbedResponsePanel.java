@@ -30,7 +30,7 @@ import shu.util.Persistence;
  *
  * @author SkyforceShen
  */
-public class TabbedResponsePanel extends javax.swing.JPanel {
+public class TabbedResponsePanel extends javax.swing.JPanel implements FollowerIF {
 
     public static void main(String[] args) {
         GUIUtil.initGUI();
@@ -84,7 +84,7 @@ public class TabbedResponsePanel extends javax.swing.JPanel {
     private DefaultTab currentPlurklTab;
     private ResponsePanel currentResponsePanel = new ResponsePanel();
 
-    boolean isInTab(Plurk plurk) {
+    public boolean isInFollow(long plurkID) {
         List<ITab> tabs = tabbedPane.getTabs();
         try {
             for (ITab tab : tabs) {
@@ -97,7 +97,7 @@ public class TabbedResponsePanel extends javax.swing.JPanel {
                 ResponsePanel responsePanel = (ResponsePanel) content;
                 ContentPanel rootContentPanel = responsePanel.getRootContentPanel();
                 Plurk plurk1 = rootContentPanel.getPlurk();
-                if (plurk1.getPlurkId() == plurk.getPlurkId()) {
+                if (plurk1.getPlurkId() == plurkID) {
                     return true;
                 }
             }
@@ -106,6 +106,16 @@ public class TabbedResponsePanel extends javax.swing.JPanel {
             Logger.getLogger(TabbedResponsePanel.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+    }
+
+    public boolean isInFollow(Plurk plurk) {
+        try {
+            return isInFollow(plurk.getPlurkId());
+        } catch (JSONException ex) {
+            Logger.getLogger(TabbedResponsePanel.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+
     }
 
     class TabbedPaneListener implements ITabbedPaneListener {
@@ -162,10 +172,10 @@ public class TabbedResponsePanel extends javax.swing.JPanel {
             jPanel1.add(tabbedPane, java.awt.BorderLayout.CENTER);
         }
 
-        if (isInTab(plurkPanel.getPlurk())) {
+        if (isInFollow(plurkPanel.getPlurk())) {
             return false;
         }
-//        isInTab()
+//        isInFollow()
 
         ResponsePanel responsePanel = new ResponsePanel();
         responsePanel.setRootContentPanel(plurkPanel);
