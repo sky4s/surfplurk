@@ -31,7 +31,6 @@ import plurker.ui.NotifyPanel;
 import plurker.ui.PlurkerApplication;
 import shu.util.Persistence;
 
-
 /**
  *
  * @author SkyforceShen
@@ -43,6 +42,7 @@ public class TinyNotificationPanel extends javax.swing.JPanel {
     public TinyNotificationWindow getWindow() {
         if (null == window) {
             window = new TinyNotificationWindow(this, false);
+            this.jButton_Close.addActionListener(window);
             window.setSize(this.getSize());
         }
         return window;
@@ -70,11 +70,11 @@ public class TinyNotificationPanel extends javax.swing.JPanel {
 
 
         window1.setVisible(true);
-        window1.addMouseMotionListener(new MouseMotionAdapter() {
-            public void mouseMoved(MouseEvent e) {
-                System.out.println(e);
-            }
-        });
+//        window1.addMouseMotionListener(new MouseMotionAdapter() {
+//            public void mouseMoved(MouseEvent e) {
+//                System.out.println(e);
+//            }
+//        });
     }
 
     /**
@@ -139,7 +139,13 @@ public class TinyNotificationPanel extends javax.swing.JPanel {
         return jButton_Close;
     }
 }
-class TinyNotificationWindow extends JWindow implements ActionListener, AWTEventListener {
+
+
+
+class TinyNotificationWindow extends StandardWindow /**
+ * JWindow implements ActionListener, AWTEventListener
+ */
+{
 
     private Timer dispearTimer;
     private TinyNotificationPanel notifyPanel;
@@ -148,29 +154,29 @@ class TinyNotificationWindow extends JWindow implements ActionListener, AWTEvent
 //            this(panel, false);
 //        }
     TinyNotificationWindow(TinyNotificationPanel panel, boolean dispear) {
+        super(panel, panel.getjPanel1());
         this.notifyPanel = panel;
-        getContentPane().add(panel);
+//        getContentPane().add(panel);
         if (dispear) {
             dispearTimer = new Timer(TinyNotificationPanel.DisappearWaitTime, this);
             dispearTimer.start();
         }
-        panel.getjButton_Close().addActionListener(this);
+//        panel.getjButton_Close().addActionListener(this);
 //            this.addMouseMotionListener(new NotifyMouseMotionListener());
 //            this.addMouseListener(new NotifyMouseListener(this));
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+//        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
-    public boolean isMouseInWindow() {
-        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-        Point location = pointerInfo.getLocation();
-//        SwingUtilities.convertPointFromScreen(location, this);
-//        Component component = this.getComponentAt(location);
-//        boolean mouseInWindow = (null != component) ? SwingUtilities.isDescendingFrom(component, this) : false;
-        Rectangle bounds = this.getBounds();
-        boolean mouseInWindow = bounds.contains(location);
-        return mouseInWindow;
-    }
-
+//    public boolean isMouseInWindow() {
+//        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+//        Point location = pointerInfo.getLocation();
+////        SwingUtilities.convertPointFromScreen(location, this);
+////        Component component = this.getComponentAt(location);
+////        boolean mouseInWindow = (null != component) ? SwingUtilities.isDescendingFrom(component, this) : false;
+//        Rectangle bounds = this.getBounds();
+//        boolean mouseInWindow = bounds.contains(location);
+//        return mouseInWindow;
+//    }
 //    public synchronized void addMouseMotionListener(MouseMotionListener l) {
 //    }
     @Override
@@ -178,42 +184,42 @@ class TinyNotificationWindow extends JWindow implements ActionListener, AWTEvent
         boolean fromCloseButton = null != e ? notifyPanel.getjButton_Close() == e.getSource() : false;
         //執行關閉的動作
         if (!isMouseInWindow() || fromCloseButton) {
-            removeAll();
-            setVisible(false);
-            dispose();
+//            removeAll();
+//            setVisible(false);
+//            dispose();
             if (null != dispearTimer) {
                 dispearTimer.stop();
                 dispearTimer = null;
             }
+            super.actionPerformed(e);
         } else {
             if (null != dispearTimer) {
                 dispearTimer.restart();
             }
         }
     }
-
-    @Override
-    public void eventDispatched(AWTEvent event) {
-        if (event instanceof MouseEvent) {
-            MouseEvent mouseevent = (MouseEvent) event;
-            if (mouseevent.getID() == MouseEvent.MOUSE_EXITED) {
-                if (!isMouseInWindow()) {
-                    //若離開了視窗
-                    notifyPanel.getjPanel1().setVisible(false);
-                }
-            } else if (mouseevent.getID() == MouseEvent.MOUSE_ENTERED) {
-                Component component = mouseevent.getComponent();
-                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
-                    notifyPanel.getjPanel1().setVisible(true);
-                }
-            } else if (mouseevent.getID() == MouseEvent.MOUSE_MOVED) {
-                Component component = mouseevent.getComponent();
-                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
+//    @Override
+//    public void eventDispatched(AWTEvent event) {
+//        if (event instanceof MouseEvent) {
+//            MouseEvent mouseevent = (MouseEvent) event;
+//            if (mouseevent.getID() == MouseEvent.MOUSE_EXITED) {
+//                if (!isMouseInWindow()) {
+//                    //若離開了視窗
+//                    notifyPanel.getjPanel1().setVisible(false);
+//                }
+//            } else if (mouseevent.getID() == MouseEvent.MOUSE_ENTERED) {
+//                Component component = mouseevent.getComponent();
+//                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
 //                    notifyPanel.getjPanel1().setVisible(true);
-//                    this.addMouseMotionListener(null);
-                }
-            }
-
-        }
-    }
+//                }
+//            } else if (mouseevent.getID() == MouseEvent.MOUSE_MOVED) {
+//                Component component = mouseevent.getComponent();
+//                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
+////                    notifyPanel.getjPanel1().setVisible(true);
+////                    this.addMouseMotionListener(null);
+//                }
+//            }
+//
+//        }
+//    }
 }

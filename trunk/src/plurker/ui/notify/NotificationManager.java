@@ -4,6 +4,8 @@
  */
 package plurker.ui.notify;
 
+import com.google.jplurk_oauth.data.Plurk;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -16,10 +18,17 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.Timer;
-import plurker.ui.PlurkerApplication;
+import org.json.JSONException;
+import plurker.ui.ContentPanel.Type;
+import plurker.ui.FollowerIF;
+import plurker.ui.NotifyPanel;
+import plurker.ui.TabbedResponsePanel;
+import plurker.ui.notify.NotificationsPanel.NotificationsWindow;
 
 /**
  *
@@ -40,15 +49,70 @@ public class NotificationManager {
     public final static int NotifyWidth = 300;
     public final static int NotifyXOffset = 20;
     public static int DisappearWaitTime = 10000;
+    private boolean displayTinyWindow = false;
+    private boolean displayNotifyWindow = true;
+//    private NotificationsFrame notificationsFrame;
+    private FollowerIF followerIF;
+
+    public void setDisplayTinyWindow(boolean displayTinyWindow) {
+        this.displayTinyWindow = displayTinyWindow;
+    }
+
+    public void setDisplayNotifyWindow(boolean displayNotifyFrame) {
+        this.displayNotifyWindow = displayNotifyFrame;
+        if (null != notificationsWindow) {
+            notificationsWindow.setVisible(false);
+        }
+    }
 
     public boolean isShowing() {
         return nowShowingList.size() != 0;
     }
+    private NotificationsPanel notificationsPanel;
+    private NotificationsWindow notificationsWindow;
 
-    public void addtToNotificationsFrame(JComponent content) {
+    private void initNotificationsWindow() {
+        if (null == notificationsPanel) {
+            notificationsPanel = new NotificationsPanel();
+            notificationsWindow = notificationsPanel.getWindow();
+            Dimension size = notificationsWindow.getSize();
+            int y = desktopBounds.y + desktopBounds.height - size.height;
+            int x = desktopBounds.width - size.width - NotifyXOffset;
+            notificationsWindow.setLocation(x, y);
+            notificationsWindow.setVisible(true);
+        }
+    }
+
+    public void addtToNotificationsWindow(NotifyPanel notify) {
+        if (!displayNotifyWindow) {
+            return;
+        }
+        initNotificationsWindow();
+        notificationsPanel.addToAll(notify);
+        Type type = notify.getType();
+        long plurkId = -1;
+        try {
+            if (Type.Comment == type) {
+                plurkId = notify.getComment().getPlurkId();
+            } else if (type.Plurk == type) {
+                plurkId = notify.getPlurk().getPlurkId();
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //        notify.getComment()
+        //        notificationsFrame.addToAll(notify);
+        //        Plurk plurk = notify.getPlurk();
+        if (null != followerIF && followerIF.isInFollow(plurkId)) {
+            NotifyPanel clone = (NotifyPanel) notify.clone();
+            notificationsPanel.addToFollow(clone);
+        }
     }
 
     public void addToTinyWindow(JComponent content) {
+        if (!displayTinyWindow) {
+            return;
+        }
         if (null == closeTimer) {
             closeTimer = new Timer(DisappearWaitTime, closeActionListener);
             closeTimer.start();
@@ -130,6 +194,7 @@ public class NotificationManager {
         NotificationManager instance = NotificationManager.getInstance();
         for (int x = 0; x < 15; x++) {
             instance.addToTinyWindow(new JLabel(Integer.toString(x + 1)));
+
         }
 //        Thread.currentThread().sleep(5000);
 //        for (int x = 15; x < 25; x++) {

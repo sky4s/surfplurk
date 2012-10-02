@@ -19,9 +19,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -333,7 +335,12 @@ public class PlurkFormater {
         //僅處理 gif
         if (-1 != src.indexOf(".gif") || -1 != src.indexOf(".GIF")) {
             try {
-                InputStream inputStream = url.openConnection().getInputStream();
+//                URLConnection openConnection = url.openConnection();
+                HttpURLConnection openConnection = (HttpURLConnection) url.openConnection();
+                openConnection.setFollowRedirects(true);
+                openConnection.setInstanceFollowRedirects(false);
+                openConnection.connect();
+                InputStream inputStream = openConnection.getInputStream();
                 gifFrame = GIFFrame.getGIFFrame(inputStream);
 //                gifFrame = GIFFrame.getGIFFrame(url.openStream());
             } catch (IOException ex) {

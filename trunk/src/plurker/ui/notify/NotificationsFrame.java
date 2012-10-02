@@ -4,6 +4,8 @@
  */
 package plurker.ui.notify;
 
+import javax.swing.JComponent;
+import plurker.ui.NotifyPanel;
 import plurker.ui.util.GUIUtil;
 
 /**
@@ -18,6 +20,14 @@ public class NotificationsFrame extends javax.swing.JFrame {
     public NotificationsFrame() {
         initComponents();
     }
+//    private PlurkPool plurkPool;
+//
+//    public void setPlurkPool(PlurkPool plurkPool) {
+//        if (null == plurkPool) {
+//            this.plurkPool = plurkPool;
+//            plurkPool.addCometChangeListener(new NewChangeListener());
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -47,6 +57,8 @@ public class NotificationsFrame extends javax.swing.JFrame {
         jTabbedPane1.addTab("所有更新", jScrollPane1);
 
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
         jScrollPane2.setViewportView(jPanel2);
 
         jTabbedPane1.addTab("追蹤中", jScrollPane2);
@@ -98,4 +110,59 @@ public class NotificationsFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
+
+    public void addToAll(NotifyPanel notify) {
+        int width = jPanel1.getWidth();
+        int contentHeight = getContentHeight(notify, width);
+        notify.setSize(width, contentHeight);
+        jPanel1.add(notify);
+    }
+    
+    private static int getContentHeight(NotifyPanel notify, int width) {
+//        TinyNotificationPanel tmppanel = new TinyNotificationPanel(component);
+//        tmppanel.setSize(width, Short.MAX_VALUE);
+//        return tmppanel.getPreferredSize().height;
+        notify.setSize(width, Short.MAX_VALUE);
+        return notify.getPreferredSize().height;
+    }
+    
+    public void addToFollow(NotifyPanel notify) {
+        jPanel2.add(notify);
+    }
+//    private class NewChangeListener implements ChangeListener {
+//
+//        @Override
+//        public void stateChanged(ChangeEvent e) {
+//            TreeSet<Plurk> newPlurkSet = plurkPool.getStackPlurkSet();
+//            TreeSet<Comment> newResponseSet = plurkPool.getStackResponseSet();
+//
+////            if (displayMessage) {
+////                int plurksize = newPlurkSet.size();
+////                int responsesize = newResponseSet.size();
+////                String message = "有" + ((plurksize != 0) ? plurksize + "則新噗" : "") + " " + ((responsesize != 0) ? responsesize + "則回應" : "");
+////                trayicon.displayMessage(null, message, TrayIcon.MessageType.INFO);
+////            }
+//
+//            for (Plurk plurk : newPlurkSet) {
+//                NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
+//                notify.updateWidth(NotificationManager.NotifyWidth);
+////                notify.setPlurker(plurker);
+////                if (displayTinyWindow) {
+////                    notifyManager.addToTinyWindow(notify);
+////                }
+////                if (displayNotifyFrame) {
+////                }
+//            }
+//            for (Comment comment : newResponseSet) {
+//                NotifyPanel notify = new NotifyPanel(comment, plurkPool);
+//                notify.updateWidth(NotificationManager.NotifyWidth);
+////                notify.setPlurker(plurker);
+////                if (displayTinyWindow) {
+////                    notifyManager.addToTinyWindow(notify);
+////                }
+////                if (displayNotifyFrame) {
+////                }
+//            }
+//        }
+//    }
 }

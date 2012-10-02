@@ -30,6 +30,20 @@ import shu.util.Persistence;
 public class NotifyPanel extends ContentPanel {
 
     @Override
+    public Object clone() {
+        switch (type) {
+            case Plurk:
+                return new NotifyPanel(this.plurk, this.plurkPool);
+            case Comment:
+                return new NotifyPanel(this.comment, this.plurkPool);
+            case Unknow:
+                return new NotifyPanel(this.content, this.prefferedWidth);
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    @Override
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseevent = (MouseEvent) event;
@@ -62,7 +76,9 @@ public class NotifyPanel extends ContentPanel {
 
     public NotifyPanel(String content, int width) {
         super(null, null, null, width, content, Type.Unknow, true);
+        this.content = content;
     }
+    private String content;
 
     @Override
     public boolean equals(Object obj) {

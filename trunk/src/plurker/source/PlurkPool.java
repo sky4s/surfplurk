@@ -66,18 +66,14 @@ public class PlurkPool implements ChangeListener {
     public synchronized void addCometChangeListener(ChangeListener listener) {
         cometListener.addChangeListener(listener);
     }
-//    private Map<Long, List<PlurkChangeListener>> plurkChangeListenerMap = new HashMap<>();
     private Map<Long, EventListenerList> plurkChangeListenerMap = new HashMap<>();
 
     public synchronized void addPlurkChangeListener(long plurkID, PlurkChangeListener listener) {
-//        List<PlurkChangeListener> list = plurkChangeListenerMap.get(plurkID);
         EventListenerList list = plurkChangeListenerMap.get(plurkID);
         if (null == list) {
-//            list = new LinkedList<>();
             list = new EventListenerList();
             plurkChangeListenerMap.put(plurkID, list);
         }
-//        list.add(listener);
         list.add(PlurkChangeListener.class, listener);
     }
 

@@ -44,6 +44,7 @@ import javax.swing.text.html.InlineView;
 import javax.swing.text.html.ParagraphView;
 import org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI;
 import org.json.JSONException;
+import plurker.image.ImageUtils;
 import plurker.source.PlurkChangeListener;
 import plurker.source.PlurkFormater;
 import plurker.source.PlurkPool;
@@ -92,12 +93,15 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.newBie = newBie;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         GUIUtil.initGUI();
         JFrame frame = new JFrame();
         String content = Utils.readContent(new File("b.html"));
         frame.setLayout(new java.awt.BorderLayout());
-        ContentPanel contentPanel = new ContentPanel(content);
+
+        BufferedImage refreshImage = ImageUtils.loadImageFromURL(ContentPanel.class.getResource("/plurker/ui/resource/1349158187_refresh.png"));
+        ContentPanel contentPanel = new ContentPanel(refreshImage);
+//        ContentPanel contentPanel = new ContentPanel(content);
         contentPanel.setNewBie(true);
         contentPanel.getTimeLabel().setText("今天");
         contentPanel.getAvatarLabel().setText("1234");
@@ -133,7 +137,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     protected Plurk plurk;
     protected Comment comment;
     PlurkPool plurkPool;
-    private int prefferedWidth;
+    protected int prefferedWidth;
 
     private void initEditorPane1(String content, int width) {
 //        jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
@@ -177,9 +181,13 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     public static enum Type {
 
-        Plurk, FirstOfResponse, Comment, Unknow
+        Plurk, FirstOfResponse, Comment, Image, Unknow
     }
-    private Type type;
+    protected Type type;
+
+    public Type getType() {
+        return type;
+    }
 
     //plurk panel, 屬於first panel擁有
     //first panel, 屬於comment panel擁有
@@ -192,6 +200,23 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     public ContentPanel(String content) {
         this(null, null, null, -1, content, Type.Unknow);
+    }
+    private BufferedImage image;
+
+    public JLabel getjLabel_Image() {
+        return jLabel_Image;
+    }
+
+    public ContentPanel(BufferedImage image) {
+        this(null, null, null, -1, "", Type.Image);
+        this.image = image;
+        this.jLabel_Image.setVisible(true);
+        this.jEditorPane1.setVisible(false);
+        this.jPanel_Info.setVisible(false);
+        this.jLabel_Avatar.setVisible(false);
+        this.jLabel_Notify.setVisible(false);
+        jLabel_Image.setIcon(new ImageIcon(image));
+        jLabel_Image.setSize(jLabel_Image.getPreferredSize());
     }
 
     public ContentPanel(String content, int width) {
@@ -325,10 +350,11 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.type = type;
         this.notifyMode = notifyMode;
         initContent(content);
+        this.jLabel_Image.setVisible(false);
         //        ComponentUI createUI = BEEditorPaneUI.createUI(this.jEditorPane1);
         //        createUI.installUI(this.jEditorPane1);
         //        jEditorPane1.setcom
-        TextUI uI = jEditorPane1.getUI();
+//        TextUI uI = jEditorPane1.getUI();
 //        org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI b = (org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI)ui;
 //        BEEditorPaneUI beui = (BEEditorPaneUI)ui;
 //        System.out.println(uI.getEditorKit(this.jEditorPane1).);
@@ -406,6 +432,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         jLabel_Notify = new javax.swing.JLabel();
         jEditorPane1 = new javax.swing.JEditorPane();
         //        jEditorPane1 = new BrowserPane();
+        jLabel_Image = new javax.swing.JLabel();
         jPanel_Info = new javax.swing.JPanel();
         jPanel_Button = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -445,6 +472,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         jEditorPane1.setPreferredSize(new java.awt.Dimension(400, 300));
         jEditorPane1.setBounds(0, 0, 390, 280);
         jLayeredPane1.add(jEditorPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLabel_Image.setBounds(0, 0, 0, 0);
+        jLayeredPane1.add(jLabel_Image, javax.swing.JLayeredPane.PALETTE_LAYER);
 
         jPanel1.add(jLayeredPane1);
 
@@ -481,9 +510,21 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 //    private Border lineBorder = javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0));
     private void jLayeredPane1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jLayeredPane1ComponentResized
         Dimension size = this.jLayeredPane1.getSize();
+
         jEditorPane1.setSize(size);
-        Dimension labelPreferredSize = this.jLabel_Notify.getPreferredSize();
-        jLabel_Notify.setBounds(size.width - labelPreferredSize.width, 0, labelPreferredSize.width, labelPreferredSize.height);
+        Dimension notifyPreferredSize = this.jLabel_Notify.getPreferredSize();
+        jLabel_Notify.setBounds(size.width - notifyPreferredSize.width, 0, notifyPreferredSize.width, notifyPreferredSize.height);
+        if (jLabel_Image.isVisible()) {
+//            Rectangle bounds = jLayeredPane1.getBounds();
+//            Dimension size1 = this.getSize();
+//            this.getRootPane().getContentPane()
+
+            Dimension imagePreferredSize = jLabel_Image.getPreferredSize();
+            int x = size.width / 2 - imagePreferredSize.width / 2;
+            int y = size.height / 2 - imagePreferredSize.height / 2;
+            jLabel_Image.setLocation(x, y);
+//            System.out.println(x + " " + y);
+        }
     }//GEN-LAST:event_jLayeredPane1ComponentResized
 
     Rectangle getViewportViewRect() {
@@ -543,6 +584,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel_Avatar;
     private javax.swing.JLabel jLabel_Floor;
+    private javax.swing.JLabel jLabel_Image;
     private javax.swing.JLabel jLabel_Notify;
     private javax.swing.JLabel jLabel_Time;
     private javax.swing.JLayeredPane jLayeredPane1;
@@ -721,7 +763,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                     }
                 } else {
                     //如果不是在這個component內就把notify打開
-                    this.jLabel_Notify.setVisible(true);
+                    if (type == Type.Plurk || type == Type.FirstOfResponse) {
+                        this.jLabel_Notify.setVisible(true);
+                    }
                     //離開了component..就要開始計時把PlurkerToolTip關掉
                     //但是還要確保不是跑到別的component去
                 }
