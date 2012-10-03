@@ -183,12 +183,12 @@ public class NotificationManager {
 
     public boolean isNotifyWindowVisible() {
         //T F F T
-        System.out.println(notificationsWindow.isVisible());
-        System.out.println(notificationsWindow.isActive()); //F
-        System.out.println(notificationsWindow.isFocused()); //F //T
-        System.out.println(notificationsWindow.isShowing());
-        System.out.println(notificationsWindow.isFocusable());
-        System.out.println(notificationsWindow.isFocusableWindow());
+//        System.out.println(notificationsWindow.isVisible());
+//        System.out.println(notificationsWindow.isActive()); //F
+//        System.out.println(notificationsWindow.isFocused()); //F //T
+//        System.out.println(notificationsWindow.isShowing());
+//        System.out.println(notificationsWindow.isFocusable());
+//        System.out.println(notificationsWindow.isFocusableWindow());
         return notificationsWindow.isVisible();
 //        System.out.println(notificationsWindow.getFocusOwner());
 //        return false;

@@ -125,16 +125,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItem_DisplayMessageActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItem_DisplayTinyWindow">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="plurker/ui/Bundle.properties" key="PlurkerApplication.jCheckBoxMenuItem_DisplayTinyWindow.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItem_DisplayTinyWindowActionPerformed"/>
-          </Events>
-        </MenuItem>
         <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItem_DisplayNotifyFrame">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
@@ -283,6 +273,16 @@
         </MenuItem>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItem_DisplayTinyWindow">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="plurker/ui/Bundle.properties" key="PlurkerApplication.jCheckBoxMenuItem_DisplayTinyWindow.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItem_DisplayTinyWindowActionPerformed"/>
+      </Events>
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
