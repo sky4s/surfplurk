@@ -1,0 +1,34 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>E:\workspace\surfplurk\dist\surfplurk.jar</jar>
+  <outfile>E:\workspace\surfplurk\dist\surfplurk.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>E:\workspace\surfplurk\workdir\image\plurk tray.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.7.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+    <fileVersion>0.4.0.0</fileVersion>
+    <txtFileVersion>0.4.20121003</txtFileVersion>
+    <fileDescription>Desktop Client for Plurk</fileDescription>
+    <copyright>skyforce Shen</copyright>
+    <productVersion>0.4.0.0</productVersion>
+    <txtProductVersion>0.4.20121003</txtProductVersion>
+    <productName>Surf Plurk</productName>
+    <companyName>skyforce.com</companyName>
+    <internalName>Plurker</internalName>
+    <originalFilename>surfplurk.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

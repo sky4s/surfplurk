@@ -67,7 +67,7 @@ public class GUIUtil {
     }
 
     public final static void initGUI() {
-        boolean useJtattoo = true;
+        boolean useJtattoo = false;
         if (useJtattoo) {
             try {
                 // select Look and Feel
@@ -101,7 +101,7 @@ public class GUIUtil {
                 java.util.logging.Logger.getLogger(PlurkerApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
         }
-        boolean useBeautyEye = false;
+        boolean useBeautyEye = true;
         if (useBeautyEye) {
             UIManager.put("RootPane.setupButtonVisible", false);
             try {
