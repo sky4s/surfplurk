@@ -12,15 +12,12 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.json.JSONException;
 import plurker.source.PlurkFormater;
 import plurker.source.PlurkPool;
 import plurker.source.PlurkSourcer;
-import plurker.ui.tooltip.CommentToolTipPanel;
-import plurker.ui.tooltip.PlurkerToolTip;
 import shu.util.Persistence;
 
 /**

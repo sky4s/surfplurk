@@ -26,6 +26,14 @@ public class ScrollBarAdjustmentListener implements AdjustmentListener, CallBack
     private boolean newerProcess = true;
     private TriggerInterface triggerInterface;
 
+    public void stopListen() {
+        doListen = false;
+    }
+
+    public void startListen() {
+        doListen = true;
+    }
+
     public ScrollBarAdjustmentListener(JPanel targetPanel, boolean newerProcess, TriggerInterface triggerInterface) {
         this.panel = targetPanel;
         this.newerProcess = newerProcess;
@@ -34,7 +42,7 @@ public class ScrollBarAdjustmentListener implements AdjustmentListener, CallBack
 
     @Override
     public void callback() {
-        doListen = true;
+        startListen();
     }
 
     @Override
@@ -46,6 +54,8 @@ public class ScrollBarAdjustmentListener implements AdjustmentListener, CallBack
         doListen = false;
         JScrollBar verticalScrollBar = (JScrollBar) e.getSource();
         int value = e.getValue();
+//        boolean isdrag = e.getValueIsAdjusting();
+//        System.out.println(prevalue + " " + value);
         if (value == 0) {
             //頂端
             if (value == prevalue || -1 == prevalue) {
@@ -54,6 +64,7 @@ public class ScrollBarAdjustmentListener implements AdjustmentListener, CallBack
                 doListen = true;
                 return;
             }
+            prevalue = value;
             //擋住不要再監聽新的
             triggerInterface.trigger(true, panel, this);
         } else if (value == (verticalScrollBar.getMaximum() - verticalScrollBar.getVisibleAmount())) {
@@ -63,6 +74,7 @@ public class ScrollBarAdjustmentListener implements AdjustmentListener, CallBack
                 doListen = true;
                 return;
             }
+            prevalue = value;
             triggerInterface.trigger(false, panel, this);
         } else {
             prevalue = value;

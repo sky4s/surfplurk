@@ -6,6 +6,7 @@ package plurker.ui.notify;
 
 import com.google.jplurk_oauth.data.Plurk;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -36,17 +37,30 @@ import plurker.ui.notify.NotificationsPanel.NotificationsWindow;
  */
 public class NotificationManager {
 
+    private Frame owner;
+
+    private NotificationManager(Frame owner) {
+        this.owner = owner;
+    }
     private static NotificationManager notificationManager;
 
     public final static NotificationManager getInstance() {
+        return getInstance(null);
+//        if (null == notificationManager) {
+//            notificationManager = new NotificationManager();
+//        }
+//        return notificationManager;
+    }
+
+    public final static NotificationManager getInstance(Frame owner) {
         if (null == notificationManager) {
-            notificationManager = new NotificationManager();
+            notificationManager = new NotificationManager(owner);
         }
         return notificationManager;
     }
-    private LinkedList<TinyNotificationWindow> linkedList = new LinkedList<>();
-    private ArrayList<JComponent> nowShowingList = new ArrayList<>();
-    public final static int NotifyWidth = 300;
+    private LinkedList<TinyNotificationWindow> tinyList = new LinkedList<>();
+    private ArrayList<JComponent> nowTinyList = new ArrayList<>();
+    public final static int NotifyWidth = 263;
     public final static int NotifyXOffset = 20;
     public static int DisappearWaitTime = 10000;
     private boolean displayTinyWindow = false;
@@ -58,6 +72,14 @@ public class NotificationManager {
         this.displayTinyWindow = displayTinyWindow;
     }
 
+    public boolean isDisplayTinyWindow() {
+        return displayTinyWindow;
+    }
+
+    public boolean isDisplayNotifyWindow() {
+        return displayNotifyWindow;
+    }
+
     public void setDisplayNotifyWindow(boolean displayNotifyFrame) {
         this.displayNotifyWindow = displayNotifyFrame;
         if (null != notificationsWindow) {
@@ -65,8 +87,8 @@ public class NotificationManager {
         }
     }
 
-    public boolean isShowing() {
-        return nowShowingList.size() != 0;
+    public boolean isTinyWindowVisible() {
+        return nowTinyList.size() != 0;
     }
     private NotificationsPanel notificationsPanel;
     private NotificationsWindow notificationsWindow;
@@ -74,7 +96,7 @@ public class NotificationManager {
     private void initNotificationsWindow() {
         if (null == notificationsPanel) {
             notificationsPanel = new NotificationsPanel();
-            notificationsWindow = notificationsPanel.getWindow();
+            notificationsWindow = notificationsPanel.getWindow(owner);
             Dimension size = notificationsWindow.getSize();
             int y = desktopBounds.y + desktopBounds.height - size.height;
             int x = desktopBounds.width - size.width - NotifyXOffset;
@@ -83,9 +105,9 @@ public class NotificationManager {
         }
     }
 
-    public void addtToNotificationsWindow(NotifyPanel notify) {
+    public boolean addtToNotificationsWindow(NotifyPanel notify) {
         if (!displayNotifyWindow) {
-            return;
+            return false;
         }
         initNotificationsWindow();
         notificationsPanel.addToAll(notify);
@@ -107,11 +129,12 @@ public class NotificationManager {
             NotifyPanel clone = (NotifyPanel) notify.clone();
             notificationsPanel.addToFollow(clone);
         }
+        return true;
     }
 
-    public void addToTinyWindow(JComponent content) {
+    public boolean addToTinyWindow(JComponent content) {
         if (!displayTinyWindow) {
-            return;
+            return false;
         }
         if (null == closeTimer) {
             closeTimer = new Timer(DisappearWaitTime, closeActionListener);
@@ -119,22 +142,23 @@ public class NotificationManager {
         } else {
             closeTimer.restart();
         }
-        if (nowShowingList.contains(content)) {
-            return;
+        if (nowTinyList.contains(content)) {
+            return false;
         }
-        nowShowingList.add(content);
+        nowTinyList.add(content);
 
         TinyNotificationPanel notity = new TinyNotificationPanel(content, NotifyWidth);
         TinyNotificationWindow window = notity.getWindow();
         window.addWindowListener(closeWindowListener);
 
-        TinyNotificationWindow last = (linkedList.size() != 0) ? linkedList.getLast() : null;
-        linkedList.add(window);
+        TinyNotificationWindow last = (tinyList.size() != 0) ? tinyList.getLast() : null;
+        tinyList.add(window);
         int y = (null != last) ? last.getLocation().y - window.getHeight()/*- last.getHeight()*/ : desktopBounds.y + desktopBounds.height - window.getHeight();
         int x = desktopBounds.width - NotifyWidth - NotifyXOffset;
         window.setLocation(x, y);
         window.setAlwaysOnTop(true);
         window.setVisible(true);
+        return true;
     }
     WindowListener closeWindowListener = new WindowAdapter() {
         private boolean listen = true;
@@ -144,20 +168,43 @@ public class NotificationManager {
                 return;
             }
             listen = false;
-            for (TinyNotificationWindow window : linkedList) {
+            for (TinyNotificationWindow window : tinyList) {
                 if (window.isVisible()) {
                     Object source = e.getSource();
                     ActionEvent ae = new ActionEvent(source, e.getID(), null);
                     window.actionPerformed(ae);
                 }
             }
-            linkedList.clear();
-            nowShowingList.clear();
+            tinyList.clear();
+            nowTinyList.clear();
             listen = true;
         }
     };
 
-    public void stopShowing() {
+    public boolean isNotifyWindowVisible() {
+        //T F F T
+        System.out.println(notificationsWindow.isVisible());
+        System.out.println(notificationsWindow.isActive()); //F
+        System.out.println(notificationsWindow.isFocused()); //F //T
+        System.out.println(notificationsWindow.isShowing());
+        System.out.println(notificationsWindow.isFocusable());
+        System.out.println(notificationsWindow.isFocusableWindow());
+        return notificationsWindow.isVisible();
+//        System.out.println(notificationsWindow.getFocusOwner());
+//        return false;
+    }
+
+    public void setNotifyWindowVisible(boolean visible) {
+        if (visible) {
+            notificationsWindow.setVisible(visible);
+            notificationsWindow.setAlwaysOnTop(true);
+            notificationsWindow.setAlwaysOnTop(false);
+        } else {
+            notificationsWindow.setVisible(visible);
+        }
+    }
+
+    public void setTinyWindowInvisible() {
         closeActionListener.actionPerformed(null);
     }
     private Timer closeTimer;
@@ -165,11 +212,11 @@ public class NotificationManager {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            if (linkedList.size() == 0) {
+            if (tinyList.size() == 0) {
                 closeTimer.stop();
             } else if (!isMouseInWindow()) {
                 //滑鼠不在視窗裡 就進行關閉
-                linkedList.getFirst().actionPerformed(e);
+                tinyList.getFirst().actionPerformed(e);
             }
 
 
@@ -179,7 +226,7 @@ public class NotificationManager {
     public boolean isMouseInWindow() {
         PointerInfo pointerInfo = MouseInfo.getPointerInfo();
         Point location = pointerInfo.getLocation();
-        for (TinyNotificationWindow window : linkedList) {
+        for (TinyNotificationWindow window : tinyList) {
             Rectangle bounds = window.getBounds();
             boolean contains = bounds.contains(location);
             if (contains) {
