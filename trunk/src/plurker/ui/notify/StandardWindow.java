@@ -58,13 +58,13 @@ class StandardDialog extends JDialog implements ActionListener, AWTEventListener
                 if (!isMouseInWindow()) {
                     //若離開了視窗
                     closePanel.setVisible(false);
-                    this.setAlwaysOnTop(false);
+//                    this.setAlwaysOnTop(false);
                 }
             } else if (MouseEvent.MOUSE_ENTERED == id) {
                 Component component = mouseevent.getComponent();
                 if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
                     closePanel.setVisible(true);
-                    this.setAlwaysOnTop(true);
+//                    this.setAlwaysOnTop(true);
 
                 }
             } else if (MouseEvent.MOUSE_MOVED == id) {
@@ -124,13 +124,13 @@ class StandardWindow extends JWindow implements ActionListener, AWTEventListener
                 if (!isMouseInWindow()) {
                     //若離開了視窗
                     closePanel.setVisible(false);
-                    this.setAlwaysOnTop(false);
+//                    this.setAlwaysOnTop(false);
                 }
             } else if (MouseEvent.MOUSE_ENTERED == id) {
                 Component component = mouseevent.getComponent();
                 if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
                     closePanel.setVisible(true);
-                    this.setAlwaysOnTop(true);
+//                    this.setAlwaysOnTop(true);
 
                 }
             } else if (MouseEvent.MOUSE_MOVED == id) {
@@ -139,9 +139,9 @@ class StandardWindow extends JWindow implements ActionListener, AWTEventListener
                 }
             }
 
-            if (MouseEvent.MOUSE_WHEEL == id) {
-                System.out.println(mouseevent);
-            }
+//            if (MouseEvent.MOUSE_WHEEL == id) {
+//                System.out.println(mouseevent);
+//            }
 
         }
     }

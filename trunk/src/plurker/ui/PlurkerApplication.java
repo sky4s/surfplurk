@@ -61,6 +61,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
 
         this.editMenu.setVisible(false);
         this.viewMenu.setVisible(false);
+        this.jCheckBoxMenuItem_DisplayTinyWindow.setVisible(false);
 
         boolean useTabbedPane = true;
         if (useTabbedPane) {
@@ -135,8 +136,8 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
                 showTinyWindow();
             }
 //            System.out.println(notifyManager.isNotifyWindowVisible());
-            if (notifyManager.isNotifyWindowVisible()) {
-            }
+//            if (notifyManager.isNotifyWindowVisible()) {
+//            }
         }
 
         void showTinyWindow() {
@@ -223,7 +224,6 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         jLabel_NewPlurkNotify = new javax.swing.JLabel();
         jPopupMenu_TrayIcon = new javax.swing.JPopupMenu();
         jCheckBoxMenuItem_DisplayMessage = new javax.swing.JCheckBoxMenuItem();
-        jCheckBoxMenuItem_DisplayTinyWindow = new javax.swing.JCheckBoxMenuItem();
         jCheckBoxMenuItem_DisplayNotifyFrame = new javax.swing.JCheckBoxMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_Exit = new javax.swing.JMenuItem();
@@ -241,6 +241,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         statusBarMenuItem = new javax.swing.JCheckBoxMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
+        jCheckBoxMenuItem_DisplayTinyWindow = new javax.swing.JCheckBoxMenuItem();
         statusBarLabel = new javax.swing.JLabel();
         statusBarLabel.setVisible(false);
         jPanel8 = new javax.swing.JPanel();
@@ -292,14 +293,6 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             }
         });
         jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_DisplayMessage);
-
-        jCheckBoxMenuItem_DisplayTinyWindow.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_DisplayTinyWindow.text")); // NOI18N
-        jCheckBoxMenuItem_DisplayTinyWindow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(evt);
-            }
-        });
-        jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_DisplayTinyWindow);
 
         jCheckBoxMenuItem_DisplayNotifyFrame.setSelected(true);
         jCheckBoxMenuItem_DisplayNotifyFrame.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_DisplayNotifyFrame.text")); // NOI18N
@@ -384,6 +377,13 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             }
         });
         jPopupMenu_Configure.add(exitMenuItem);
+
+        jCheckBoxMenuItem_DisplayTinyWindow.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_DisplayTinyWindow.text")); // NOI18N
+        jCheckBoxMenuItem_DisplayTinyWindow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(bundle.getString("PlurkerApplication.title")); // NOI18N
@@ -792,13 +792,13 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         trayICONHandler.displayMessage = jCheckBoxMenuItem_DisplayMessage.isSelected();
     }//GEN-LAST:event_jCheckBoxMenuItem_DisplayMessageActionPerformed
 
-    private void jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
-        notifyManager.setDisplayTinyWindow(jCheckBoxMenuItem_DisplayTinyWindow.isSelected());
-    }//GEN-LAST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
-
     private void jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed
         notifyManager.setDisplayNotifyWindow(jCheckBoxMenuItem_DisplayNotifyFrame.isSelected());
     }//GEN-LAST:event_jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed
+
+    private void jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
+        notifyManager.setDisplayTinyWindow(jCheckBoxMenuItem_DisplayTinyWindow.isSelected());
+    }//GEN-LAST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
 
     /**
      * @param args the command line arguments

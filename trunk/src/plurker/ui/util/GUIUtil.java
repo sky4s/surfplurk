@@ -5,13 +5,11 @@
 package plurker.ui.util;
 
 import com.ctreber.aclib.image.ico.ICOFile;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -69,7 +67,7 @@ public class GUIUtil {
     }
 
     public final static void initGUI() {
-        boolean useJtattoo = false;
+        boolean useJtattoo = true;
         if (useJtattoo) {
             try {
                 // select Look and Feel
@@ -103,7 +101,7 @@ public class GUIUtil {
                 java.util.logging.Logger.getLogger(PlurkerApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
         }
-        boolean useBeautyEye = true;
+        boolean useBeautyEye = false;
         if (useBeautyEye) {
             UIManager.put("RootPane.setupButtonVisible", false);
             try {
