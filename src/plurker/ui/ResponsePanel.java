@@ -12,12 +12,10 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -240,7 +238,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         return rootContentPanel;
     }
 
-    public ResponsePanel(ContentPanel rootContentPanel) {
+    private static void initImage() {
         try {
             if (null == plurkImage) {
                 plurkImage = ImageUtils.loadImage("./image/595fd1c19cbfa3545c4268d1c2e4056b.png");
@@ -249,19 +247,38 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 emoticon_mini_off = ImageUtils.loadImage("./image/emoticon_mini_off.png");
             }
             if (null == refreshImage) {
-                refreshImage = ImageUtils.loadImageFromURL(getClass().getResource("/plurker/ui/resource/1349158187_refresh.png"));
+                refreshImage = ImageUtils.loadImageFromURL(ResponsePanel.class.getResource("/plurker/ui/resource/1349158187_refresh.png"));
             }
         } catch (IOException ex) {
             Logger.getLogger(ResponsePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    private ScrollBarAdjustmentListener commentsAdjustmentListener;
+
+    public ResponsePanel(ContentPanel rootContentPanel) {
+        this(rootContentPanel, false);
+
+    }
+
+    public ResponsePanel(boolean notifyMode) {
+        this(null, notifyMode);
+    }
+    private boolean notifyMode;
+
+    public ResponsePanel(ContentPanel rootContentPanel, boolean notifyMode) {
+        initImage();
         initComponents();
+        this.notifyMode = notifyMode;
 
-        if (true) {
-            JScrollBar verticalScrollBar = jScrollPane2.getVerticalScrollBar();
-            verticalScrollBar.setUnitIncrement(GUIUtil.DefaultUnitIncrement);
-
-            ScrollBarAdjustmentListener adjustmentListener = new ScrollBarAdjustmentListener(jPanel_Comments, true, this);
-            verticalScrollBar.addAdjustmentListener(adjustmentListener);
+        JScrollBar verticalScrollBar = jScrollPane2.getVerticalScrollBar();
+        verticalScrollBar.setUnitIncrement(GUIUtil.DefaultUnitIncrement);
+        if (notifyMode) {
+            this.jPanel_Plurk.setVisible(false);
+            this.jPanel_ResponseInput.setVisible(false);
+        } else {
+            updateMouseListener = new UpdateMouseListener();
+            commentsAdjustmentListener = new ScrollBarAdjustmentListener(jPanel_Comments, true, this);
+            verticalScrollBar.addAdjustmentListener(commentsAdjustmentListener);
 
             alterEnterKeyMap(jEditorPane_ResponseInput);
             plurkerDocumentListener = new PlurkerDocumentListener(jLabel_InputNotify);
@@ -273,7 +290,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         }
 
     }
-    private UpdateMouseListener updateMouseListener = new UpdateMouseListener();
+    private UpdateMouseListener updateMouseListener;// = new UpdateMouseListener();
 
     class UpdateMouseListener extends MouseAdapter {
 
@@ -300,7 +317,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
      * Creates new form ResponsePanel
      */
     public ResponsePanel() {
-        this(null);
+        this(null, false);
     }
 
     /**
@@ -314,7 +331,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
         jPanel_Plurk = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel_ResponseInput1 = new javax.swing.JPanel();
+        jPanel_ResponseInput = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jLabel_DisplayName = new javax.swing.JLabel();
         jComboBox_Qualifier1 = new javax.swing.JComboBox();
@@ -347,8 +364,8 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
         add(jPanel_Plurk, java.awt.BorderLayout.NORTH);
 
-        jPanel_ResponseInput1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel_ResponseInput1.setLayout(new java.awt.BorderLayout());
+        jPanel_ResponseInput.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel_ResponseInput.setLayout(new java.awt.BorderLayout());
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
         jPanel9.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
@@ -360,7 +377,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         jComboBox_Qualifier1.setSelectedIndex(17);
         jPanel9.add(jComboBox_Qualifier1);
 
-        jPanel_ResponseInput1.add(jPanel9, java.awt.BorderLayout.WEST);
+        jPanel_ResponseInput.add(jPanel9, java.awt.BorderLayout.WEST);
 
         jPanel8.setLayout(new java.awt.BorderLayout());
 
@@ -406,12 +423,12 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
         jPanel8.add(jPanel1, java.awt.BorderLayout.SOUTH);
 
-        jPanel_ResponseInput1.add(jPanel8, java.awt.BorderLayout.CENTER);
+        jPanel_ResponseInput.add(jPanel8, java.awt.BorderLayout.CENTER);
 
         jLabel3.setText("您的回應：");
-        jPanel_ResponseInput1.add(jLabel3, java.awt.BorderLayout.PAGE_START);
+        jPanel_ResponseInput.add(jLabel3, java.awt.BorderLayout.PAGE_START);
 
-        add(jPanel_ResponseInput1, java.awt.BorderLayout.SOUTH);
+        add(jPanel_ResponseInput, java.awt.BorderLayout.SOUTH);
 
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -448,6 +465,8 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         int width = this.getWidth();
         updateWidth(width);
+//        updateWhiteUI();
+//        System.out.println(evt);
 
     }//GEN-LAST:event_formComponentResized
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -465,7 +484,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanel_Comments;
     private javax.swing.JPanel jPanel_Plurk;
-    private javax.swing.JPanel jPanel_ResponseInput1;
+    private javax.swing.JPanel jPanel_ResponseInput;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
@@ -500,6 +519,17 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         }
     }
 
+    public void addContentPanel(ContentPanel contentPanel) {
+//              ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
+        Dimension size = jPanel_Comments.getSize();
+        contentPanel.updateWidth(size.width);
+        if (null != whitePanel && SwingUtilities.isDescendingFrom(whitePanel, jPanel_Comments)) {
+            jPanel_Comments.remove(whitePanel);
+        }
+        jPanel_Comments.add(contentPanel);
+        updateWhiteUI();
+    }
+
     private void addCommentToUI(Comment comment) {
 
         if (jPanel_Comments.getComponentCount() == 1 && jPanel_Comments.getComponent(0) == noResponsePanel) {
@@ -508,47 +538,19 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
         firstPanel.addNofityLabelCount();
         ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
-        Dimension size = jPanel_Comments.getSize();
-        contentPanel.updateWidth(size.width);
-        jPanel_Comments.add(contentPanel);
-
-        updateWhiteUI();
-
-//        Dimension size = jScrollPane2.getViewport().getSize();
+        addContentPanel(contentPanel);
+//        Dimension size = jPanel_Comments.getSize();
 //        contentPanel.updateWidth(size.width);
-//        int contentHeight = contentPanel.getHeight();
-//        int deltaHeight = size.height - contentHeight;
-//
-//        if (jPanel_Comments.getComponentCount() == 1) {
-//            if (jPanel_Comments.getComponent(0) == noResponsePanel) {
-//                jPanel_Comments.remove(noResponsePanel);
-//            }
-//            jPanel_Comments.add(contentPanel);
-//            jPanel_Comments.add(getWhiteContentPanel(size.width, deltaHeight));
-//        } else {
-//            if (null == whitePanel) {
-//                //沒有白就不用特別處理了
-//                jPanel_Comments.add(contentPanel);
-//            } else {
-//                int whiteHeight = whitePanel.getHeight();
-//                if (contentHeight > whiteHeight) {
-//                    //不用白了
-//                    jPanel_Comments.remove(whitePanel);
-//                    whitePanel = null;
-//                    jPanel_Comments.add(contentPanel);
-//                } else {
-//                    //要新的白
-//                    jPanel_Comments.remove(whitePanel);
-//                    jPanel_Comments.add(contentPanel);
-//                    int newWhiteHeight = whitePanel.getHeight() - contentHeight;
-//                    jPanel_Comments.add(getWhiteContentPanel(size.width, newWhiteHeight));
-//                }
-//            }
+//        if (null != whitePanel && SwingUtilities.isDescendingFrom(whitePanel, jPanel_Comments)) {
+//            jPanel_Comments.remove(whitePanel);
 //        }
+//        jPanel_Comments.add(contentPanel);
+//        updateWhiteUI();
+
     }
 
     private void updateWhiteUI() {
-        if (0 == jPanel_Comments.getComponentCount()) {
+        if (!notifyMode && 0 == jPanel_Comments.getComponentCount()) {
             if (null == noResponsePanel) {
                 noResponsePanel = new ContentPanel("還沒有人回應哦，趕快來搶頭香囉！:)");
                 noResponsePanel.addMouseListener(updateMouseListener);
@@ -558,32 +560,41 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
             Dimension size = jPanel_Comments.getSize();
             Dimension preferredSize = jPanel_Comments.getPreferredSize();
-
             int deltaHeight = size.height - preferredSize.height;
+//            
             if (deltaHeight > 0) {
-                whitePanel = new ContentPanel(refreshImage);
+                if (null == whitePanel) {
+
+                    if (notifyMode) {
+                        whitePanel = new ContentPanel("");
+                    } else {
+                        whitePanel = new ContentPanel(refreshImage);
+                        whitePanel.addMouseListener(updateMouseListener);
+                        whitePanel.getjLabel_Image().addMouseListener(updateMouseListener);
+                    }
+                }
+
                 Dimension whitesize = new Dimension(size.width, deltaHeight);
                 whitePanel.setSize(whitesize);
                 whitePanel.setPreferredSize(whitesize);
-                whitePanel.addMouseListener(updateMouseListener);
-                whitePanel.getjLabel_Image().addMouseListener(updateMouseListener);
-                jPanel_Comments.add(whitePanel);
+                if (!SwingUtilities.isDescendingFrom(whitePanel, jPanel_Comments)) {
+                    jPanel_Comments.add(whitePanel);
+                }
+
             } else {
-                whitePanel = null;
+//                whitePanel = null;
                 JViewport viewport = jScrollPane2.getViewport();
+                if (null != commentsAdjustmentListener) {
+                    commentsAdjustmentListener.stopListen();
+                }
                 viewport.setViewPosition(new Point(0, jPanel_Comments.getPreferredSize().height));
+                if (null != commentsAdjustmentListener) {
+                    commentsAdjustmentListener.startListen();
+                }
             }
 
         }
-//        System.out.println(jPanel_Comments.getSize().height);
-//        System.out.println(jPanel_Comments.getPreferredSize().height);
-//        JViewport viewport = jScrollPane2.getViewport();
-//        viewport.setViewPosition(new Point(0, jPanel_Comments.getPreferredSize().height));
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                updateUI();
-//            }
-//        });
+
     }
 
     private void setCommentToUI(final java.util.List<Comment> commentList) {
@@ -604,11 +615,15 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 panelList.add(panel);
                 totalHeight += panel.getHeight();
             }
-
+//            System.out.println("totalHeight1: " + totalHeight);
             for (ContentPanel panel : panelList) {
                 jPanel_Comments.add(panel);
             }
-
+//            totalHeight = 0;
+//            for (ContentPanel panel : panelList) {
+//                totalHeight += panel.getHeight();
+//            }
+//            System.out.println("totalHeight2: " + totalHeight);
         }
 
         updateWhiteUI();

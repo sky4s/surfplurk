@@ -134,10 +134,12 @@ public class PlurkFormater {
 //            Comment comment = (context instanceof Comment) ? (Comment) context : null;
             if (context instanceof Comment) {
                 Comment comment = (Comment) context;
-                JSONObject parent = comment.getParent();
-                Plurk plurk = new Plurk(parent.getJSONObject("plurk"));
-                String displayName = getDisplayName(plurkPool.getUserInfo(plurk.getUserId()));
-                middle = " 回應 " + displayName + " 的噗";
+                Plurk plurk = comment.getParentPlurk();
+                long plurkOwnerId = plurk.getOwnerId();
+                long commentOwnerId = comment.getOwnerId();
+                String displayName = (plurkOwnerId == commentOwnerId) ? "自己"
+                        : " " + getDisplayName(plurkPool.getUserInfo(plurkOwnerId)) + " ";
+                middle = " 回應" + displayName + "的噗";
             }
         }
 
@@ -153,7 +155,7 @@ public class PlurkFormater {
             }
         }
 
-        return pretext;
+        return pretext + (isNotify ? "<br>" : "");
     }
 
     public String getPreText(UserInfo userInfo, Plurk plurk) throws JSONException {

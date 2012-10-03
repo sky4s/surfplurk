@@ -30,6 +30,20 @@ public class Comment extends Data implements ContextIF {
         return parent;
     }
 
+    public Plurk getParentPlurk() {
+        if (null != parent) {
+            //                JSONObject parent = comment.getParent();
+            JSONObject jsonObject = parent.optJSONObject("plurk");
+            if (null == jsonObject) {
+                return null;
+            }
+            Plurk plurk = new Plurk(jsonObject);
+            return plurk;
+        } else {
+            return null;
+        }
+    }
+
     public Comment(JSONObject json, JSONObject parent) {
         super(json);
         this.parent = parent;

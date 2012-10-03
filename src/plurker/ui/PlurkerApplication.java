@@ -85,12 +85,13 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         boolean useSystemTray = true;
         if (useSystemTray && SystemTray.isSupported()) {
             SystemTray systemTray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit()
-                    .getImage("image/plurk tray.png");
-            trayicon = new JTrayIcon(image);
+
+//            Image image = Toolkit.getDefaultToolkit()
+//                    .getImage(PlurkerApplication.class.getResource("/plurker/ui/resource/plurk tray.png"));
+            trayicon = new JTrayIcon(plurkIcon);
             trayicon.setJPopupMenu(this.jPopupMenu_TrayIcon);
             trayicon.setToolTip("Surf Plurk");
-            trayicon.addMouseListener(trayIconMouseListener);
+            trayicon.addMouseListener(trayICONHandler);
 //            trayicon.addMouseMotionListener(trayIconMouseListener);
             try {
                 systemTray.add(trayicon);
@@ -98,36 +99,48 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
                 Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        this.setIconImage(plurkIcon);
     }
-    private MouseAdapter trayIconMouseListener = new MouseAdapter() {
-        public void mouseClicked(MouseEvent e) {
-            if (notifyManager.isShowing()) {
-                notifyManager.stopShowing();
-            } else {
-//                trayICONHandler.displayMessage = false;
-//                trayICONHandler.stateChanged(null);
-//                trayICONHandler.displayMessage = true;
-                trayICONHandler.showTinyWindow();
-            }
-        }
-
-        public void mouseEntered(MouseEvent e) {
-            System.out.println("enter");
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void mouseExited(MouseEvent e) {
-            System.out.println("exit");
-        }
-    };
+    static Image plurkIcon = Toolkit.getDefaultToolkit()
+            .getImage(PlurkerApplication.class.getResource("/plurker/ui/resource/plurk tray.png"));
+//    private MouseAdapter trayIconMouseListener = new MouseAdapter() {
+//        public void mouseClicked(MouseEvent e) {
+//            if (notifyManager.isTinyShowing()) {
+//                notifyManager.stopTinyShowing();
+//            } else {
+//                trayICONHandler.showTinyWindow();
+//            }
+//        }
+//
+//        public void mouseEntered(MouseEvent e) {
+//            System.out.println("enter");
+//        }
+//
+//        /**
+//         * {@inheritDoc}
+//         */
+//        public void mouseExited(MouseEvent e) {
+//            System.out.println("exit");
+//        }
+//    };
     private PlurkerApplication plurker = this;
     private TrayICONHandler trayICONHandler = new TrayICONHandler();
 
-    private class TrayICONHandler implements ChangeListener {
+    private class TrayICONHandler extends MouseAdapter implements ChangeListener {
+
+        public void mouseClicked(MouseEvent e) {
+            if (notifyManager.isTinyWindowVisible()) {
+                notifyManager.setTinyWindowInvisible();
+            } else {
+                showTinyWindow();
+            }
+//            System.out.println(notifyManager.isNotifyWindowVisible());
+            if (notifyManager.isNotifyWindowVisible()) {
+            }
+        }
 
         void showTinyWindow() {
+
             TreeSet<Plurk> newPlurkSet = plurkPool.getStackPlurkSet();
             TreeSet<Comment> newResponseSet = plurkPool.getStackResponseSet();
 
@@ -166,19 +179,23 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
                 NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
 //                notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
-//                notifyManager.addToTinyWindow(notify);
+                if (notifyManager.addToTinyWindow(notify)) {
+                    notify = (NotifyPanel) notify.clone();
+                }
                 notifyManager.addtToNotificationsWindow(notify);
             }
             for (Comment comment : newResponseSet) {
                 NotifyPanel notify = new NotifyPanel(comment, plurkPool);
 //                notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
-//                notifyManager.addToTinyWindow(notify);
+                if (notifyManager.addToTinyWindow(notify)) {
+                    notify = (NotifyPanel) notify.clone();
+                }
                 notifyManager.addtToNotificationsWindow(notify);
             }
         }
     }
-    private NotificationManager notifyManager = NotificationManager.getInstance();
+    private NotificationManager notifyManager = NotificationManager.getInstance(this);
     private JTrayIcon trayicon;
 //    public final static String Current = "目前";
 //    public final static String NewPlurk = "發噗";
@@ -277,7 +294,6 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_DisplayMessage);
 
         jCheckBoxMenuItem_DisplayTinyWindow.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_DisplayTinyWindow.text")); // NOI18N
-        jCheckBoxMenuItem_DisplayTinyWindow.setEnabled(false);
         jCheckBoxMenuItem_DisplayTinyWindow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(evt);

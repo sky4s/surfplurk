@@ -48,10 +48,13 @@ public class PlurkOAuth implements Serializable {
 
         service.signRequest(token, request);
         Response response = request.send();
-        if (response.getCode() != 200) {
-//            System.err.println(url + " " + args + " " + method);
-//            throw new RequestException(String.format("http status %d, body: %s", response.getCode(), response.getBody()));
-            throw new HttpRequestException(String.format("http status %d, body: %s", response.getCode(), response.getBody()), response);
+        int code = response.getCode();
+        if (code != 200) {
+            //            System.err.println(url + " " + args + " " + method);
+            //            throw new RequestException(String.format("http status %d, body: %s", response.getCode(), response.getBody()));
+            String body = response.getBody();
+            body = (null == body) ? "N/A" : body;
+            throw new HttpRequestException(String.format("http status %d, body: %s", code, body), response);
         }
         return response.getBody();
     }
