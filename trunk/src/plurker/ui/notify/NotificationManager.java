@@ -96,7 +96,7 @@ public class NotificationManager {
     private void initNotificationsWindow() {
         if (null == notificationsPanel) {
             notificationsPanel = new NotificationsPanel();
-            notificationsWindow = notificationsPanel.getWindow(owner);
+            notificationsWindow = notificationsPanel.getWindow(null);
             Dimension size = notificationsWindow.getSize();
             int y = desktopBounds.y + desktopBounds.height - size.height;
             int x = desktopBounds.width - size.width - NotifyXOffset;

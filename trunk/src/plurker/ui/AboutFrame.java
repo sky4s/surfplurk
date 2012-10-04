@@ -35,20 +35,22 @@ public class AboutFrame extends javax.swing.JFrame {
     public AboutFrame() {
         initComponents();
         this.jEditorPane1.setText(
-                "<html>SurfPlurk (2012) Version: " + Version + "\n"
-                + "<a href=\"http://code.google.com/p/surfplurk/\">http://code.google.com/p/surfplurk/</a>"
+                "<html>SurfPlurk (2012) Version: " + Version + "<br>"
+                + "<a href=\"http://code.google.com/p/surfplurk/\">" + "官方網站" + " http://code.google.com/p/surfplurk/</a><br>"
+                + "<a href=\"http://www.plurk.com/goplurker/\">" + "噗浪" + " http://www.plurk.com/goplurker/</a><br>"
                 + "</html>");
         this.jEditorPane1.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent e) {
-
-                try {
-                    URI uri = e.getURL().toURI();
-                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        Desktop.getDesktop().browse(uri);
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                            URI uri = e.getURL().toURI();
+                            Desktop.getDesktop().browse(uri);
+                        }
+                    } catch (URISyntaxException | IOException ex) {
+                        Logger.getLogger(AboutFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (URISyntaxException | IOException ex) {
-                    Logger.getLogger(AboutFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
 
