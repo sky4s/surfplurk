@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 import plurker.source.PlurkPool;
 import plurker.ui.ContentPanel;
 import plurker.ui.NotifyPanel;
+import plurker.ui.PlurkerApplication;
 import plurker.ui.ResponsePanel;
 import plurker.ui.util.GUIUtil;
 import shu.util.Persistence;
@@ -29,7 +30,7 @@ import shu.util.Persistence;
  * @author SkyforceShen
  */
 public class NotificationsPanel extends javax.swing.JPanel implements AWTEventListener {
-
+    
     private ResponsePanel allPanel;
     private ResponsePanel followPanel;
 
@@ -44,13 +45,13 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
 //        followPanel.setToNotifyMode();
         jTabbedPane2.addTab("所有更新", allPanel);
         jTabbedPane2.addTab("追蹤中", followPanel);
-
+        
         this.setSize(this.getPreferredSize());
         this.jPanel3.setVisible(false);
 //        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_WHEEL_EVENT_MASK);
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
     }
-
+    
     @Override
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
@@ -59,7 +60,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
                 if (GUIUtil.isMouseInWindow(this.getBounds())) {
                 }
             }
-
+            
         }
     }
 
@@ -136,7 +137,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         notify.setSize(width, contentHeight);
         notify.setPreferredSize(size);
     }
-
+    
     public void addToAll(NotifyPanel notify) {
         alterToFitsize(notify);
         this.allPanel.addContentPanel(notify);
@@ -176,14 +177,14 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         notify.setSize(width, Short.MAX_VALUE);
         return notify.getPreferredSize().height;
     }
-
+    
     public void addToFollow(NotifyPanel notify) {
         jPanel2.add(notify);
     }
-
+    
     public static void main(String[] args) {
-
-
+        
+        
         PlurkPool plurkpool = null;// new PlurkPool(plurkSourcerInstance);
 //        PlurkPool plurkpool = new PlurkPool(plurkSourcerInstance);
         Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
@@ -210,7 +211,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
 
 //        panel.addToFollow(notifyPanel2);
     }
-
+    
     public NotificationsWindow getWindow(Frame owener) {
         if (null == window) {
             window = new NotificationsWindow(this, owener);
@@ -221,34 +222,35 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         return window;
     }
     private NotificationsWindow window;
-
-    class NotificationsWindow extends StandardWindow {
-
+    
+    class NotificationsWindow extends StandardDialog {
+        
         private NotificationsPanel notificationsPanel;
-
+        
         NotificationsWindow(NotificationsPanel notificationsPanel, Frame owener) {
             super(notificationsPanel, jPanel3, owener);
+            this.setIconImage(PlurkerApplication.PlurkIcon);
             this.notificationsPanel = notificationsPanel;
             getContentPane().add(notificationsPanel);
 //            notificationsPanel.jButton_Close.addActionListener(this);
             //            this.addMouseMotionListener(null);
-            NotifyMouseAdapter notifyMouseAdapter = new NotifyMouseAdapter();
-            this.addMouseListener(notifyMouseAdapter);
-            this.addMouseMotionListener(notifyMouseAdapter);
+//            NotifyMouseAdapter notifyMouseAdapter = new NotifyMouseAdapter();
+//            this.addMouseListener(notifyMouseAdapter);
+//            this.addMouseMotionListener(notifyMouseAdapter);
         }
         private boolean dragable = false;
-
+        
         public void setDragable(boolean dragable) {
             this.dragable = dragable;
         }
-
+        
         class NotifyMouseAdapter extends MouseAdapter {
-
+            
             public void mousePressed(MouseEvent e) {
                 dragStartpoint = e.getPoint();
             }
             private Point dragStartpoint;
-
+            
             public void mouseDragged(MouseEvent e) {
                 if (null != dragStartpoint) {
                     Point locationOnScreen = e.getLocationOnScreen();
@@ -258,7 +260,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
                 }
             }
         }
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == jButton_Close) {

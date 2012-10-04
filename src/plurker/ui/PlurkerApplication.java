@@ -89,7 +89,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
 
 //            Image image = Toolkit.getDefaultToolkit()
 //                    .getImage(PlurkerApplication.class.getResource("/plurker/ui/resource/plurk tray.png"));
-            trayicon = new JTrayIcon(plurkIcon);
+            trayicon = new JTrayIcon(PlurkIcon);
             trayicon.setJPopupMenu(this.jPopupMenu_TrayIcon);
             trayicon.setToolTip("Surf Plurk");
             trayicon.addMouseListener(trayICONHandler);
@@ -100,9 +100,9 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
                 Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        this.setIconImage(plurkIcon);
+        this.setIconImage(PlurkIcon);
     }
-    static Image plurkIcon = Toolkit.getDefaultToolkit()
+    public static Image PlurkIcon = Toolkit.getDefaultToolkit()
             .getImage(PlurkerApplication.class.getResource("/plurker/ui/resource/plurk tray.png"));
 //    private MouseAdapter trayIconMouseListener = new MouseAdapter() {
 //        public void mouseClicked(MouseEvent e) {
@@ -761,10 +761,11 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         jLabel_ShowAll.setVisible(false);
         jLabel_NewResponse.setVisible(true);
     }//GEN-LAST:event_jLabel_ShowAllMouseClicked
-    private AboutFrame about;
+//    private AboutFrame about;
+    private AboutDialog about;
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         if (null == about) {
-            about = new AboutFrame();
+            about = new AboutDialog(this, true);
         }
         if (!about.isVisible()) {
             centerWindow(about);

@@ -31,11 +31,11 @@ class StandardDialog extends JDialog implements ActionListener, AWTEventListener
 
     StandardDialog(JPanel contentPanel, JPanel closePanel, Frame owener) {
         super(owener);
-//        this.setType(Type.UTILITY);
         this.contentPanel = contentPanel;
         this.closePanel = closePanel;
+        this.setAlwaysOnTop(false);
         getContentPane().add(contentPanel);
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
+//        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
     }
     protected JPanel contentPanel;
     private JPanel closePanel;
