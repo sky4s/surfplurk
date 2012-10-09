@@ -6,8 +6,10 @@ package plurker.ui.util;
 
 import java.awt.Desktop;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.HyperlinkEvent;
@@ -31,16 +33,22 @@ public class HyperlinkHandler implements HyperlinkListener {
 
     @Override
     public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                            URI uri = e.getURL().toURI();
-                            Desktop desktop = Desktop.getDesktop();
-                            desktop.browse(uri);
-                        }
-                    } catch (URISyntaxException | IOException ex) {
-                        Logger.getLogger(AboutFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        if (Desktop.isDesktopSupported()) {
+            try {
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    URI uri = e.getURL().toURI();
+                    Desktop desktop = Desktop.getDesktop();
+                    desktop.browse(uri);
                 }
+            } catch (URISyntaxException | IOException ex) {
+                Logger.getLogger(AboutFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void main(String[] args) throws MalformedURLException {
+        HyperlinkHandler instance = HyperlinkHandler.getInstance();
+        HyperlinkEvent e = new HyperlinkEvent(instance, HyperlinkEvent.EventType.ACTIVATED, new URL("http://google.com"));
+        instance.hyperlinkUpdate(e);
     }
 }
