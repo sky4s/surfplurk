@@ -8,25 +8,21 @@ import com.google.jplurk_oauth.data.Comment;
 import com.google.jplurk_oauth.data.ContextIF;
 import com.google.jplurk_oauth.data.Plurk;
 import com.google.jplurk_oauth.data.UserInfo;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -36,7 +32,6 @@ import javax.net.ssl.HttpsURLConnection;
 //import org.jivesoftware.stringprep.Punycode;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -55,6 +50,7 @@ import plurker.ui.Qualifier;
  */
 public class PlurkFormater {
 
+    public final static Color HighLightColor = new Color(255, 255, 187);
     private PlurkPool plurkPool;
     private static PlurkFormater plurkFormater;
 

@@ -130,14 +130,16 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
     private class TrayICONHandler extends MouseAdapter implements ChangeListener {
 
         public void mouseClicked(MouseEvent e) {
-            if (notifyManager.isTinyWindowVisible()) {
-                notifyManager.setTinyWindowInvisible();
-            } else {
-                showTinyWindow();
-            }
-//            System.out.println(notifyManager.isNotifyWindowVisible());
-//            if (notifyManager.isNotifyWindowVisible()) {
+//            if (notifyManager.isTinyWindowVisible()) {
+//                notifyManager.setTinyWindowInvisible();
+//            } else {
+//                showTinyWindow();
 //            }
+//            System.out.println(notifyManager.isNotifyDialogVisible());
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                boolean visible = notifyManager.isNotifyDialogVisible();
+                notifyManager.setNotifyDialogVisible(!visible);
+            }
         }
 
         void showTinyWindow() {
@@ -150,17 +152,18 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
                 notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
                 notifyManager.addToTinyWindow(notify);
-//                notifyManager.addtToNotificationsWindow(notify);
+//                notifyManager.addToNotificationsDialog(notify);
             }
             for (Comment comment : newResponseSet) {
                 NotifyPanel notify = new NotifyPanel(comment, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
                 notify.setPlurker(plurker);
                 notifyManager.addToTinyWindow(notify);
-//                notifyManager.addtToNotificationsWindow(notify);
+//                notifyManager.addToNotificationsDialog(notify);
             }
         }
         boolean displayMessage = true;
+        boolean topDialogWhenUpdate = true;
 //        boolean displayTinyWindow = true;
 //        boolean displayNotifyFrame = true;
 
@@ -183,7 +186,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
                 if (notifyManager.addToTinyWindow(notify)) {
                     notify = (NotifyPanel) notify.clone();
                 }
-                notifyManager.addtToNotificationsWindow(notify);
+                notifyManager.addToNotificationsDialog(notify);
             }
             for (Comment comment : newResponseSet) {
                 NotifyPanel notify = new NotifyPanel(comment, plurkPool);
@@ -192,7 +195,10 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
                 if (notifyManager.addToTinyWindow(notify)) {
                     notify = (NotifyPanel) notify.clone();
                 }
-                notifyManager.addtToNotificationsWindow(notify);
+                notifyManager.addToNotificationsDialog(notify);
+            }
+            if (notifyManager.isNotifyDialogVisible() && topDialogWhenUpdate) {
+                notifyManager.setNotifyDialogVisible(true);
             }
         }
     }
@@ -224,7 +230,8 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         jLabel_NewPlurkNotify = new javax.swing.JLabel();
         jPopupMenu_TrayIcon = new javax.swing.JPopupMenu();
         jCheckBoxMenuItem_DisplayMessage = new javax.swing.JCheckBoxMenuItem();
-        jCheckBoxMenuItem_DisplayNotifyFrame = new javax.swing.JCheckBoxMenuItem();
+        jCheckBoxMenuItem_DisplayNotifyDialog = new javax.swing.JCheckBoxMenuItem();
+        jCheckBoxMenuItem_TopNotifyDialogWhenUpdate = new javax.swing.JCheckBoxMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_Exit = new javax.swing.JMenuItem();
         menuBar = new javax.swing.JMenuBar();
@@ -294,14 +301,23 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         });
         jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_DisplayMessage);
 
-        jCheckBoxMenuItem_DisplayNotifyFrame.setSelected(true);
-        jCheckBoxMenuItem_DisplayNotifyFrame.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_DisplayNotifyFrame.text")); // NOI18N
-        jCheckBoxMenuItem_DisplayNotifyFrame.addActionListener(new java.awt.event.ActionListener() {
+        jCheckBoxMenuItem_DisplayNotifyDialog.setSelected(true);
+        jCheckBoxMenuItem_DisplayNotifyDialog.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_DisplayNotifyDialog.text")); // NOI18N
+        jCheckBoxMenuItem_DisplayNotifyDialog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed(evt);
+                jCheckBoxMenuItem_DisplayNotifyDialogActionPerformed(evt);
             }
         });
-        jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_DisplayNotifyFrame);
+        jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_DisplayNotifyDialog);
+
+        jCheckBoxMenuItem_TopNotifyDialogWhenUpdate.setSelected(true);
+        jCheckBoxMenuItem_TopNotifyDialogWhenUpdate.setText(bundle.getString("PlurkerApplication.jCheckBoxMenuItem_TopNotifyDialogWhenUpdate.text")); // NOI18N
+        jCheckBoxMenuItem_TopNotifyDialogWhenUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem_TopNotifyDialogWhenUpdateActionPerformed(evt);
+            }
+        });
+        jPopupMenu_TrayIcon.add(jCheckBoxMenuItem_TopNotifyDialogWhenUpdate);
         jPopupMenu_TrayIcon.add(jSeparator1);
 
         jMenuItem_Exit.setText(bundle.getString("PlurkerApplication.jMenuItem_Exit.text")); // NOI18N
@@ -793,13 +809,17 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         trayICONHandler.displayMessage = jCheckBoxMenuItem_DisplayMessage.isSelected();
     }//GEN-LAST:event_jCheckBoxMenuItem_DisplayMessageActionPerformed
 
-    private void jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed
-        notifyManager.setDisplayNotifyWindow(jCheckBoxMenuItem_DisplayNotifyFrame.isSelected());
-    }//GEN-LAST:event_jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed
+    private void jCheckBoxMenuItem_DisplayNotifyDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayNotifyDialogActionPerformed
+        notifyManager.setDisplayNotifyDialog(jCheckBoxMenuItem_DisplayNotifyDialog.isSelected());
+    }//GEN-LAST:event_jCheckBoxMenuItem_DisplayNotifyDialogActionPerformed
 
     private void jCheckBoxMenuItem_DisplayTinyWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
         notifyManager.setDisplayTinyWindow(jCheckBoxMenuItem_DisplayTinyWindow.isSelected());
     }//GEN-LAST:event_jCheckBoxMenuItem_DisplayTinyWindowActionPerformed
+
+    private void jCheckBoxMenuItem_TopNotifyDialogWhenUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem_TopNotifyDialogWhenUpdateActionPerformed
+        trayICONHandler.topDialogWhenUpdate = this.jCheckBoxMenuItem_TopNotifyDialogWhenUpdate.isSelected();
+    }//GEN-LAST:event_jCheckBoxMenuItem_TopNotifyDialogWhenUpdateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -868,8 +888,9 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
     private javax.swing.JMenu helpMenu;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem_DisplayMessage;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem_DisplayNotifyFrame;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem_DisplayNotifyDialog;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem_DisplayTinyWindow;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem_TopNotifyDialogWhenUpdate;
     private javax.swing.JComboBox jComboBox_Qualifier;
     private javax.swing.JEditorPane jEditorPane_NewPlurk;
     private javax.swing.JLabel jLabel1;

@@ -31,18 +31,14 @@ import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.TextUI;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 import javax.swing.text.html.ParagraphView;
-import org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI;
 import org.json.JSONException;
 import plurker.image.ImageUtils;
 import plurker.source.PlurkChangeListener;
@@ -54,6 +50,7 @@ import plurker.ui.tooltip.ToolTipPanel;
 import plurker.ui.util.DirectScroll;
 import plurker.util.Utils;
 //import org.fit.cssbox.swingbox.*;
+
 
 /**
  *
@@ -74,7 +71,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     class NewBieActionListener implements ActionListener {
 
-        private int blue = 187;
+        private int blue = PlurkFormater.HighLightColor.getBlue();
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -136,8 +133,12 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
     protected Plurk plurk;
     protected Comment comment;
-    PlurkPool plurkPool;
+    protected PlurkPool plurkPool;
     protected int prefferedWidth;
+
+    public PlurkPool getPlurkPool() {
+        return plurkPool;
+    }
 
     private void initEditorPane1(String content, int width) {
 //        jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
@@ -228,9 +229,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             try {
                 UnreadType unreadType = plurk.getUnreadType();
                 if (UnreadType.Unread == unreadType && Type.FirstOfResponse != type) {
-                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), HighLight, true, false);
+                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), LabelHighLightColor, true, false);
                 } else {
-                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), Normal, true, true);
+                    this.setNotifyLabel(Long.toString(plurk.getResponseCount()), LabelNormalColor, true, true);
                 }
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -625,8 +626,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 //        jLabel_Notify.setSize(preferredSize);
 //        jLabel_Notify.setPreferredSize(preferredSize);
     }
-    public final static Color HighLight = Color.red;
-    public final static Color Normal = Color.white;
+    public final static Color LabelHighLightColor = Color.red;
+    public final static Color LabelNormalColor = Color.white;
 
     public void setNofityLabelCount(long count) {
         if (null != plurkPanel) {
@@ -682,7 +683,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     public void setNotifyLabelNormal() {
-        jLabel_Notify.setBackground(Normal);
+        jLabel_Notify.setBackground(LabelNormalColor);
 //        jLabel_Notify.setBorder(lineBorder);
         if (null != plurkPanel) {
             plurkPanel.setNotifyLabelNormal();
@@ -735,53 +736,162 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     @Override
+    public void setBackground(Color bg) {
+        super.setBackground(bg);
+        if (null != jEditorPane1) {
+            this.jEditorPane1.setBackground(bg);
+        }
+    }
+    private boolean autoHighlight;
+
+    public void setAutoHighlight(boolean autoHighlight) {
+        this.autoHighlight = autoHighlight;
+    }
+    private Color autoHighlightColor = PlurkFormater.HighLightColor;
+
+    @Override
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseevent = (MouseEvent) event;
             if (mouseevent.getID() == MouseEvent.MOUSE_MOVED) {
                 Component component = mouseevent.getComponent();
-                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
-                    //如果是在這個component內就把notify關掉
-                    this.jLabel_Notify.setVisible(false);
-                    if (null != this.plurkPool && null == toolTipPanel) {
-                        if (Type.Plurk == type && null != this.plurk) {
-                            //plurk用的小視窗
-                            //toolTipPanel = new PlurkToolTipPanel(this.plurkPool, this.plurk, this);
+
+                if (null != component) {
+
+                    if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
+                        //如果是在這個component內就把notify關掉
+                        this.jLabel_Notify.setVisible(false);
+                        if (null != this.plurkPool && null == toolTipPanel) {
+                            if (Type.Plurk == type && null != this.plurk) {
+                                //plurk用的小視窗
+                                //toolTipPanel = new PlurkToolTipPanel(this.plurkPool, this.plurk, this);
+                            }
+                            if (null != this.comment && !this.notifyMode) {
+                                //回噗的小視窗
+                                toolTipPanel = new CommentToolTipPanel(this.plurkPool, this.comment, this, responseInput);
+                            }
                         }
-                        if (null != this.comment && !this.notifyMode) {
-                            //回噗的小視窗
-                            toolTipPanel = new CommentToolTipPanel(this.plurkPool, this.comment, this, responseInput);
+
+                        if (null != toolTipPanel) {
+                            tooltip = PlurkerToolTip.getInstance(this.getClass(), toolTipPanel);
+                            int width = this.getWidth();
+                            Point locationOnScreen = this.getLocationOnScreen();
+                            tooltip.setLocation(locationOnScreen.x + width + offsetOfToolTip, locationOnScreen.y);
+                            tooltip.begin();
                         }
+                        if (this.autoHighlight) {
+                            this.setBackground(this.autoHighlightColor);
+                        }
+                    } else {
+                        //如果不是在這個component內就把notify打開
+                        if (type == Type.Plurk || type == Type.FirstOfResponse) {
+                            this.jLabel_Notify.setVisible(true);
+                        }
+                        //離開了component..就要開始計時把PlurkerToolTip關掉
+                        //但是還要確保不是跑到別的component去
+//                        if (this.autoHighlight) {
+//                            this.setBackground(Color.white);
+//                            if (component instanceof JPanel) {
+//                                ContentPanel content = this;
+//                                System.out.println(component == this.getParent());
+////                            System.out.println((component == this.getRootPane()) + " " + component);
+//                            }
+//                        }
+
+                        if (this.autoHighlight) {
+                            if (component == this.getParent()) {
+                                Point locationOnScreen = mouseevent.getLocationOnScreen();
+                                SwingUtilities.convertPointFromScreen(locationOnScreen, this);
+                                if (!this.contains(locationOnScreen)) {
+                                    this.setBackground(Color.white);
+                                } else {
+                                    this.setBackground(this.autoHighlightColor);
+                                }
+                            } else {
+                                this.setBackground(Color.white);
+                            }
+
+                        }
+
+
+//                        if (this.autoHighlight && component == this.getParent()) {
+//                            Point locationOnScreen = mouseevent.getLocationOnScreen();
+////                            SwingUtilities.convertPointFromScreen(locationOnScreen, component);
+//                            System.out.println(locationOnScreen);
+//                            if (!this.contains(locationOnScreen)) {
+//                                this.setBackground(Color.white);
+//                            }
+////                            SwingUtilities.convertMouseEvent(component, mouseevent, component)
+//                        }
                     }
 
-                    if (null != toolTipPanel) {
-                        tooltip = PlurkerToolTip.getInstance(this.getClass(), toolTipPanel);
-                        int width = this.getWidth();
-                        Point locationOnScreen = this.getLocationOnScreen();
-                        tooltip.setLocation(locationOnScreen.x + width + offsetOfToolTip, locationOnScreen.y);
-                        tooltip.begin();
-                    }
                 } else {
-                    //如果不是在這個component內就把notify打開
-                    if (type == Type.Plurk || type == Type.FirstOfResponse) {
-                        this.jLabel_Notify.setVisible(true);
-                    }
-                    //離開了component..就要開始計時把PlurkerToolTip關掉
-                    //但是還要確保不是跑到別的component去
                 }
+
+
+//                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
+//                    //如果是在這個component內就把notify關掉
+//                    this.jLabel_Notify.setVisible(false);
+//                    if (null != this.plurkPool && null == toolTipPanel) {
+//                        if (Type.Plurk == type && null != this.plurk) {
+//                            //plurk用的小視窗
+//                            //toolTipPanel = new PlurkToolTipPanel(this.plurkPool, this.plurk, this);
+//                        }
+//                        if (null != this.comment && !this.notifyMode) {
+//                            //回噗的小視窗
+//                            toolTipPanel = new CommentToolTipPanel(this.plurkPool, this.comment, this, responseInput);
+//                        }
+//                    }
+//
+//                    if (null != toolTipPanel) {
+//                        tooltip = PlurkerToolTip.getInstance(this.getClass(), toolTipPanel);
+//                        int width = this.getWidth();
+//                        Point locationOnScreen = this.getLocationOnScreen();
+//                        tooltip.setLocation(locationOnScreen.x + width + offsetOfToolTip, locationOnScreen.y);
+//                        tooltip.begin();
+//                    }
+//                    if (this.autoHighlight) {
+//                        this.setBackground(this.autoHighlightColor);
+//                    }
+//                } else {
+//                    //如果不是在這個component內就把notify打開
+//                    if (type == Type.Plurk || type == Type.FirstOfResponse) {
+//                        this.jLabel_Notify.setVisible(true);
+//                    }
+//                    //離開了component..就要開始計時把PlurkerToolTip關掉
+//                    //但是還要確保不是跑到別的component去
+//                    if (this.autoHighlight) {
+//                        this.setBackground(Color.white);
+//                        if (component instanceof JPanel) {
+//                            ContentPanel content = this;
+//                            System.out.println(component == this.getParent());
+//                        }
+//                    }
+//
+//                    if (component instanceof JPanel) {
+//                    }
+//                }
             } else if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
 //                System.out.println(mouseevent);
                 //                Point point = mouseevent.getPoint();
                 Component component = mouseevent.getComponent();
-                if (null != tooltip && null != component && !SwingUtilities.isDescendingFrom(mouseevent.getComponent(), tooltip)) {
+                if (null != tooltip && null != component && !SwingUtilities.isDescendingFrom(component, tooltip)) {
                     //有tooltip且不是點在自己身上, 就把tooltip關掉
                     tooltip.setVisible(false);
                 }
+
+
+//                System.out.println("click");
             } else if (mouseevent.getID() == MouseEvent.MOUSE_WHEEL) {
                 if (null != tooltip) {
                     tooltip.setVisible(false);
                 }
-            }
+            } /*else if (mouseevent.getID() == MouseEvent.MOUSE_ENTERED) {
+             System.out.println("enter");
+             }
+             if (mouseevent.getID() == MouseEvent.MOUSE_EXITED) {
+             System.out.println("exit");
+             }*/
 
         }
     }
@@ -881,7 +991,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
     }
 }
-
 class FixedHTMLEditorKit extends HTMLEditorKit {
 
     private static FixedHTMLEditorKit fixedHTMLEditorKit = new FixedHTMLEditorKit();

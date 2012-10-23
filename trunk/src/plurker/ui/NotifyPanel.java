@@ -7,6 +7,7 @@ package plurker.ui;
 import com.google.jplurk_oauth.data.Comment;
 import com.google.jplurk_oauth.data.Plurk;
 import java.awt.AWTEvent;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -40,23 +41,24 @@ public class NotifyPanel extends ContentPanel {
         }
     }
 
-    @Override
-    public void eventDispatched(AWTEvent event) {
-        if (event instanceof MouseEvent) {
-            MouseEvent mouseevent = (MouseEvent) event;
-            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
-                Point point = mouseevent.getPoint();
-                Component component = mouseevent.getComponent();
-                if (null != component && (SwingUtilities.isDescendingFrom(component, this) || SwingUtilities.isDescendingFrom(component, this.getParent())) && SwingUtilities.isLeftMouseButton(mouseevent)) {
-                    //點到, 就應該設定到current
-//                    System.out.println("click");
-                    if (null != plurker) {
-//                        plurker.setCurrentFollow(this);
-                    }
-                }
-            }
-        }
-    }
+//    @Override
+//    public void eventDispatched(AWTEvent event) {
+//        super.eventDispatched(event);
+//        if (event instanceof MouseEvent) {
+//            MouseEvent mouseevent = (MouseEvent) event;
+//            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
+//                Point point = mouseevent.getPoint();
+//                Component component = mouseevent.getComponent();
+//                if (null != component && (SwingUtilities.isDescendingFrom(component, this) || SwingUtilities.isDescendingFrom(component, this.getParent())) && SwingUtilities.isLeftMouseButton(mouseevent)) {
+//                    //點到, 就應該設定到current
+////                    System.out.println("click");
+//                    if (null != plurker) {
+////                        plurker.setCurrentFollow(this);
+//                    }
+//                }
+//            }
+//        }
+//    }
     private PlurkerApplication plurker;
 
     public void setPlurker(PlurkerApplication plurker) {
@@ -118,6 +120,8 @@ public class NotifyPanel extends ContentPanel {
         JFrame frame = new JFrame();
         Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
         NotifyPanel notifyPanel2 = new NotifyPanel(plurk, plurkpool);
+        notifyPanel2.setAutoHighlight(true);
+//        notifyPanel2.setBackground(Color.yellow);
         notifyPanel2.updateWidth(300);
         frame.add(notifyPanel2);
         frame.pack();
