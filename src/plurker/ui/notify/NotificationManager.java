@@ -4,7 +4,6 @@
  */
 package plurker.ui.notify;
 
-import com.google.jplurk_oauth.data.Plurk;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
@@ -14,6 +13,8 @@ import java.awt.PointerInfo;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -22,14 +23,12 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.Timer;
 import org.json.JSONException;
 import plurker.ui.ContentPanel.Type;
 import plurker.ui.FollowerIF;
 import plurker.ui.NotifyPanel;
-import plurker.ui.TabbedResponsePanel;
-import plurker.ui.notify.NotificationsPanel.NotificationsWindow;
+import plurker.ui.notify.NotificationsPanel.NotificationsDialog;
 
 /**
  *
@@ -64,7 +63,7 @@ public class NotificationManager {
     public final static int NotifyXOffset = 20;
     public static int DisappearWaitTime = 10000;
     private boolean displayTinyWindow = false;
-    private boolean displayNotifyWindow = true;
+    private boolean displayNotifyDialog = true;
 //    private NotificationsFrame notificationsFrame;
     private FollowerIF followerIF;
 
@@ -76,14 +75,14 @@ public class NotificationManager {
         return displayTinyWindow;
     }
 
-    public boolean isDisplayNotifyWindow() {
-        return displayNotifyWindow;
+    public boolean isDisplayNotifydialog() {
+        return displayNotifyDialog;
     }
 
-    public void setDisplayNotifyWindow(boolean displayNotifyFrame) {
-        this.displayNotifyWindow = displayNotifyFrame;
-        if (null != notificationsWindow) {
-            notificationsWindow.setVisible(false);
+    public void setDisplayNotifyDialog(boolean displayNotifyFrame) {
+        this.displayNotifyDialog = displayNotifyFrame;
+        if (null != notificationsDialog) {
+            notificationsDialog.setVisible(false);
         }
     }
 
@@ -91,25 +90,42 @@ public class NotificationManager {
         return nowTinyList.size() != 0;
     }
     private NotificationsPanel notificationsPanel;
-    private NotificationsWindow notificationsWindow;
+    private NotificationsDialog notificationsDialog;
 
-    private void initNotificationsWindow() {
+    private void initNotificationsDialog() {
         if (null == notificationsPanel) {
             notificationsPanel = new NotificationsPanel();
-            notificationsWindow = notificationsPanel.getWindow(null);
-            Dimension size = notificationsWindow.getSize();
+            notificationsDialog = notificationsPanel.getNotificationsDialog(null);
+            Dimension size = notificationsDialog.getSize();
             int y = desktopBounds.y + desktopBounds.height - size.height;
             int x = desktopBounds.width - size.width - NotifyXOffset;
-            notificationsWindow.setLocation(x, y);
-            notificationsWindow.setVisible(true);
+
+            notificationsDialog.setLocation(x, y);
+            notificationsDialog.setVisible(true);
+
         }
     }
+    MouseAdapter notifyPanelMouseAdapter = new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            Object source = e.getSource();
+            System.out.println(source);
+        }
 
-    public boolean addtToNotificationsWindow(NotifyPanel notify) {
-        if (!displayNotifyWindow) {
+        @Override
+        public void mouseExited(MouseEvent e) {
+            Object source = e.getSource();
+            System.out.println(source);
+        }
+    };
+
+    public boolean addToNotificationsDialog(NotifyPanel notify) {
+        if (!displayNotifyDialog) {
             return false;
         }
-        initNotificationsWindow();
+        initNotificationsDialog();
+//        notify.addMouseListener(notifyPanelMouseAdapter);
+        notify.setAutoHighlight(true);
         notificationsPanel.addToAll(notify);
         Type type = notify.getType();
         long plurkId = -1;
@@ -181,26 +197,26 @@ public class NotificationManager {
         }
     };
 
-    public boolean isNotifyWindowVisible() {
+    public boolean isNotifyDialogVisible() {
         //T F F T
-//        System.out.println(notificationsWindow.isVisible());
-//        System.out.println(notificationsWindow.isActive()); //F
-//        System.out.println(notificationsWindow.isFocused()); //F //T
-//        System.out.println(notificationsWindow.isShowing());
-//        System.out.println(notificationsWindow.isFocusable());
-//        System.out.println(notificationsWindow.isFocusableWindow());
-        return notificationsWindow.isVisible();
-//        System.out.println(notificationsWindow.getFocusOwner());
+//        System.out.println(notificationsDialog.isVisible());
+//        System.out.println(notificationsDialog.isActive()); //F
+//        System.out.println(notificationsDialog.isFocused()); //F //T
+//        System.out.println(notificationsDialog.isShowing());
+//        System.out.println(notificationsDialog.isFocusable());
+//        System.out.println(notificationsDialog.isFocusableWindow());
+        return notificationsDialog.isVisible();
+//        System.out.println(notificationsDialog.getFocusOwner());
 //        return false;
     }
 
-    public void setNotifyWindowVisible(boolean visible) {
+    public void setNotifyDialogVisible(boolean visible) {
         if (visible) {
-            notificationsWindow.setVisible(visible);
-            notificationsWindow.setAlwaysOnTop(true);
-            notificationsWindow.setAlwaysOnTop(false);
+            notificationsDialog.setVisible(visible);
+            notificationsDialog.setAlwaysOnTop(true);
+            notificationsDialog.setAlwaysOnTop(false);
         } else {
-            notificationsWindow.setVisible(visible);
+            notificationsDialog.setVisible(visible);
         }
     }
 
@@ -240,7 +256,8 @@ public class NotificationManager {
     public static void main(String[] args) throws InterruptedException {
         NotificationManager instance = NotificationManager.getInstance();
         for (int x = 0; x < 15; x++) {
-            instance.addToTinyWindow(new JLabel(Integer.toString(x + 1)));
+//            instance.addToTinyWindow(new JLabel(Integer.toString(x + 1)));
+            instance.addToNotificationsDialog(new NotifyPanel("1234", 300));
 
         }
 //        Thread.currentThread().sleep(5000);

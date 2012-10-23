@@ -72,7 +72,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About");
-        setPreferredSize(new java.awt.Dimension(350, 150));
+        setPreferredSize(new java.awt.Dimension(350, 200));
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("plurker/ui/Bundle"); // NOI18N
         jButton2.setText(bundle.getString("AboutFrame.jButton2.text")); // NOI18N

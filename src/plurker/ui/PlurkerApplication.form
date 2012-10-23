@@ -125,15 +125,26 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItem_DisplayMessageActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItem_DisplayNotifyFrame">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItem_DisplayNotifyDialog">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="plurker/ui/Bundle.properties" key="PlurkerApplication.jCheckBoxMenuItem_DisplayNotifyFrame.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="plurker/ui/Bundle.properties" key="PlurkerApplication.jCheckBoxMenuItem_DisplayNotifyDialog.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItem_DisplayNotifyFrameActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItem_DisplayNotifyDialogActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="jCheckBoxMenuItem_TopNotifyDialogWhenUpdate">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="plurker/ui/Bundle.properties" key="PlurkerApplication.jCheckBoxMenuItem_TopNotifyDialogWhenUpdate.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxMenuItem_TopNotifyDialogWhenUpdateActionPerformed"/>
           </Events>
         </MenuItem>
         <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator1">

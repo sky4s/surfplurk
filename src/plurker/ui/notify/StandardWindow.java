@@ -7,10 +7,6 @@ package plurker.ui.notify;
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Frame;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.PointerInfo;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
@@ -23,7 +19,7 @@ import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import plurker.ui.util.GUIUtil;
 
-class StandardDialog extends JDialog implements ActionListener, AWTEventListener {
+class StandardDialog extends JDialog implements ActionListener/*, AWTEventListener*/ {
 
     StandardDialog(JPanel contentPanel, JPanel closePanel) {
         this(contentPanel, closePanel, null);
@@ -48,38 +44,37 @@ class StandardDialog extends JDialog implements ActionListener, AWTEventListener
     }
 //    JFrame frame;
 
-    @Override
-    public void eventDispatched(AWTEvent event) {
-//        System.out.println(event);
-        if (event instanceof MouseEvent) {
-            MouseEvent mouseevent = (MouseEvent) event;
-            int id = mouseevent.getID();
-            if (MouseEvent.MOUSE_EXITED == id) {
-                if (!isMouseInWindow()) {
-                    //若離開了視窗
-                    closePanel.setVisible(false);
-//                    this.setAlwaysOnTop(false);
-                }
-            } else if (MouseEvent.MOUSE_ENTERED == id) {
-                Component component = mouseevent.getComponent();
-                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
-                    closePanel.setVisible(true);
-//                    this.setAlwaysOnTop(true);
-
-                }
-            } else if (MouseEvent.MOUSE_MOVED == id) {
-                Component component = mouseevent.getComponent();
-                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
-                }
-            }
-
-            if (MouseEvent.MOUSE_WHEEL == id) {
-                System.out.println(mouseevent);
-            }
-
-        }
-    }
-
+//    @Override
+//    public void eventDispatched(AWTEvent event) {
+////        System.out.println(event);
+//        if (event instanceof MouseEvent) {
+//            MouseEvent mouseevent = (MouseEvent) event;
+//            int id = mouseevent.getID();
+//            if (MouseEvent.MOUSE_EXITED == id) {
+//                if (!isMouseInWindow()) {
+//                    //若離開了視窗
+//                    closePanel.setVisible(false);
+////                    this.setAlwaysOnTop(false);
+//                }
+//            } else if (MouseEvent.MOUSE_ENTERED == id) {
+//                Component component = mouseevent.getComponent();
+//                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
+//                    closePanel.setVisible(true);
+////                    this.setAlwaysOnTop(true);
+//
+//                }
+//            } else if (MouseEvent.MOUSE_MOVED == id) {
+//                Component component = mouseevent.getComponent();
+//                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
+//                }
+//            }
+//
+//            if (MouseEvent.MOUSE_WHEEL == id) {
+//                System.out.println(mouseevent);
+//            }
+//
+//        }
+//    }
     public boolean isMouseInWindow() {
         return GUIUtil.isMouseInWindow(this.getBounds());
     }

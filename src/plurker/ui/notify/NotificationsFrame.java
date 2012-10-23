@@ -11,6 +11,7 @@ import plurker.ui.util.GUIUtil;
 /**
  *
  * @author SkyforceShen
+ * @deprecated 
  */
 public class NotificationsFrame extends javax.swing.JFrame {
 
