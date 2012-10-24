@@ -49,8 +49,6 @@ import plurker.ui.tooltip.PlurkerToolTip;
 import plurker.ui.tooltip.ToolTipPanel;
 import plurker.ui.util.DirectScroll;
 import plurker.util.Utils;
-//import org.fit.cssbox.swingbox.*;
-
 
 /**
  *
@@ -108,26 +106,13 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         frame.setVisible(true);
 
         contentPanel.setNofityLabelCount(8);
-//        for (int x = 8; x < 20; x++) {
-//            Thread.currentThread().sleep(500);
-//            contentPanel.addNofityLabelCount();
-//        }
-//        System.out.println(contentPanel.jEditorPane1.getFont());
-//        contentPanel.jEditorPane1.setFont(GUIUtil.font);
+
     }
 
     public Plurk getPlurk() {
         return plurk;
     }
 
-//    @Override
-//    public void setComponentPopupMenu(JPopupMenu popup) {
-//        super.setComponentPopupMenu(popup);
-//        this.jEditorPane1.setComponentPopupMenu(popup);
-//        this.jLabel_Avatar.setComponentPopupMenu(popup);
-//        this.jLabel_Time.setComponentPopupMenu(popup);
-////        this.jPanel1.setComponentPopupMenu(popup);
-//    }
     public Comment getComment() {
         return comment;
     }
@@ -141,12 +126,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     private void initEditorPane1(String content, int width) {
-//        jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
         jEditorPane1.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-//        Font font = UIManager.getFont("Label.font");
-//        String bodyRule = "body { font-family: " + font.getFamily() + "; "
-//                + "font-size: " + font.getSize() + "pt; }";
-//        ((HTMLDocument) jEditorPane1.getDocument()).getStyleSheet().addRule(bodyRule);
 
 
         if (this.notifyMode) {
@@ -296,15 +276,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             return false;
         }
 
-//        if (null != plurk && null == unreadType) {
-//            try {
-//                unreadType = plurk.getUnreadType();
-//            } catch (JSONException ex) {
-//                Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            return unreadType == UnreadType.Muted;
-//        }
-//        return false;
     }
 
     /**
@@ -352,13 +323,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.notifyMode = notifyMode;
         initContent(content);
         this.jLabel_Image.setVisible(false);
-        //        ComponentUI createUI = BEEditorPaneUI.createUI(this.jEditorPane1);
-        //        createUI.installUI(this.jEditorPane1);
-        //        jEditorPane1.setcom
-//        TextUI uI = jEditorPane1.getUI();
-//        org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI b = (org.jb2011.lnf.beautyeye.ch6_textcoms.BEEditorPaneUI)ui;
-//        BEEditorPaneUI beui = (BEEditorPaneUI)ui;
-//        System.out.println(uI.getEditorKit(this.jEditorPane1).);
+
     }
     private boolean notifyMode = false;
 
@@ -403,11 +368,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.responseInput = responseInput;
     }
     private JEditorPane responseInput;
-//    private ContentPanel firstPanel;
 
-//    public ContentPanel getFirstPanel() {
-//        return firstPanel;
-//    }
     protected String getContent() throws JSONException {
         if (null != plurk) {
             return PlurkFormater.getInstance(plurkPool).getContent(plurk);
@@ -516,15 +477,11 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         Dimension notifyPreferredSize = this.jLabel_Notify.getPreferredSize();
         jLabel_Notify.setBounds(size.width - notifyPreferredSize.width, 0, notifyPreferredSize.width, notifyPreferredSize.height);
         if (jLabel_Image.isVisible()) {
-//            Rectangle bounds = jLayeredPane1.getBounds();
-//            Dimension size1 = this.getSize();
-//            this.getRootPane().getContentPane()
 
             Dimension imagePreferredSize = jLabel_Image.getPreferredSize();
             int x = size.width / 2 - imagePreferredSize.width / 2;
             int y = size.height / 2 - imagePreferredSize.height / 2;
             jLabel_Image.setLocation(x, y);
-//            System.out.println(x + " " + y);
         }
     }//GEN-LAST:event_jLayeredPane1ComponentResized
 
@@ -616,15 +573,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
         jLabel_Notify.setBackground(background);
         jLabel_Notify.setOpaque(isOpaque);
-//        if (withBorder) {
-//            jLabel_Notify.setBorder(lineBorder);
-//        } else {
-//            jLabel_Notify.setBorder(null);
-//        }
-//        Dimension preferredSize = jLabel_Notify.getPreferredSize();
-//        System.out.println(preferredSize);
-//        jLabel_Notify.setSize(preferredSize);
-//        jLabel_Notify.setPreferredSize(preferredSize);
+
     }
     public final static Color LabelHighLightColor = Color.red;
     public final static Color LabelNormalColor = Color.white;
@@ -665,18 +614,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             long responseCount = plurk.getResponseCount();
             setNofityLabelCount(responseCount - 1);
 
-            //        if (null != plurkPanel) {
-            //            plurkPanel.addNofityLabelCount();
-            //        }
-            //        if (Type.Plurk == type && null != plurk) {
-            //            try {
-            //                long responseCount = plurk.getResponseCount();
-            //                plurk.setResponseCount(responseCount + 1);
-            //            } catch (JSONException ex) {
-            //                Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
-            //            }
-            //        this.initLabel_Notify();
-            //        this.initLabel_Notify();
         } catch (JSONException ex) {
             Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -689,44 +626,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             plurkPanel.setNotifyLabelNormal();
         }
     }
-//    public static void main(String[] args) throws IOException {
-//        JFrame frame = new JFrame();
-//        //    frame.
-//        String content = "<html><head></head><body>"
-//                + "bigmaomao#3739 &#35498;: &#27491;&#22969;&#20063;&#30332;PS&#25991; XDD <a href=\"http://www.mobile01.com/topicdetail.php?f=256&t=2875277&p=1\" class=\"ex_link meta\" title=\"如下圖，謝謝大家！^________^\" rel=\"nofollow\"><img height=40  src=\"http://download.mobile01.com/topic/256-2875277-58973f3ab686a478f60604e0806548df.jpg\">&#27714;&#31070;&#20154;&#24171;&#25105;&#25226;&#24460;&#38754;&#37027;&#20301;P&#25481;&#65281;</a>"
-//                + "</body></html>";
-//        ContentPanel plurkPanel = new ContentPanel(content);
-////        frame.setLayout(new javax.swing.BoxLayout(frame, javax.swing.BoxLayout.Y_AXIS));
-//        frame.getContentPane().add(plurkPanel);//, java.awt.BorderLayout.CENTER);
-//        frame.setSize(400, 300);
-//        plurkPanel.setNotifyLabel("Label1", Color.blue, true);
-//        BufferedImage loadImage = ImageUtils.loadImage("./image/font.png");
-//        plurkPanel.getAvatarLabel().setIcon(new ImageIcon(loadImage));
-//        frame.setVisible(true);
-////        plurkPanel.updateWidth(100);
-//
-//    }
-//    private Dimension originalSize = null;
-//    private static java.util.Timer timer = new java.util.Timer();
-//    private DisappearTask disappearTask = null;
-//    public final static long DisappearTime = 2000;
-//
-//    public class DisappearTask extends TimerTask {
-//
-//        boolean stop = false;
-//
-//        public void run() {
-//            if (!stop) {
-//                panel1Disappear();
-//            }
-//        }
-//    }
-//    private void panel1Disappear() {
-//        this.jPanel_Info.setVisible(false);
-//        this.setSize(originalSize);
-//        this.setPreferredSize(originalSize);
-//        this.updateUI();
-//    }
     private ToolTipPanel toolTipPanel;
     private PlurkerToolTip tooltip;
     private int offsetOfToolTip = 0;
@@ -787,16 +686,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                         if (type == Type.Plurk || type == Type.FirstOfResponse) {
                             this.jLabel_Notify.setVisible(true);
                         }
-                        //離開了component..就要開始計時把PlurkerToolTip關掉
-                        //但是還要確保不是跑到別的component去
-//                        if (this.autoHighlight) {
-//                            this.setBackground(Color.white);
-//                            if (component instanceof JPanel) {
-//                                ContentPanel content = this;
-//                                System.out.println(component == this.getParent());
-////                            System.out.println((component == this.getRootPane()) + " " + component);
-//                            }
-//                        }
 
                         if (this.autoHighlight) {
                             if (component == this.getParent()) {
@@ -813,67 +702,12 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
                         }
 
-
-//                        if (this.autoHighlight && component == this.getParent()) {
-//                            Point locationOnScreen = mouseevent.getLocationOnScreen();
-////                            SwingUtilities.convertPointFromScreen(locationOnScreen, component);
-//                            System.out.println(locationOnScreen);
-//                            if (!this.contains(locationOnScreen)) {
-//                                this.setBackground(Color.white);
-//                            }
-////                            SwingUtilities.convertMouseEvent(component, mouseevent, component)
-//                        }
                     }
 
                 } else {
                 }
 
-
-//                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
-//                    //如果是在這個component內就把notify關掉
-//                    this.jLabel_Notify.setVisible(false);
-//                    if (null != this.plurkPool && null == toolTipPanel) {
-//                        if (Type.Plurk == type && null != this.plurk) {
-//                            //plurk用的小視窗
-//                            //toolTipPanel = new PlurkToolTipPanel(this.plurkPool, this.plurk, this);
-//                        }
-//                        if (null != this.comment && !this.notifyMode) {
-//                            //回噗的小視窗
-//                            toolTipPanel = new CommentToolTipPanel(this.plurkPool, this.comment, this, responseInput);
-//                        }
-//                    }
-//
-//                    if (null != toolTipPanel) {
-//                        tooltip = PlurkerToolTip.getInstance(this.getClass(), toolTipPanel);
-//                        int width = this.getWidth();
-//                        Point locationOnScreen = this.getLocationOnScreen();
-//                        tooltip.setLocation(locationOnScreen.x + width + offsetOfToolTip, locationOnScreen.y);
-//                        tooltip.begin();
-//                    }
-//                    if (this.autoHighlight) {
-//                        this.setBackground(this.autoHighlightColor);
-//                    }
-//                } else {
-//                    //如果不是在這個component內就把notify打開
-//                    if (type == Type.Plurk || type == Type.FirstOfResponse) {
-//                        this.jLabel_Notify.setVisible(true);
-//                    }
-//                    //離開了component..就要開始計時把PlurkerToolTip關掉
-//                    //但是還要確保不是跑到別的component去
-//                    if (this.autoHighlight) {
-//                        this.setBackground(Color.white);
-//                        if (component instanceof JPanel) {
-//                            ContentPanel content = this;
-//                            System.out.println(component == this.getParent());
-//                        }
-//                    }
-//
-//                    if (component instanceof JPanel) {
-//                    }
-//                }
             } else if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
-//                System.out.println(mouseevent);
-                //                Point point = mouseevent.getPoint();
                 Component component = mouseevent.getComponent();
                 if (null != tooltip && null != component && !SwingUtilities.isDescendingFrom(component, tooltip)) {
                     //有tooltip且不是點在自己身上, 就把tooltip關掉
@@ -881,18 +715,11 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                 }
 
 
-//                System.out.println("click");
             } else if (mouseevent.getID() == MouseEvent.MOUSE_WHEEL) {
                 if (null != tooltip) {
                     tooltip.setVisible(false);
                 }
-            } /*else if (mouseevent.getID() == MouseEvent.MOUSE_ENTERED) {
-             System.out.println("enter");
-             }
-             if (mouseevent.getID() == MouseEvent.MOUSE_EXITED) {
-             System.out.println("exit");
-             }*/
-
+            }
         }
     }
     private static Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -971,94 +798,16 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         public void hyperlinkUpdate(HyperlinkEvent e) {
             EventType eventType = e.getEventType();
             URL url = e.getURL();
-            //        System.out.println("d: "+e.getDescription());
-            //        System.out.println(e.getInputEvent());
-            //        System.out.println(e.getSourceElement());
-            //        System.out.println("u: "+e.getURL());
+
 
             if (EventType.ACTIVATED == eventType) {
-//            System.out.println(e);
+                System.out.println(url);
             } else if (EventType.ENTERED == eventType) {
-//                System.out.println("enter");
                 inHyperlink = true;
             } else if (EventType.EXITED == eventType) {
-//                System.out.println("exit");
                 inHyperlink = false;
             }
 
-//        System.out.println(e.getEventType());
-//        System.out.println(e);
-        }
-    }
-}
-class FixedHTMLEditorKit extends HTMLEditorKit {
-
-    private static FixedHTMLEditorKit fixedHTMLEditorKit = new FixedHTMLEditorKit();
-
-    public final static FixedHTMLEditorKit getInstance() {
-        if (null == fixedHTMLEditorKit) {
-            fixedHTMLEditorKit = new FixedHTMLEditorKit();
-        }
-        return fixedHTMLEditorKit;
-    }
-    final ViewFactory defaultFactory = new FixedHTMLFactory();
-
-    @Override
-    public ViewFactory getViewFactory() {
-        return defaultFactory;
-    }
-
-    static class FixedHTMLFactory extends HTMLEditorKit.HTMLFactory {
-
-        public View create(Element elem) {
-            Object o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
-            if (o instanceof HTML.Tag) {
-                HTML.Tag kind = (HTML.Tag) o;
-                if (kind == HTML.Tag.IMG) {
-                    return new PlurkerImageView(elem);
-                }
-            }
-            return super.create(elem);
-        }
-
-        public View _create(Element e) {
-            View v = super.create(e);
-            if (v instanceof InlineView) {
-                return new InlineView(e) {
-                    public int getBreakWeight(int axis, float pos, float len) {
-                        return GoodBreakWeight;
-                    }
-
-                    public View breakView(int axis, int p0, float pos, float len) {
-                        if (axis == View.X_AXIS) {
-                            checkPainter();
-                            int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
-                            if (p0 == getStartOffset() && p1 == getEndOffset()) {
-                                return this;
-                            }
-                            return createFragment(p0, p1);
-                        }
-                        return this;
-                    }
-                };
-            } else if (v instanceof ParagraphView) {
-                return new ParagraphView(e) {
-                    protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
-                        if (r == null) {
-                            r = new SizeRequirements();
-                        }
-                        float pref = layoutPool.getPreferredSpan(axis);
-                        float min = layoutPool.getMinimumSpan(axis);
-                        // Don't include insets, Box.getXXXSpan will include them. 
-                        r.minimum = (int) min;
-                        r.preferred = Math.max(r.minimum, (int) pref);
-                        r.maximum = Integer.MAX_VALUE;
-                        r.alignment = 0.5f;
-                        return r;
-                    }
-                };
-            }
-            return v;
         }
     }
 }

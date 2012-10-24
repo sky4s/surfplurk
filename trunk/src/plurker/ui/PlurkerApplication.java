@@ -137,8 +137,9 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
 //            }
 //            System.out.println(notifyManager.isNotifyDialogVisible());
             if (SwingUtilities.isLeftMouseButton(e)) {
-                boolean visible = notifyManager.isNotifyDialogVisible();
-                notifyManager.setNotifyDialogVisible(!visible);
+//                boolean visible = notifyManager.isNotifyDialogVisible();
+//                System.out.println(visible);
+                notifyManager.setNotifyDialogVisible(true);
             }
         }
 

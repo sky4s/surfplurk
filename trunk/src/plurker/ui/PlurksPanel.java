@@ -48,48 +48,73 @@ import shu.util.Persistence;
  */
 public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener, ScrollBarAdjustmentListener.TriggerInterface {
 
+    private Component getJPanel1ComponentAtCursor(MouseEvent mouseevent) {
+        Point point = mouseevent.getPoint();
+        Point convertPoint = SwingUtilities.convertPoint(mouseevent.getComponent(), point, this.jPanel1);
+        Component child = jPanel1.getComponentAt(convertPoint);
+        return child;
+    }
 //    private DirectScroll directScroll;
+    private boolean inHyperlink;
+
     @Override
     public void eventDispatched(AWTEvent event) {
         MouseEvent mouseevent = (MouseEvent) event;
-        if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(mouseevent)) {
+
+        if (mouseevent.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(mouseevent)) {
             if (null != mouseevent.getComponent() && SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
-                Point point = mouseevent.getPoint();
-                Point convertPoint = SwingUtilities.convertPoint(mouseevent.getComponent(), point, this.jPanel1);
-                Component child = jPanel1.getComponentAt(convertPoint);
-//                System.out.println(mouseevent.getWhen() + " " + mouseevent);
+                //popup
+                Component child = getJPanel1ComponentAtCursor(mouseevent);
+                if (child instanceof ContentPanel) {
+                    inHyperlink = ((ContentPanel) child).isInHyperlink(mouseevent);
+                } else {
+                    inHyperlink = false;
+                }
+            }
+        }
+        if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(mouseevent)) {
+            //read or open hyperlink
+            if (null != mouseevent.getComponent() && SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
+                Component child = getJPanel1ComponentAtCursor(mouseevent);
+
                 if (child instanceof ContentPanel) {
                     System.out.println("inHyperlink: " + ((ContentPanel) child).isInHyperlink(mouseevent));
                 }
-                if (child instanceof ContentPanel && !((ContentPanel) child).isInHyperlink(mouseevent) && null != plurker) {
+
+                if (child instanceof ContentPanel) {
+                    if (((ContentPanel) child).isInHyperlink(mouseevent)) {
+                    } else if (null != plurker) {
+                        //滑鼠點下去, 如果是contentpanel, 而且plurker不是空的, 就設定plurker的current follow
+                        ContentPanel contentPanel = (ContentPanel) child;
+                        plurker.setCurrentFollow(contentPanel);
+                    }
                     //滑鼠點下去, 如果是contentpanel, 而且plurker不是空的, 就設定plurker的current follow
-                    ContentPanel contentPanel = (ContentPanel) child;
-//                    System.out.println("set from plurks panel");
-                    plurker.setCurrentFollow(contentPanel);
+//                    ContentPanel contentPanel = (ContentPanel) child;
+//                    plurker.setCurrentFollow(contentPanel);
                 }
             }
-            
+
         }
     }
-    
+
     public void updatePlurks() {
-        
+
         if (null == plurkPool && !PlurkerApplication.offlineMode) {
             return;
         }
-        
+
         if (PlurkerApplication.offlineMode) {
             List<Plurk> debugPlurkList = readPlurkList();
             if (null == debugPlurkList) {
                 String content = "1233";
-                
+
                 content =
                         "<html><head></head><body>"
                         + "wenbao.icm :  Michelle "
                         + "Jenneke (complete race, no 80s music)</a> Michelle Jenneke<br>&#36229;&#27491;. &#36229;&#19978;&#30456;."
                         + "&#32780;&#19988;&#36229;&#24375;....&#28459;&#30059;&#35201;&#26159;&#26377;&#35282;&#33394;&#36889;&#40636;&#23436;&#32654;&#20854;&#20182;&#20154;&#36996;&#35201;&#28436;&#21861;  "
                         + "</body></html>";
-                
+
                 ContentPanel pane = new ContentPanel(content);
                 pane.updateWidth(jPanel1.getWidth());
                 pane.setComponentPopupMenu(jPopupMenu1);
@@ -100,20 +125,20 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 } catch (JSONException ex) {
                     Logger.getLogger(PlurksPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
             }
         } else {
             retrievePlurkProcess(!newPlurkAtTop, null);
         }
-        
+
     }
-    
+
     private void storePlurkList(List<Plurk> plurkList) {
         if (PlurkerApplication.debugMode && !new File("plurks.obj").exists()) {
             Persistence.writeObjectAsXML(plurkList, "plurks.obj");
         }
     }
-    
+
     private List<Plurk> readPlurkList() {
         if (PlurkerApplication.debugMode && new File("plurks.obj").exists()) {
             return (List<Plurk>) Persistence.readObjectAsXML("plurks.obj");
@@ -122,7 +147,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         }
     }
     private DirectScroll.PopupMenuListener popupMenuListener;
-    
+
     private List<ContentPanel> addToPanel(final List<Plurk> plurkList, final boolean addToTop) throws JSONException {
         /*
          * 預設為list順向 add to top New @ Top: list順向 T!=T Old @ Top: list逆向 F!=T O
@@ -133,14 +158,14 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             Collections.reverse(plurkList);
         }
         List<ContentPanel> contentPanelList = new ArrayList<ContentPanel>();
-        
+
         for (Plurk p : plurkList) {
             ContentPanel pane = new ContentPanel(p, plurkPool);
 //            pane.setNewBie(true);
             pane.setPopupMenuListener(popupMenuListener);
             pane.updateWidth(jPanel1.getWidth());
             contentPanelList.add(pane);
-            
+
         }
         for (ContentPanel pane : contentPanelList) {
             if (addToTop) {
@@ -152,40 +177,40 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             }
         }
         return contentPanelList;
-        
+
     }
     private PlurkPool plurkPool = null;
     private Timeline.Filter filter = null;
     private int plurkPanelWidth = -1;
     private boolean newerProcess;
     private boolean newPlurkAtTop = true;
-    
+
     public void setNewPlurkAtTop(boolean newPlurkAtTop) {
         this.newPlurkAtTop = newPlurkAtTop;
     }
-    
+
     public void setPlurkPool(PlurkPool plurkPool) {
         this.plurkPool = plurkPool;
         if (null != plurkPool) {
             plurkPool.addCometChangeListener(new CometChangeListener());
         }
     }
-    
+
     private class CometChangeListener implements ChangeListener {
-        
+
         private void addToPanel0(Plurk plurk) throws JSONException {
             List<Plurk> list = new ArrayList<>();
             list.add(plurk);
             addToPanel(list, true);
         }
-        
+
         @Override
         @SuppressWarnings("empty-statement")
         public void stateChanged(ChangeEvent e) {
             PlurkPool pool = (PlurkPool) e.getSource();
             TreeSet<Plurk> newPlurkSet = pool.getNewPlurkSet();
             TreeSet<Comment> newResponseSet = pool.getNewResponseSet();
-            
+
             try {
                 for (Plurk plurk : newPlurkSet) {
                     switch (filter) {
@@ -212,7 +237,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                             }
                             break;
                     }
-                    
+
                 }
             } catch (JSONException ex) {
                 Logger.getLogger(PlurksPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -246,19 +271,20 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 verticalScrollBar.setUnitIncrement(GUIUtil.DefaultUnitIncrement);
                 verticalScrollBar.setBackground(Color.white);
             }
-            
+
+            this.jSeparator1.setVisible(PlurkerApplication.debugMode);
             this.jMenuItem_CopyPlurk.setVisible(PlurkerApplication.debugMode);
             this.jMenuItem_CopyContent.setVisible(PlurkerApplication.debugMode);
             this.jMenuItem_CopyContentRaw.setVisible(PlurkerApplication.debugMode);
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
-            
+
             popupMenuListener = new DirectScroll.PopupMenuListener(jPopupMenu1);
             DirectScroll.initDirectScroll(this.jScrollPane1.getVerticalScrollBar(), true);
         }
-        
+
     }
     private PlurkerApplication plurker;
-    
+
     public void setPlurker(PlurkerApplication plurker) {
         this.plurker = plurker;
     }
@@ -275,11 +301,25 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem_setCurrentFollow = new javax.swing.JMenuItem();
         jMenuItem_AddToFollow = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem_OpenLink = new javax.swing.JMenuItem();
+        jMenuItem_OpenLinkToBrowser = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_CopyContent = new javax.swing.JMenuItem();
         jMenuItem_CopyContentRaw = new javax.swing.JMenuItem();
         jMenuItem_CopyPlurk = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
+
+        jPopupMenu1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                jPopupMenu1PopupMenuWillBecomeVisible(evt);
+            }
+        });
 
         jMenuItem_setCurrentFollow.setAction(setCurrentFollowAction);
         jMenuItem_setCurrentFollow.setText("閱讀");
@@ -288,6 +328,16 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         jMenuItem_AddToFollow.setAction(addToFollowAction);
         jMenuItem_AddToFollow.setText("加入追蹤");
         jPopupMenu1.add(jMenuItem_AddToFollow);
+        jPopupMenu1.add(jSeparator2);
+
+        jMenuItem_OpenLink.setAction(this.openLinkAction);
+        jMenuItem_OpenLink.setText("開啟連結");
+        jPopupMenu1.add(jMenuItem_OpenLink);
+
+        jMenuItem_OpenLinkToBrowser.setAction(this.openLinkToBrowserAction);
+        jMenuItem_OpenLinkToBrowser.setText("開啟連結至瀏覽器");
+        jPopupMenu1.add(jMenuItem_OpenLinkToBrowser);
+        jPopupMenu1.add(jSeparator1);
 
         jMenuItem_CopyContent.setAction(this.copyContentAction);
         jMenuItem_CopyContent.setText("複製Content");
@@ -333,15 +383,24 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         }
         lastViewportsize = size;
     }//GEN-LAST:event_jScrollPane1ComponentResized
+
+    private void jPopupMenu1PopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jPopupMenu1PopupMenuWillBecomeVisible
+        this.jMenuItem_OpenLink.setVisible(inHyperlink);
+        this.jMenuItem_OpenLinkToBrowser.setVisible(inHyperlink);
+    }//GEN-LAST:event_jPopupMenu1PopupMenuWillBecomeVisible
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem jMenuItem_AddToFollow;
     private javax.swing.JMenuItem jMenuItem_CopyContent;
     private javax.swing.JMenuItem jMenuItem_CopyContentRaw;
     private javax.swing.JMenuItem jMenuItem_CopyPlurk;
+    private javax.swing.JMenuItem jMenuItem_OpenLink;
+    private javax.swing.JMenuItem jMenuItem_OpenLinkToBrowser;
     private javax.swing.JMenuItem jMenuItem_setCurrentFollow;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     // End of variables declaration//GEN-END:variables
 
     private ContentPanel getContentPanel(JMenuItem menuItem) {
@@ -375,6 +434,26 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             }
         }
     };
+    Action openLinkAction = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (null != plurker) {
+                JMenuItem source = (JMenuItem) e.getSource();
+//                ContentPanel plurkPanel = getContentPanel(source);
+//                plurker.addNewFollow(plurkPanel);
+            }
+        }
+    };
+    Action openLinkToBrowserAction = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (null != plurker) {
+                JMenuItem source = (JMenuItem) e.getSource();
+//                ContentPanel plurkPanel = getContentPanel(source);
+//                plurker.addNewFollow(plurkPanel);
+            }
+        }
+    };
     Action copyContentAction = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -399,14 +478,14 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             plurkPanel.copyPlurkToClipboard();
         }
     };
-    
+
     public static void main(String[] args) throws RequestException, JSONException {
         GUIUtil.initGUI();
         PlurkSourcer.setDoValidToken(false);
         PlurkSourcer plurkSourcer = new PlurkSourcer(PlurkSourcer.API_KEY, PlurkSourcer.APP_SECRET, "GIRLiuAIdINH", "79aUVlCqRw4GzU04kiRIkfzHTSwonWBR");
         PlurkPool plurkPool = new PlurkPool(plurkSourcer);
         plurkPool.startComet();
-        
+
         JFrame frame = new JFrame();
         PlurksPanel panel = new PlurksPanel(plurkPool, Timeline.Filter.None, true);
 //        panel.setNewPlurkAtTop(false);
@@ -415,7 +494,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         frame.setVisible(true);
         panel.updatePlurks();
         panel.updateUI();
-        
+
     }
     public final static String OffLine = "Off-line mode...";
     public final static String Loading = "Loading...";
@@ -424,11 +503,11 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
     private JLayer<JPanel> jlayer;
     private WaitLayerUI layerUI = new WaitLayerUI();
     private boolean topProcess;
-    
+
     public boolean isUpdating() {
         return (null != layerUI) ? layerUI.isRunning() : false;
     }
-    
+
     private void retrievePlurkProcess(boolean topProcess, CallBack callBack) {
         this.topProcess = topProcess;
         //用來判斷是抓新的還是舊的
@@ -439,7 +518,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             }
             return;
         }
-        
+
         int componentCount = jPanel1.getComponentCount();
         //======================================================================
         //show出loading訊息
@@ -456,7 +535,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         ContentPanel targetpane = (component instanceof ContentPanel) ? (ContentPanel) component : null;
         Plurk offsetPlurk = null != targetpane ? targetpane.getPlurk() : null;
         DateTime offset = (null == offsetPlurk) ? DateTime.now() : DateTime.create(offsetPlurk.getPosted());
-        
+
         plurkRetriever = new PlurkRetriever(offset, getNewer, new PlurkRetrieverCallback());
         if (null != callBack) {
             plurkRetriever.addCallBack(callBack);
@@ -464,18 +543,18 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         plurkRetriever.execute();
     }
     private PlurkRetriever plurkRetriever;
-    
+
     @Override
     public void trigger(boolean topProcess, JPanel panel, CallBack callBack) {
         this.retrievePlurkProcess(topProcess, callBack);
     }
-    
+
     private class PlurkRetrieverCallback implements CallBack {
-        
+
         PlurkRetrieverCallback() {
         }
         private PlurkRetriever plurkRetriever;
-        
+
         @Override
         public void callback() {
             if (null == plurkRetriever) {
@@ -500,28 +579,28 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             jPanel1.updateUI();
         }
     }
-    
+
     class PlurkRetriever extends SwingWorker<  List<Plurk>, Void> {
-        
+
         private DateTime offset;
         private boolean getNewer;
         private PlurkRetrieverCallback retrieverCallback;
         private List<CallBack> callBackList;
-        
+
         public void addCallBack(CallBack callback) {
             if (null == callBackList) {
                 callBackList = new ArrayList<>();
             }
             callBackList.add(callback);
         }
-        
+
         PlurkRetriever(DateTime offset, boolean getNewer, PlurkRetrieverCallback retrieverCallback) {
             this.offset = offset;
             this.getNewer = getNewer;
             this.retrieverCallback = retrieverCallback;
             retrieverCallback.plurkRetriever = this;
         }
-        
+
         protected void done() {
             new Thread() {
                 public void run() {
@@ -534,7 +613,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 }
             }.start();
         }
-        
+
         @Override
         protected List<Plurk> doInBackground() throws Exception {
             List<Plurk> plurkList = null;
