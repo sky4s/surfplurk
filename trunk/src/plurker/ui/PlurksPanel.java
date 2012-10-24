@@ -33,11 +33,13 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.HyperlinkEvent;
 import org.json.JSONException;
 import plurker.source.PlurkPool;
 import plurker.source.PlurkSourcer;
 import plurker.ui.notify.NotificationManager;
 import plurker.ui.util.DirectScroll;
+import plurker.ui.util.HyperlinkHandler;
 import plurker.ui.util.ScrollBarAdjustmentListener;
 import plurker.ui.util.WaitLayerUI;
 import shu.util.Persistence;
@@ -439,8 +441,10 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         public void actionPerformed(ActionEvent e) {
             if (null != plurker) {
                 JMenuItem source = (JMenuItem) e.getSource();
-//                ContentPanel plurkPanel = getContentPanel(source);
-//                plurker.addNewFollow(plurkPanel);
+                ContentPanel plurkPanel = getContentPanel(source);
+                HyperlinkEvent hyperlinkEvent = plurkPanel.getHyperlinkEvent();
+                HyperlinkEvent newHyperlinkEvent = HyperlinkHandler.modifyToActivatedType(hyperlinkEvent);
+                HyperlinkHandler.hyperlinkUpdate(newHyperlinkEvent, false);
             }
         }
     };
@@ -449,8 +453,10 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
         public void actionPerformed(ActionEvent e) {
             if (null != plurker) {
                 JMenuItem source = (JMenuItem) e.getSource();
-//                ContentPanel plurkPanel = getContentPanel(source);
-//                plurker.addNewFollow(plurkPanel);
+                ContentPanel plurkPanel = getContentPanel(source);
+                HyperlinkEvent hyperlinkEvent = plurkPanel.getHyperlinkEvent();
+                HyperlinkEvent newHyperlinkEvent = HyperlinkHandler.modifyToActivatedType(hyperlinkEvent);
+                HyperlinkHandler.hyperlinkUpdate(newHyperlinkEvent, true);
             }
         }
     };

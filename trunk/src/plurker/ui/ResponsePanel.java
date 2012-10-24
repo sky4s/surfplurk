@@ -41,13 +41,14 @@ import shu.util.Persistence;
  */
 public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjustmentListener.TriggerInterface {
 
-    private boolean startListen = false;
+    private boolean startListenComet = false;
+//    private boolean doTrigger = true;
     private NewResponseListener newResponseListener;
 
     private void listenComent() {
-        if (!startListen && null != plurkPool) {
+        if (!startListenComet && null != plurkPool) {
             plurkPool.addCometChangeListener(new NewResponseListener());
-            startListen = true;
+            startListenComet = true;
         }
     }
     private CallBack triggerCallBack;
@@ -64,15 +65,22 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
      */
     @Override
     public void trigger(boolean topProcess, JPanel panel, CallBack callBack) {
-        System.out.println("trigger");
+//        if (!doTrigger) {
+//            return;
+//        }
+
         if (!topProcess) {
             if (isFetchThreadRunning()) {
                 commentsFetchThread.interrupt();
+                System.out.println("interrupt");
             }
             //接著去抓comment, 因為費時, 所以要用thread
             commentsFetchThread = new CommentsFetchThread(true);
             this.triggerCallBack = callBack;
+            System.out.println("trigger");
             commentsFetchThread.start();
+        } else {
+            callBack.callback();
         }
     }
 
@@ -85,8 +93,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
         @Override
         public void stateChanged(ChangeEvent e) {
-//            Object source = e.getSource();
-//            if (source instanceof PlurkPool) {
             final TreeSet<Comment> newResponseSet = plurkPool.getNewResponseSet();
             final Plurk plurk = rootContentPanel.getPlurk();
 
@@ -98,7 +104,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                         for (Comment comment : newResponseSet) {
                             long plurkIDOfComment = comment.getPlurkId();
                             if (plurkID == plurkIDOfComment) {
-//                                addToExistCommentPanel(comment);
                                 addCommentToUI(comment);
                                 updateUnread();
                             }
@@ -168,8 +173,10 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
 
         //接著去抓comment, 因為費時, 所以要用thread
+        this.commentsAdjustmentListener.stopListen();
         commentsFetchThread = new CommentsFetchThread();
         commentsFetchThread.start();
+        this.commentsAdjustmentListener.startListen();
 //         System.out.println("thread start");
 
     }
@@ -778,11 +785,13 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
             java.util.List<Comment> commentList = null;
             try {
+                System.out.println("fetch comments");
                 if (PlurkerApplication.offlineMode && new File("comments.obj").exists()) {
                     commentList = (java.util.List<Comment>) Persistence.readObjectAsXML("comments.obj");
                 } else if (null != plurkPool) {
                     commentList = plurkPool.getComments(plurk, 0, fetchFromPlurkSourcer);
                 }
+                System.out.println("fetch end");
             } catch (JSONException ex) {
                 Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
             } catch (java.lang.IllegalArgumentException ex) {
@@ -797,6 +806,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             }
 
 //            updateCommentsToUI(commentList);
+            commentsAdjustmentListener.stopListen();
             setCommentListToUI(commentList);
             updateCommentCountToPlurk(commentList);
 
@@ -813,6 +823,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                     updateUI();
                 }
             });
+            commentsAdjustmentListener.startListen();
         }
 
         private void updateCommentCountToPlurk(java.util.List<Comment> commentList) {
@@ -903,9 +914,12 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 Plurk plurk = rootContentPanel.getPlurk();
                 Comment comment = plurkPool.responseAdd(plurk.getPlurkId(), text, qualifier);
                 if (null != comment) {
-//                    addToExistCommentPanel(comment);
+//                    doTrigger = false;
+                    commentsAdjustmentListener.stopListen();
                     addCommentToUI(comment);
                     jEditorPane_ResponseInput.setText("");
+//                    doTrigger = true;
+                    commentsAdjustmentListener.startListen();
                 } else {
                     HttpRequestException httpRequestException = plurkPool.getSourcer().getHttpRequestException();
                     String errorText = httpRequestException.getErrorText();

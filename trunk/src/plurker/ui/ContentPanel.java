@@ -48,6 +48,7 @@ import plurker.ui.tooltip.CommentToolTipPanel;
 import plurker.ui.tooltip.PlurkerToolTip;
 import plurker.ui.tooltip.ToolTipPanel;
 import plurker.ui.util.DirectScroll;
+import plurker.ui.util.HyperlinkHandler;
 import plurker.util.Utils;
 
 /**
@@ -791,17 +792,24 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
     }
     private boolean inHyperlink;
+    private HyperlinkEvent hyperlinkEvent;
+
+    public HyperlinkEvent getHyperlinkEvent() {
+        return hyperlinkEvent;
+    }
 
     class PlurkerHyperlinkListener implements HyperlinkListener {
 
         @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
+            hyperlinkEvent = e;
             EventType eventType = e.getEventType();
             URL url = e.getURL();
 
 
             if (EventType.ACTIVATED == eventType) {
-                System.out.println(url);
+                HyperlinkHandler.getInstance().hyperlinkUpdate(e);
+//                System.out.println(url);
             } else if (EventType.ENTERED == eventType) {
                 inHyperlink = true;
             } else if (EventType.EXITED == eventType) {

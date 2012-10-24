@@ -111,7 +111,7 @@ public class Plurk extends Data implements ContextIF {
 
     public long getReplurkerId() {
         String replurkerID = get("replurker_id");
-        if (null != replurkerID && !replurkerID.equals("null")) {
+        if (null != replurkerID && !replurkerID.equals("null") && !replurkerID.equals("")) {
             return Long.parseLong(replurkerID);
         } else {
             return -1;

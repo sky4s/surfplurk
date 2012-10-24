@@ -71,7 +71,6 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
 
         ContentPanel contentPanel = new ContentPanel(plurk, plurkPool);
 
-//        ContentPanel contentPanel = new ContentPanel((null != plurk) ? plurk : comment, plurkPool);
         if (null == responsePanel) {
             responsePanel = new ResponsePanel(contentPanel, ResponsePanel.Mode.Simple);
         } else {
@@ -79,8 +78,6 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         }
         if (null == responseDialog) {
             responseDialog = new JDialog(notificationsDialog, "", false);
-//            ((java.awt.Frame) responseDialog.getOwner()).setIconImage(PlurkerApplication.PlurkIcon);
-//            responseDialog.setIconImage(null);
             responseDialog.getContentPane().add(responsePanel);
         }
 
@@ -93,7 +90,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseevent = (MouseEvent) event;
-            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
+            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED&& SwingUtilities.isLeftMouseButton(mouseevent) ) {
 
                 Component component = mouseevent.getComponent();
                 if (null != component && SwingUtilities.isDescendingFrom(component, this)) {

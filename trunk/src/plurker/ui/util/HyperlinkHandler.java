@@ -30,6 +30,29 @@ public class HyperlinkHandler implements HyperlinkListener {
         }
         return hyperlinkHandler;
     }
+//    public static boolean openToBrowser;
+
+    public final static HyperlinkEvent modifyToActivatedType(HyperlinkEvent e) {
+        HyperlinkEvent result = new HyperlinkEvent(e.getSource(), HyperlinkEvent.EventType.ACTIVATED, e.getURL(), e.getDescription(), e.getSourceElement(), e.getInputEvent());
+        return result;
+    }
+
+    public static void hyperlinkUpdate(HyperlinkEvent e, boolean openLinkToBrowser) {
+//        openToBrowser = openLinkToBrowser;
+        mode = openLinkToBrowser ? Mode.Desktop : Mode.EditorPane;
+        getInstance().hyperlinkUpdate(e);
+    }
+
+    public static void hyperlinkUpdate(HyperlinkEvent e, Mode openmode) {
+        mode = openmode;
+        getInstance().hyperlinkUpdate(e);
+    }
+    public static Mode mode = Mode.Desktop;
+
+    public static enum Mode {
+
+        EditorPane, DJSwing, Desktop
+    }
 
     @Override
     public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -37,8 +60,21 @@ public class HyperlinkHandler implements HyperlinkListener {
             try {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     URI uri = e.getURL().toURI();
-                    Desktop desktop = Desktop.getDesktop();
-                    desktop.browse(uri);
+                    switch (mode) {
+                        case Desktop:
+                            Desktop desktop = Desktop.getDesktop();
+                            desktop.browse(uri);
+                            break;
+                        case EditorPane:
+                            break;
+                        case DJSwing:
+                            break;
+                    }
+//                    if (openToBrowser) {
+//                        Desktop desktop = Desktop.getDesktop();
+//                        desktop.browse(uri);
+//                    } else {
+//                    }
                 }
             } catch (URISyntaxException | IOException ex) {
                 Logger.getLogger(AboutFrame.class.getName()).log(Level.SEVERE, null, ex);
