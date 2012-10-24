@@ -14,8 +14,12 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JViewport;
@@ -59,28 +63,31 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
 
     public JDialog getResponseDialog(NotifyPanel notifyPanel) {
         Plurk plurk = notifyPanel.getPlurk();
-        Comment comment = notifyPanel.getComment();
+        if (null == plurk) {
+            Comment comment = notifyPanel.getComment();
+            plurk = comment.getParentPlurk();
+        }
         PlurkPool plurkPool = notifyPanel.getPlurkPool();
 
-        ContentPanel contentPanel = null;
-        if (null != plurk) {
-            contentPanel = new ContentPanel(plurk, plurkPool);
-        } else {
-        }
+        ContentPanel contentPanel = new ContentPanel(plurk, plurkPool);
+
 //        ContentPanel contentPanel = new ContentPanel((null != plurk) ? plurk : comment, plurkPool);
         if (null == responsePanel) {
-            responsePanel = new ResponsePanel(contentPanel);
+            responsePanel = new ResponsePanel(contentPanel, ResponsePanel.Mode.Simple);
         } else {
             responsePanel.setRootContentPanel(contentPanel);
         }
         if (null == responseDialog) {
-            responseDialog = new JDialog((JDialog) null, "title");
-//            responseDialog.add(responsePanel);
-            responseDialog.getContentPane().add(responseDialog);
+            responseDialog = new JDialog(notificationsDialog, "", false);
+//            ((java.awt.Frame) responseDialog.getOwner()).setIconImage(PlurkerApplication.PlurkIcon);
+//            responseDialog.setIconImage(null);
+            responseDialog.getContentPane().add(responsePanel);
         }
 
         return responseDialog;
     }
+    private final static int ResponseDialogWidth = 300;
+    private final static int ResponseDialogHeight = 475;
 
     @Override
     public void eventDispatched(AWTEvent event) {
@@ -89,7 +96,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
             if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
 
                 Component component = mouseevent.getComponent();
-                if (SwingUtilities.isDescendingFrom(component, this)) {
+                if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
                     int selectedIndex = jTabbedPane2.getSelectedIndex();
                     ResponsePanel responsePanel = (ResponsePanel) jTabbedPane2.getComponentAt(selectedIndex);
 
@@ -100,8 +107,13 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
                     if (componentAt instanceof NotifyPanel) {
                         NotifyPanel notifyPanel = (NotifyPanel) componentAt;
                         JDialog responseDialog = getResponseDialog(notifyPanel);
-                        responseDialog.setLocation(0, 0);
-                        responseDialog.setSize(300, 400);
+                        responseDialog.setSize(ResponseDialogWidth, ResponseDialogHeight);
+
+                        Point panelLocation = notifyPanel.getLocationOnScreen();
+                        int height = notifyPanel.getHeight();
+                        Point dialogLocation = notificationsDialog.getLocationOnScreen();
+
+                        responseDialog.setLocation(dialogLocation.x - ResponseDialogWidth, panelLocation.y + height - ResponseDialogHeight);
                         responseDialog.setVisible(true);
                         //                        Plurk plurk = notifyPanel.getPlurk();
                         //                        notifyPanel.getPlurkPanel().getpl
@@ -172,34 +184,6 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         this.allPanel.addContentPanel(notify);
     }
 
-//    private void updateWhiteUI(JPanel panel) {
-//
-//        Dimension size = panel.getSize();
-//        Dimension preferredSize = panel.getPreferredSize();
-//        int deltaHeight = size.height - preferredSize.height;
-////            
-//        if (deltaHeight > 0) {
-//            if (null == whitePanel) {
-//                whitePanel = new ContentPanel(refreshImage);
-////                whitePanel.addMouseListener(updateMouseListener);
-////                whitePanel.getjLabel_Image().addMouseListener(updateMouseListener);
-//            }
-//
-//            Dimension whitesize = new Dimension(size.width, deltaHeight);
-//            whitePanel.setSize(whitesize);
-//            whitePanel.setPreferredSize(whitesize);
-//            if (!SwingUtilities.isDescendingFrom(whitePanel, panel)) {
-//                panel.add(whitePanel);
-//            }
-//
-//        } else {
-//            whitePanel = null;
-//            JViewport viewport = jScrollPane2.getViewport();
-////            commentsAdjustmentListener.stopListen();
-//            viewport.setViewPosition(new Point(0, jPanel_Comments.getPreferredSize().height));
-////            commentsAdjustmentListener.startListen();
-//        }
-//    }
     private static int getContentHeight(NotifyPanel notify, int width) {
 //        TinyNotificationPanel tmppanel = new TinyNotificationPanel(component);
         notify.setSize(width, Short.MAX_VALUE);
@@ -242,15 +226,29 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     }
 
     public NotificationsDialog getNotificationsDialog(Frame owener) {
-        if (null == dialog) {
-            dialog = new NotificationsDialog(this, owener);
+        if (null == notificationsDialog) {
+            notificationsDialog = new NotificationsDialog(this, owener);
+            notificationsDialog.setIconImage(PlurkerApplication.PlurkIcon);
+
+//            notificationsDialog.addWindowFocusListener(new WindowFocusListener() {
+//                @Override
+//                public void windowGainedFocus(WindowEvent e) {
+////                    System.out.println(e);
+//                }
+//
+//                @Override
+//                public void windowLostFocus(WindowEvent e) {
+//                    System.out.println(e);
+//                }
+//            });
+
             Dimension size = this.getSize();
-            dialog.setSize(this.getSize());
-            jButton_Close.addActionListener(dialog);
+            notificationsDialog.setSize(this.getSize());
+            jButton_Close.addActionListener(notificationsDialog);
         }
-        return dialog;
+        return notificationsDialog;
     }
-    private NotificationsDialog dialog;
+    private NotificationsDialog notificationsDialog;
 
     class NotificationsDialog extends StandardDialog {
 

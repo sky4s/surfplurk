@@ -10,6 +10,7 @@ import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +41,6 @@ public class NotifyPanel extends ContentPanel {
                 throw new UnsupportedOperationException();
         }
     }
-
 //    @Override
 //    public void eventDispatched(AWTEvent event) {
 //        super.eventDispatched(event);
@@ -123,6 +123,15 @@ public class NotifyPanel extends ContentPanel {
         notifyPanel2.setAutoHighlight(true);
 //        notifyPanel2.setBackground(Color.yellow);
         notifyPanel2.updateWidth(300);
+
+        notifyPanel2.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("click" + e);
+            }
+        });
+
+
+
         frame.add(notifyPanel2);
         frame.pack();
         frame.setVisible(true);

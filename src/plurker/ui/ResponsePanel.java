@@ -256,37 +256,54 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     private ScrollBarAdjustmentListener commentsAdjustmentListener;
 
     public ResponsePanel(ContentPanel rootContentPanel) {
-        this(rootContentPanel, false);
+        this(rootContentPanel, Mode.Normal);
 
     }
 
     public ResponsePanel(boolean notifyMode) {
-        this(null, notifyMode);
+        this(null, notifyMode ? Mode.Notify : Mode.Normal);
     }
-    private boolean notifyMode;
+//    private boolean notifyMode;
+    private Mode mode = Mode.Normal;
 
-    public ResponsePanel(ContentPanel rootContentPanel, boolean notifyMode) {
+    public static enum Mode {
+
+        Normal, Notify, Simple
+    }
+
+    public ResponsePanel(ContentPanel rootContentPanel, Mode mode) {
         initImage();
         initComponents();
-        this.notifyMode = notifyMode;
+//        this.notifyMode = notifyMode;
+        this.mode = mode;
 
         JScrollBar verticalScrollBar = jScrollPane2.getVerticalScrollBar();
         verticalScrollBar.setUnitIncrement(GUIUtil.DefaultUnitIncrement);
-        if (notifyMode) {
-            this.jPanel_Plurk.setVisible(false);
-            this.jPanel_ResponseInput.setVisible(false);
-        } else {
-            updateMouseListener = new UpdateMouseListener();
-            commentsAdjustmentListener = new ScrollBarAdjustmentListener(jPanel_Comments, true, this);
-            verticalScrollBar.addAdjustmentListener(commentsAdjustmentListener);
 
-            alterEnterKeyMap(jEditorPane_ResponseInput);
-            plurkerDocumentListener = new PlurkerDocumentListener(jLabel_InputNotify);
-            jEditorPane_ResponseInput.getDocument().addDocumentListener(plurkerDocumentListener);
+        switch (mode) {
+            case Notify:
+                this.jPanel_Plurk.setVisible(false);
+                this.jPanel_ResponseInput.setVisible(false);
+            case Normal:
+            case Simple:
+                updateMouseListener = new UpdateMouseListener();
+                commentsAdjustmentListener = new ScrollBarAdjustmentListener(jPanel_Comments, true, this);
+                verticalScrollBar.addAdjustmentListener(commentsAdjustmentListener);
+
+                alterEnterKeyMap(jEditorPane_ResponseInput);
+
+                plurkerDocumentListener = new PlurkerDocumentListener(jLabel_InputNotify, Mode.Simple == mode);
+                jEditorPane_ResponseInput.getDocument().addDocumentListener(plurkerDocumentListener);
+                if (mode == Mode.Simple) {
+                    this.jLabel_DisplayName.setVisible(false);
+                    this.jLabel3.setVisible(false);
+//                    jLabel_InputNotify.setVisible(false);
+                }
         }
+
+
         if (null != rootContentPanel) {
             setRootContentPanel(rootContentPanel);
-//            getCommentCount();
         }
 
     }
@@ -317,7 +334,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
      * Creates new form ResponsePanel
      */
     public ResponsePanel() {
-        this(null, false);
+        this(null, Mode.Normal);
     }
 
     /**
@@ -558,7 +575,8 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     }
 
     private void updateWhiteUI() {
-        if (!notifyMode && 0 == jPanel_Comments.getComponentCount()) {
+        if (Mode.Notify != mode && 0 == jPanel_Comments.getComponentCount()) {
+            //不是notify,而且又沒東西
             if (null == noResponsePanel) {
                 noResponsePanel = new ContentPanel("還沒有人回應哦，趕快來搶頭香囉！:)");
                 noResponsePanel.addMouseListener(updateMouseListener);
@@ -573,7 +591,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             if (deltaHeight > 0) {
                 if (null == whitePanel) {
 
-                    if (notifyMode) {
+                    if (Mode.Notify == mode) {
                         whitePanel = new ContentPanel("");
                     } else {
                         whitePanel = new ContentPanel(refreshImage);
@@ -737,7 +755,9 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
         @Override
         public void run() {
-
+            if (null == rootContentPanel) {
+                return;
+            }
             Plurk plurk = rootContentPanel.getPlurk();
             if (null == plurk) {
                 return;
@@ -954,9 +974,11 @@ class PlurkerDocumentListener implements DocumentListener {
 
     public final static int MaxInputCharCount = 140;
     private JLabel notify;
+    private boolean simple;
 
-    public PlurkerDocumentListener(JLabel notify) {
+    public PlurkerDocumentListener(JLabel notify, boolean simple) {
         this.notify = notify;
+        this.simple = simple;
     }
     private boolean inLimit = true;
 
@@ -979,9 +1001,11 @@ class PlurkerDocumentListener implements DocumentListener {
             notify.setForeground(Color.red);
             inLimit = false;
         } else {
-            notify.setVisible(true);
-            notify.setText("按 Enter 送出");
-            notify.setForeground(Color.black);
+            if (!simple) {
+                notify.setVisible(true);
+                notify.setText("按 Enter 送出");
+                notify.setForeground(Color.black);
+            }
             inLimit = true;
         }
     }

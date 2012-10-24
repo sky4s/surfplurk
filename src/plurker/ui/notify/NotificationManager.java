@@ -198,16 +198,11 @@ public class NotificationManager {
     };
 
     public boolean isNotifyDialogVisible() {
-        //T F F T
-//        System.out.println(notificationsDialog.isVisible());
-//        System.out.println(notificationsDialog.isActive()); //F
-//        System.out.println(notificationsDialog.isFocused()); //F //T
-//        System.out.println(notificationsDialog.isShowing());
-//        System.out.println(notificationsDialog.isFocusable());
-//        System.out.println(notificationsDialog.isFocusableWindow());
-        return notificationsDialog.isVisible();
-//        System.out.println(notificationsDialog.getFocusOwner());
-//        return false;
+        if (null != notificationsDialog) {
+            return notificationsDialog.isVisible();// && notificationsDialog.isFocused();
+        } else {
+            return false;
+        }
     }
 
     public void setNotifyDialogVisible(boolean visible) {
