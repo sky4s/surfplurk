@@ -375,7 +375,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         if (null != plurk) {
             return PlurkFormater.getInstance(plurkPool).getContent(plurk);
         } else if (null != comment) {
-            return PlurkFormater.getInstance(plurkPool).getContent(comment);
+            return PlurkFormater.getInstance(plurkPool).getContent(comment, this.notifyMode);
         } else {
             return "N/A";
         }
@@ -817,5 +817,21 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             }
 
         }
+    }
+
+    public static ContentPanel getNotifyInstance(Plurk plurk, PlurkPool plurkPool) {
+        ContentPanel notify = new ContentPanel(plurk, null, plurkPool, -1, null, Type.Plurk, true);
+        return notify;
+
+    }
+
+    public static ContentPanel getNotifyInstance(Comment comment, PlurkPool plurkPool) {
+        ContentPanel notify = new ContentPanel(null, comment, plurkPool, -1, null, Type.Comment, true);
+        return notify;
+    }
+
+    public static ContentPanel getNotifyInstance(String content, int width) {
+        ContentPanel notify = new ContentPanel(null, null, null, width, content, Type.Unknow, true);
+        return notify;
     }
 }
