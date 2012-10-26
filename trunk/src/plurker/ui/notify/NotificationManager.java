@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 import org.json.JSONException;
+import plurker.ui.ContentPanel;
 import plurker.ui.ContentPanel.Type;
 import plurker.ui.FollowerIF;
 import plurker.ui.NotifyPanel;
@@ -119,7 +120,7 @@ public class NotificationManager {
         }
     };
 
-    public boolean addToNotificationsDialog(NotifyPanel notify) {
+    public boolean addToNotificationsDialog(ContentPanel notify) {
         if (!displayNotifyDialog) {
             return false;
         }

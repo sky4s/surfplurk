@@ -61,7 +61,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     private ResponsePanel responsePanel;
     private JDialog responseDialog;
 
-    public JDialog getResponseDialog(NotifyPanel notifyPanel) {
+    public JDialog getResponseDialog(ContentPanel notifyPanel) {
         Plurk plurk = notifyPanel.getPlurk();
         if (null == plurk) {
             Comment comment = notifyPanel.getComment();
@@ -151,7 +151,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     private javax.swing.JTabbedPane jTabbedPane2;
     // End of variables declaration//GEN-END:variables
 
-    private void alterToFitsize(NotifyPanel notify) {
+    private void alterToFitsize(ContentPanel notify) {
         int width = this.allPanel.getWidth();
 //        System.out.println(width);
         int contentHeight = getContentHeight(notify, width);
@@ -160,12 +160,12 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         notify.setPreferredSize(size);
     }
 
-    public void addToAll(NotifyPanel notify) {
+    public void addToAll(ContentPanel notify) {
 //        alterToFitsize(notify);
         this.allPanel.addContentPanel(notify);
     }
 
-    private static int getContentHeight(NotifyPanel notify, int width) {
+    private static int getContentHeight(ContentPanel notify, int width) {
 //        TinyNotificationPanel tmppanel = new TinyNotificationPanel(component);
         notify.setSize(width, Short.MAX_VALUE);
         return notify.getPreferredSize().height;
@@ -195,7 +195,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
 //        window1.frame = frame;
         NotificationManager notifyManager = NotificationManager.getInstance();
         for (int x = 0; x < 15; x++) {
-            NotifyPanel notifyPanel2 = new NotifyPanel(plurk, plurkpool);
+            ContentPanel notifyPanel2 = new ContentPanel(plurk, plurkpool);
 //            notifyPanel2.updateWidth(300);
 //            panel.addToAll(notifyPanel2);
             notifyManager.addToNotificationsDialog(notifyPanel2);
