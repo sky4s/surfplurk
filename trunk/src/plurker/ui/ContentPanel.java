@@ -809,7 +809,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
             if (EventType.ACTIVATED == eventType) {
                 HyperlinkHandler.getInstance().hyperlinkUpdate(e);
-//                System.out.println(url);
             } else if (EventType.ENTERED == eventType) {
                 inHyperlink = true;
             } else if (EventType.EXITED == eventType) {

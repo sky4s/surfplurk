@@ -41,24 +41,7 @@ public class NotifyPanel extends ContentPanel {
                 throw new UnsupportedOperationException();
         }
     }
-//    @Override
-//    public void eventDispatched(AWTEvent event) {
-//        super.eventDispatched(event);
-//        if (event instanceof MouseEvent) {
-//            MouseEvent mouseevent = (MouseEvent) event;
-//            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED) {
-//                Point point = mouseevent.getPoint();
-//                Component component = mouseevent.getComponent();
-//                if (null != component && (SwingUtilities.isDescendingFrom(component, this) || SwingUtilities.isDescendingFrom(component, this.getParent())) && SwingUtilities.isLeftMouseButton(mouseevent)) {
-//                    //點到, 就應該設定到current
-////                    System.out.println("click");
-//                    if (null != plurker) {
-////                        plurker.setCurrentFollow(this);
-//                    }
-//                }
-//            }
-//        }
-//    }
+ 
     private PlurkerApplication plurker;
 
     public void setPlurker(PlurkerApplication plurker) {
