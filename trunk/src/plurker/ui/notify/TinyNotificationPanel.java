@@ -5,30 +5,14 @@
 package plurker.ui.notify;
 
 import com.google.jplurk_oauth.data.Plurk;
-import java.awt.AWTEvent;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.PointerInfo;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JWindow;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import plurker.source.PlurkPool;
-import plurker.source.PlurkSourcer;
-import plurker.ui.NotifyPanel;
-import plurker.ui.PlurkerApplication;
+import plurker.ui.ContentPanel;
 import shu.util.Persistence;
 
 /**
@@ -55,7 +39,7 @@ public class TinyNotificationPanel extends javax.swing.JPanel {
         PlurkPool plurkpool = null;// new PlurkPool(plurkSourcerInstance);
         Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
 //        NotifyPanel notifyPanel2 = new NotifyPanel("1234", 300);
-        NotifyPanel notifyPanel2 = new NotifyPanel(plurk, plurkpool);
+        ContentPanel notifyPanel2 = new ContentPanel(plurk, plurkpool);
         notifyPanel2.updateWidth(300);
 
 //        JLabel label = new JLabel("123");
@@ -139,8 +123,6 @@ public class TinyNotificationPanel extends javax.swing.JPanel {
         return jButton_Close;
     }
 }
-
-
 
 class TinyNotificationWindow extends StandardWindow /**
  * JWindow implements ActionListener, AWTEventListener

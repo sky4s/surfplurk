@@ -28,7 +28,6 @@ import org.json.JSONException;
 import plurker.ui.ContentPanel;
 import plurker.ui.ContentPanel.Type;
 import plurker.ui.FollowerIF;
-import plurker.ui.NotifyPanel;
 import plurker.ui.notify.NotificationsPanel.NotificationsDialog;
 
 /**
@@ -143,7 +142,7 @@ public class NotificationManager {
         //        notificationsFrame.addToAll(notify);
         //        Plurk plurk = notify.getPlurk();
         if (null != followerIF && followerIF.isInFollow(plurkId)) {
-            NotifyPanel clone = (NotifyPanel) notify.clone();
+            ContentPanel clone = (ContentPanel) notify.clone();
             notificationsPanel.addToFollow(clone);
         }
         return true;
@@ -256,7 +255,7 @@ public class NotificationManager {
         NotificationManager instance = NotificationManager.getInstance();
         for (int x = 0; x < 15; x++) {
 //            instance.addToTinyWindow(new JLabel(Integer.toString(x + 1)));
-            instance.addToNotificationsDialog(new NotifyPanel("1234", 300));
+            instance.addToNotificationsDialog(ContentPanel.getNotifyInstance("1234", 300));
 
         }
 //        Thread.currentThread().sleep(5000);

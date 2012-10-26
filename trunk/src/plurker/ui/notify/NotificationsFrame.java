@@ -4,8 +4,7 @@
  */
 package plurker.ui.notify;
 
-import javax.swing.JComponent;
-import plurker.ui.NotifyPanel;
+import plurker.ui.ContentPanel;
 import plurker.ui.util.GUIUtil;
 
 /**
@@ -112,14 +111,14 @@ public class NotificationsFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 
-    public void addToAll(NotifyPanel notify) {
+    public void addToAll(ContentPanel notify) {
         int width = jPanel1.getWidth();
         int contentHeight = getContentHeight(notify, width);
         notify.setSize(width, contentHeight);
         jPanel1.add(notify);
     }
     
-    private static int getContentHeight(NotifyPanel notify, int width) {
+    private static int getContentHeight(ContentPanel notify, int width) {
 //        TinyNotificationPanel tmppanel = new TinyNotificationPanel(component);
 //        tmppanel.setSize(width, Short.MAX_VALUE);
 //        return tmppanel.getPreferredSize().height;
@@ -127,7 +126,7 @@ public class NotificationsFrame extends javax.swing.JFrame {
         return notify.getPreferredSize().height;
     }
     
-    public void addToFollow(NotifyPanel notify) {
+    public void addToFollow(ContentPanel notify) {
         jPanel2.add(notify);
     }
 //    private class NewChangeListener implements ChangeListener {

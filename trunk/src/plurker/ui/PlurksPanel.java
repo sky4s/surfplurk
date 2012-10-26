@@ -162,12 +162,11 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
             Collections.reverse(plurkList);
         }
         List<ContentPanel> contentPanelList = new ArrayList<ContentPanel>();
-
+        int width = jPanel1.getWidth();
         for (Plurk p : plurkList) {
             ContentPanel pane = new ContentPanel(p, plurkPool);
-//            pane.setNewBie(true);
             pane.setPopupMenuListener(popupMenuListener);
-            pane.updateWidth(jPanel1.getWidth());
+            pane.updateWidth(width);
             contentPanelList.add(pane);
 
         }
@@ -260,9 +259,7 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
      */
     public PlurksPanel(PlurkPool plurkPool, Timeline.Filter filter, boolean newerProcess) {
         initComponents();
-//        this.plurkPool = plurkPool;
         setPlurkPool(plurkPool);
-//        plurkPool.add
         this.filter = filter;
         this.newerProcess = newerProcess;
         if (true) {

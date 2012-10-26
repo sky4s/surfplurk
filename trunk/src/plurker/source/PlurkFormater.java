@@ -70,10 +70,14 @@ public class PlurkFormater {
         if (null == plurkPool) {
             return plurk.getContent();
         }
+        long start = System.currentTimeMillis();
         long ownderid = plurk.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
+//        System.out.println("#getUserInfo " + (System.currentTimeMillis() - start) / 1000.);
         String pretext = getPreText(userinfo, plurk);
+        System.out.println("#getPreText " + (System.currentTimeMillis() - start) / 1000.);
         String content = pretext + filterConten(plurk.getContent());
+        System.out.println("filter " + (System.currentTimeMillis() - start) / 1000.);
         return content;
     }
 
@@ -82,19 +86,9 @@ public class PlurkFormater {
     }
 
     public String getContent(Comment comment, boolean isNotify) throws JSONException {
-//        comment.getPlurkId();
         long ownderid = comment.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
         String pretext = getPreText(userinfo, comment, false, isNotify);
-//        String middle = "";
-//        if (isNotify) {
-//            JSONObject parent = comment.getParent();
-//            Plurk plurk = new Plurk(parent.getJSONObject("plurk"));
-//            long ownerId = plurk.getOwnerId();
-//            String displayName = getDisplayName(plurkPool.getUserInfo(ownerId));
-//            middle = "回應了 " + displayName + " 的噗 ";
-//        }
-
 
         String content = pretext + filterConten(comment.getContent());
         return content;
@@ -102,7 +96,7 @@ public class PlurkFormater {
 
     private void precache(String url, String path) {
         if (null == plurkPool) {
-            return;
+            throw new java.lang.IllegalStateException("null == plurkPool");
         }
         try {
             BufferedImage loadImage = ImageUtils.loadImage(path);
@@ -127,7 +121,6 @@ public class PlurkFormater {
         qualifier = qualifierTranslated != null && qualifierTranslated.length() != 0 ? qualifierTranslated : getTranslatedQualifier(qualifier);
         String middle = "";
         if (isNotify) {
-//            Comment comment = (context instanceof Comment) ? (Comment) context : null;
             if (context instanceof Comment) {
                 Comment comment = (Comment) context;
                 Plurk plurk = comment.getParentPlurk();
@@ -257,7 +250,6 @@ public class PlurkFormater {
             }
         }
 
-//        Elements atag = doc.select("a");
 
         return doc.body().html();
 
@@ -333,14 +325,12 @@ public class PlurkFormater {
         //僅處理 gif
         if (-1 != src.indexOf(".gif") || -1 != src.indexOf(".GIF")) {
             try {
-//                URLConnection openConnection = url.openConnection();
                 HttpURLConnection openConnection = (HttpURLConnection) url.openConnection();
                 openConnection.setFollowRedirects(true);
                 openConnection.setInstanceFollowRedirects(false);
                 openConnection.connect();
                 InputStream inputStream = openConnection.getInputStream();
                 gifFrame = GIFFrame.getGIFFrame(inputStream);
-//                gifFrame = GIFFrame.getGIFFrame(url.openStream());
             } catch (IOException ex) {
                 Logger.getLogger(PlurkFormater.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -351,20 +341,11 @@ public class PlurkFormater {
                 image = getGIFImage(gifFrame, 100);
             }
         }
+//          plurkPool.getImage(url);
         if (null == plurkPool.imageCache.get(url)) {
             if (null == image) {
                 if (url.getProtocol().equals("https")) {
-                    //因為https需要認證才能抓圖...乾脆直接換成http...
-                    //此為治標的行為, 先這樣
-                    String str = url.toString();
-                    str = str.replaceAll("https", "http");
-                    URL httpurl = null;
-                    try {
-                        httpurl = new URL(str);
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    image = Toolkit.getDefaultToolkit().createImage(httpurl);
+                    image = createImageFromHttps(url);
                 } else {
                     image = Toolkit.getDefaultToolkit().createImage(url);
                 }
@@ -374,23 +355,37 @@ public class PlurkFormater {
     }
 
     private Image createImageFromHttps(URL url) {
+        //因為https需要認證才能抓圖...乾脆直接換成http...
+        //此為治標的行為, 先這樣
+        String str = url.toString();
+        str = str.replaceAll("https", "http");
+        URL httpurl = null;
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
-            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-            int c;
-            while ((c = in.read()) != -1) {
-                byteArrayOut.write(c);
-            }
-            Image image = Toolkit.getDefaultToolkit().createImage(
-                    byteArrayOut.toByteArray());
-            return image;
-        } catch (IOException ex) {
+            httpurl = new URL(str);
+        } catch (MalformedURLException ex) {
             Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
+        Image image = Toolkit.getDefaultToolkit().createImage(httpurl);
+        return image;
     }
 
+//    private Image createImageFromHttps(URL url) {
+//        try {
+//            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+//            BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+//            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+//            int c;
+//            while ((c = in.read()) != -1) {
+//                byteArrayOut.write(c);
+//            }
+//            Image image = Toolkit.getDefaultToolkit().createImage(
+//                    byteArrayOut.toByteArray());
+//            return image;
+//        } catch (IOException ex) {
+//            Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
+//            return null;
+//        }
+//    }
     private static Image getGIFImage(GIFFrame[] gifFrame, int delayTime) {
         AnimatedGifEncoder encoder = new AnimatedGifEncoder();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();

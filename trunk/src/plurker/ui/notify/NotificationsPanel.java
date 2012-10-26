@@ -13,23 +13,15 @@ import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import plurker.source.PlurkPool;
 import plurker.ui.ContentPanel;
-import plurker.ui.NotifyPanel;
 import plurker.ui.PlurkerApplication;
 import plurker.ui.ResponsePanel;
-import plurker.ui.util.GUIUtil;
 import shu.util.Persistence;
 
 /**
@@ -101,8 +93,8 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
                     mouseevent = SwingUtilities.convertMouseEvent(mouseevent.getComponent(), mouseevent, commentsPanel);
                     Component componentAt = commentsPanel.getComponentAt(mouseevent.getPoint());
 //                    System.out.println(componentAt);
-                    if (componentAt instanceof NotifyPanel) {
-                        NotifyPanel notifyPanel = (NotifyPanel) componentAt;
+                    if (componentAt instanceof ContentPanel) {
+                        ContentPanel notifyPanel = (ContentPanel) componentAt;
                         JDialog responseDialog = getResponseDialog(notifyPanel);
                         responseDialog.setSize(ResponseDialogWidth, ResponseDialogHeight);
 
@@ -171,7 +163,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         return notify.getPreferredSize().height;
     }
 
-    public void addToFollow(NotifyPanel notify) {
+    public void addToFollow(ContentPanel notify) {
 //        jPanel2.add(notify);
         this.followPanel.addContentPanel(notify);
     }

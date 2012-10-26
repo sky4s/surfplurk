@@ -618,18 +618,19 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             int width = jPanel_Comments.getWidth();
             final java.util.List<ContentPanel> panelList = new ArrayList<>(length);
             int scrollBarWidth = this.jScrollPane2.getVerticalScrollBar().getWidth();
-
+            long start = System.currentTimeMillis();
             for (int x = 0; x < length; x++) {
                 if (stopUpdateUI) {
                     stopUpdateUI = false;
                     return;
                 }
                 Comment comment = commentList.get(x);
-                ContentPanel panel = initContentPanel(comment, width);
-                panel.setOffsetOfToolTip(scrollBarWidth);
-                panelList.add(panel);
-                totalHeight += panel.getHeight();
+                ContentPanel content = initContentPanel(comment, width);
+                content.setOffsetOfToolTip(scrollBarWidth);
+                panelList.add(content);
+                totalHeight += content.getHeight();
             }
+            System.out.println("init ui " + (System.currentTimeMillis() - start) / 1000.);
             jPanel_Comments.removeAll();
             jPanel_Comments.updateUI();
             for (ContentPanel panel : panelList) {
@@ -639,6 +640,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 }
                 jPanel_Comments.add(panel);
             }
+            System.out.println("add ui " + (System.currentTimeMillis() - start) / 1000.);
 
         } else {
             jPanel_Comments.removeAll();

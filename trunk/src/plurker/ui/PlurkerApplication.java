@@ -823,6 +823,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
     }//GEN-LAST:event_jCheckBoxMenuItem_TopNotifyDialogWhenUpdateActionPerformed
 
     /**
+     * -DproxyHost=auhqtmg06.corpnet.auo.com  -DproxyPassword=jamoe70F  -DproxyPort=80  -DproxyUser=skyforceshen
      * @param args the command line arguments
      */
     public static void main(String args[]) {
