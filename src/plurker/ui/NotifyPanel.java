@@ -25,6 +25,7 @@ import shu.util.Persistence;
 /**
  *
  * @author SkyforceShen
+ * @deprecated 
  */
 public class NotifyPanel extends ContentPanel {
 
@@ -41,13 +42,12 @@ public class NotifyPanel extends ContentPanel {
                 throw new UnsupportedOperationException();
         }
     }
- 
+
 //    private PlurkerApplication plurker;
 //
 //    public void setPlurker(PlurkerApplication plurker) {
 //        this.plurker = plurker;
 //    }
-
     public NotifyPanel(Plurk plurk, PlurkPool plurkPool) {
         super(plurk, null, plurkPool, -1, null, Type.Plurk, true);
     }
