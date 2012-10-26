@@ -841,11 +841,11 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     public Object clone() {
         switch (type) {
             case Plurk:
-                return new NotifyPanel(this.plurk, this.plurkPool);
+                return ContentPanel.getNotifyInstance(this.plurk, this.plurkPool);
             case Comment:
-                return new NotifyPanel(this.comment, this.plurkPool);
+                return ContentPanel.getNotifyInstance(this.comment, this.plurkPool);
             case Unknow:
-                return new NotifyPanel(this.content, this.prefferedWidth);
+                return ContentPanel.getNotifyInstance(this.content, this.prefferedWidth);
             default:
                 throw new UnsupportedOperationException();
         }
