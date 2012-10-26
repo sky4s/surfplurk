@@ -42,11 +42,11 @@ public class NotifyPanel extends ContentPanel {
         }
     }
  
-    private PlurkerApplication plurker;
-
-    public void setPlurker(PlurkerApplication plurker) {
-        this.plurker = plurker;
-    }
+//    private PlurkerApplication plurker;
+//
+//    public void setPlurker(PlurkerApplication plurker) {
+//        this.plurker = plurker;
+//    }
 
     public NotifyPanel(Plurk plurk, PlurkPool plurkPool) {
         super(plurk, null, plurkPool, -1, null, Type.Plurk, true);

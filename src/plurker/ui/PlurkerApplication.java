@@ -151,14 +151,14 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             for (Plurk plurk : newPlurkSet) {
                 NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
-                notify.setPlurker(plurker);
+//                notify.setPlurker(plurker);
                 notifyManager.addToTinyWindow(notify);
 //                notifyManager.addToNotificationsDialog(notify);
             }
             for (Comment comment : newResponseSet) {
                 NotifyPanel notify = new NotifyPanel(comment, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
-                notify.setPlurker(plurker);
+//                notify.setPlurker(plurker);
                 notifyManager.addToTinyWindow(notify);
 //                notifyManager.addToNotificationsDialog(notify);
             }
@@ -183,7 +183,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             for (Plurk plurk : newPlurkSet) {
                 NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
 //                notify.updateWidth(NotificationManager.NotifyWidth);
-                notify.setPlurker(plurker);
+//                notify.setPlurker(plurker);
                 if (notifyManager.addToTinyWindow(notify)) {
                     notify = (NotifyPanel) notify.clone();
                 }
@@ -192,7 +192,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             for (Comment comment : newResponseSet) {
                 NotifyPanel notify = new NotifyPanel(comment, plurkPool);
 //                notify.updateWidth(NotificationManager.NotifyWidth);
-                notify.setPlurker(plurker);
+//                notify.setPlurker(plurker);
                 if (notifyManager.addToTinyWindow(notify)) {
                     notify = (NotifyPanel) notify.clone();
                 }
