@@ -293,7 +293,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             try {
 
                 _content = getContent();
-//                System.out.println("#getContent " + (System.currentTimeMillis() - start) / 1000.);
+                System.out.println("#getContent " + (System.currentTimeMillis() - start) / 1000.);
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
                 return;
@@ -316,7 +316,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.jEditorPane1.addHyperlinkListener(new PlurkerHyperlinkListener());
 
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
-//        System.out.println("else " + (System.currentTimeMillis() - start) / 1000.);
+        System.out.println("else " + (System.currentTimeMillis() - start) / 1000.);
     }
 
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type) {
