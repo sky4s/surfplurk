@@ -30,6 +30,7 @@ import plurker.image.ImageUtils;
 import plurker.source.PlurkFormater;
 import plurker.source.PlurkPool;
 import plurker.source.PlurkSourcer;
+import plurker.ui.util.DirectScroll;
 import plurker.ui.util.ScrollBarAdjustmentListener;
 import plurker.ui.util.WaitLayerUI;
 //import shu.image.ImageUtils;
@@ -302,6 +303,8 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         if (null != rootContentPanel) {
             setRootContentPanel(rootContentPanel);
         }
+
+        DirectScroll.initDirectScroll(this.jScrollPane2.getVerticalScrollBar(), true);
 
     }
     private UpdateMouseListener updateMouseListener;// = new UpdateMouseListener();
