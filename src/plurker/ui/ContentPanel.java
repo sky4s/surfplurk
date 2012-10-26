@@ -313,6 +313,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type) {
         this(plurk, comment, plurkPool, width, content, type, false);
     }
+//    private static int SerialID = 0;
 
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type, boolean notifyMode) {
         initComponents();
@@ -324,7 +325,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.notifyMode = notifyMode;
         initContent(content);
         this.jLabel_Image.setVisible(false);
-
+//        System.out.println(SerialID++);
     }
     private boolean notifyMode = false;
 
