@@ -73,7 +73,6 @@ public class PlurkFormater {
         long start = System.currentTimeMillis();
         long ownderid = plurk.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
-//        System.out.println("#getUserInfo " + (System.currentTimeMillis() - start) / 1000.);
         String pretext = getPreText(userinfo, plurk);
         System.out.println("#getPreText " + (System.currentTimeMillis() - start) / 1000.);
         String content = pretext + filterConten(plurk.getContent());
@@ -86,11 +85,16 @@ public class PlurkFormater {
     }
 
     public String getContent(Comment comment, boolean isNotify) throws JSONException {
+        if (null == plurkPool) {
+            return comment.getContent();
+        }
+        long start = System.currentTimeMillis();
         long ownderid = comment.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
         String pretext = getPreText(userinfo, comment, false, isNotify);
-
+        System.out.println("#getPreText " + (System.currentTimeMillis() - start) / 1000.);
         String content = pretext + filterConten(comment.getContent());
+        System.out.println("filter " + (System.currentTimeMillis() - start) / 1000.);
         return content;
     }
 

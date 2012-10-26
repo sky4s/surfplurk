@@ -43,7 +43,7 @@ public class DirectScroll implements AWTEventListener {
         if (event instanceof MouseEvent) {
             MouseEvent mouseevent = (MouseEvent) event;
 
-            if (!SwingUtilities.isDescendingFrom(mouseevent.getComponent(), parent)) {
+            if (null == mouseevent.getComponent() || !SwingUtilities.isDescendingFrom(mouseevent.getComponent(), parent)) {
                 return;
             }
 
