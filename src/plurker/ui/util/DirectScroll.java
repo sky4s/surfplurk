@@ -5,6 +5,7 @@
 package plurker.ui.util;
 
 import java.awt.AWTEvent;
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
@@ -13,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -28,17 +30,22 @@ public class DirectScroll implements AWTEventListener {
     public static void initDirectScroll(JScrollBar scrollBar, boolean inverse) {
         DirectScroll directScroll = new DirectScroll(scrollBar, true);
     }
+    private Container parent;
 
     public DirectScroll(JScrollBar scrollBar, boolean inverse) {
         this.scrollBar = scrollBar;
         this.inverse = inverse;
-
+        parent = scrollBar.getParent();
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseevent = (MouseEvent) event;
+
+            if (!SwingUtilities.isDescendingFrom(mouseevent.getComponent(), parent)) {
+                return;
+            }
 
             if (mouseevent.getID() == MouseEvent.MOUSE_PRESSED && mouseevent.getButton() == MouseEvent.BUTTON3) {
                 directScrolllY = mouseevent.getYOnScreen();

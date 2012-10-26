@@ -129,7 +129,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     private void initEditorPane1(String content, int width) {
         jEditorPane1.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
-
         if (this.notifyMode) {
             jEditorPane1.setFont(GUIUtil.smallfont);
         } else {
@@ -227,16 +226,19 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     private void initLabel_Avatar() {
-        if (null == plurkPool) {
+        if (null == plurk && null == comment) {
             return;
+        }
+        if (null == plurkPool) {
+            throw new java.lang.IllegalStateException("null == plurkPool");
         }
         String profileImage = null;
         try {
             if ((Type.Plurk == type || Type.FirstOfResponse == type) && null != plurk) {
-//                long replurkerId = plurk.getReplurkerId();
                 long ownerId = isReplurk() ? plurk.getReplurkerId() : plurk.getOwnerId();
                 UserInfo userInfo = plurkPool.getUserInfo(ownerId);
-                UserInfo.ImageSize imageSize = isMuted() ? UserInfo.ImageSize.Medium.Small : UserInfo.ImageSize.Medium.Medium;
+                UserInfo.ImageSize imageSize = isMuted() ? UserInfo.ImageSize.Small : UserInfo.ImageSize.Medium;
+//                UserInfo.ImageSize imageSize = UserInfo.ImageSize.Small;
                 profileImage = userInfo != null ? userInfo.getProfileImage(imageSize) : null;
             } else if (Type.Comment == type && null != comment) {
                 long ownerId = comment.getOwnerId();
@@ -285,9 +287,13 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
      * @param _content
      */
     protected void initContent(String _content) {
+        long start = System.currentTimeMillis();
         if (null == _content) {
+//             _content ="";
             try {
+
                 _content = getContent();
+//                System.out.println("#getContent " + (System.currentTimeMillis() - start) / 1000.);
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
                 return;
@@ -310,6 +316,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.jEditorPane1.addHyperlinkListener(new PlurkerHyperlinkListener());
 
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
+//        System.out.println("else " + (System.currentTimeMillis() - start) / 1000.);
     }
 
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type) {
@@ -327,7 +334,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.notifyMode = notifyMode;
         initContent(content);
         this.jLabel_Image.setVisible(false);
-//        System.out.println(SerialID++);
     }
     private boolean notifyMode = false;
 
