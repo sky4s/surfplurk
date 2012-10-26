@@ -42,7 +42,6 @@ import shu.util.Persistence;
 public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjustmentListener.TriggerInterface {
 
     private boolean startListenComet = false;
-//    private boolean doTrigger = true;
     private NewResponseListener newResponseListener;
 
     private void listenComent() {
@@ -65,14 +64,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
      */
     @Override
     public void trigger(boolean topProcess, JPanel panel, CallBack callBack) {
-//        if (!doTrigger) {
-//            return;
-//        }
+
 
         if (!topProcess) {
             if (isFetchThreadRunning()) {
-                commentsFetchThread.interrupt();
-                System.out.println("interrupt");
+                commentsFetchThread.terminate();
             }
             //接著去抓comment, 因為費時, 所以要用thread
             commentsFetchThread = new CommentsFetchThread(true);
@@ -85,8 +81,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     }
 
     public boolean isFetchThreadRunning() {
-//        commentsFetchThread.isAlive();
-        return null != commentsFetchThread && commentsFetchThread.isAlive();
+        return null != commentsFetchThread && commentsFetchThread.isAlive() && !commentsFetchThread.stop;
     }
 
     private class NewResponseListener implements ChangeListener {
@@ -148,10 +143,8 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     }
 
     public final void setRootContentPanel(final ContentPanel rootContentPanel) {
-//        System.out.println("set");
         if (isFetchThreadRunning()) {
-            commentsFetchThread.interrupt();
-//            return;
+            commentsFetchThread.terminate();
         }
 
         this.reset();
@@ -176,9 +169,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         this.commentsAdjustmentListener.stopListen();
         commentsFetchThread = new CommentsFetchThread();
         commentsFetchThread.start();
-        this.commentsAdjustmentListener.startListen();
-//         System.out.println("thread start");
-
     }
     private ContentPanel loadingPane;
     public final static String RedFont = "<font color=\"#FF0000\">";
@@ -320,8 +310,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
         public void mouseClicked(MouseEvent e) {
             if (isFetchThreadRunning()) {
-                commentsFetchThread.interrupt();
-//                return;
+                commentsFetchThread.terminate();
             }
             //接著去抓comment, 因為費時, 所以要用thread
 //            if (jPanel_Comments.contains(whitePanel)) {
@@ -561,23 +550,12 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         }
 
         firstPanel.addNofityLabelCount();
-        //        ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
-        //contentPanel.updateWidth(width);
 
-//        ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
         int width = jPanel_Comments.getWidth();
+        int scrollBarWidth = this.jScrollPane2.getVerticalScrollBar().getWidth();
         ContentPanel contentPanel = initContentPanel(comment, width);
-
-
-
+        contentPanel.setOffsetOfToolTip(scrollBarWidth);
         addContentPanel(contentPanel);
-//        Dimension size = jPanel_Comments.getSize();
-//        contentPanel.updateWidth(size.width);
-//        if (null != whitePanel && SwingUtilities.isDescendingFrom(whitePanel, jPanel_Comments)) {
-//            jPanel_Comments.remove(whitePanel);
-//        }
-//        jPanel_Comments.add(contentPanel);
-//        updateWhiteUI();
 
     }
 
@@ -621,18 +599,18 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                     commentsAdjustmentListener.stopListen();
                 }
                 viewport.setViewPosition(new Point(0, jPanel_Comments.getPreferredSize().height));
-                if (null != commentsAdjustmentListener) {
-                    commentsAdjustmentListener.startListen();
-                }
+//                if (null != commentsAdjustmentListener) {
+//                    commentsAdjustmentListener.startListen();
+//                }
             }
 
         }
 
     }
+    private boolean stopUpdateUI = false;
 
     private void setCommentListToUI(final java.util.List<Comment> commentList) {
-        jPanel_Comments.removeAll();
-        jPanel_Comments.updateUI();
+
 
         if (null != commentList && !commentList.isEmpty()) {
             int totalHeight = 0;
@@ -641,96 +619,32 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             final java.util.List<ContentPanel> panelList = new ArrayList<>(length);
             int scrollBarWidth = this.jScrollPane2.getVerticalScrollBar().getWidth();
 
-            for (int x = 0; x < length /*&& !isStopUpdate()*/; x++) {
+            for (int x = 0; x < length; x++) {
+                if (stopUpdateUI) {
+                    stopUpdateUI = false;
+                    return;
+                }
                 Comment comment = commentList.get(x);
                 ContentPanel panel = initContentPanel(comment, width);
                 panel.setOffsetOfToolTip(scrollBarWidth);
                 panelList.add(panel);
                 totalHeight += panel.getHeight();
             }
-//            System.out.println("totalHeight1: " + totalHeight);
+            jPanel_Comments.removeAll();
+            jPanel_Comments.updateUI();
             for (ContentPanel panel : panelList) {
-                jPanel_Comments.add(panel);
-            }
-//            totalHeight = 0;
-//            for (ContentPanel panel : panelList) {
-//                totalHeight += panel.getHeight();
-//            }
-//            System.out.println("totalHeight2: " + totalHeight);
-        }
-
-        updateWhiteUI();
-
-    }
-
-    private void setCommentToUI_(final java.util.List<Comment> commentList) {
-        jPanel_Comments.removeAll();
-        jPanel_Comments.updateUI();
-        if (null != commentList && !commentList.isEmpty()) {
-            int totalHeight = 0;
-            int length = commentList.size();
-            int width = jPanel_Comments.getWidth();
-            final java.util.List<ContentPanel> panelList = new ArrayList<>(length);
-            int scrollBarWidth = this.jScrollPane2.getVerticalScrollBar().getWidth();
-
-            for (int x = 0; x < length /*&& !isStopUpdate()*/; x++) {
-                Comment comment = commentList.get(x);
-                ContentPanel panel = initContentPanel(comment, width);
-                panel.setOffsetOfToolTip(scrollBarWidth);
-                panelList.add(panel);
-                totalHeight += panel.getHeight();
-            }
-            for (ContentPanel panel : panelList) {
+                if (stopUpdateUI) {
+                    stopUpdateUI = false;
+                    return;
+                }
                 jPanel_Comments.add(panel);
             }
 
-            Dimension size = jScrollPane2.getViewport().getSize();
-            int deltaHeight = size.height - totalHeight;
-
-
-            Dimension size_ = jPanel_Comments.getSize();
-            Dimension preferredSize_ = jPanel_Comments.getPreferredSize();
-//            Dimension preferredSize = jPanel_Comments.getPreferredSize();
-
-            int totalHeight_ = 0;
-            for (int x = 0; x < jPanel_Comments.getComponentCount(); x++) {
-                Component component = jPanel_Comments.getComponent(x);
-                totalHeight_ += component.getHeight();
-            }
-//
-            int deltaHeight_ = size_.height - preferredSize_.height;
-            int deltaHeight__ = size_.height - totalHeight_;
-            System.out.println(deltaHeight + " " + deltaHeight_ + " " + deltaHeight__);
-            if (deltaHeight > 0) {
-                whitePanel = new ContentPanel("");
-                Dimension whitesize = new Dimension(size.width, deltaHeight);
-                whitePanel.setSize(whitesize);
-                whitePanel.setPreferredSize(whitesize);
-                whitePanel.addMouseListener(updateMouseListener);
-                jPanel_Comments.add(whitePanel);
-            } else {
-                whitePanel = null;
-            }
         } else {
-            if (null == noResponsePanel) {
-                noResponsePanel = new ContentPanel("還沒有人回應哦，趕快來搶頭香囉！:)");
-                noResponsePanel.addMouseListener(updateMouseListener);
-            }
-            jPanel_Comments.add(noResponsePanel);
+            jPanel_Comments.removeAll();
+            jPanel_Comments.updateUI();
         }
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                updateUI();
-            }
-        });
-        JViewport viewport = jScrollPane2.getViewport();
-        viewport.setViewPosition(new Point(0, jPanel_Comments.getPreferredSize().height));
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                updateUI();
-            }
-        });
+        updateWhiteUI();
     }
 
     /**
@@ -744,21 +658,22 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     }
     private JLayer<JPanel> jlayer;
     private WaitLayerUI layerUI = new WaitLayerUI();
+    static int ThreadSerialID = 0;
 
     private class CommentsFetchThread extends Thread {
 
+        int serialID;
+
         CommentsFetchThread(boolean fetchFromPlurkSourcer) {
             this.fetchFromPlurkSourcer = fetchFromPlurkSourcer;
+            serialID = ThreadSerialID++;
         }
 
         CommentsFetchThread() {
             this(false);
         }
-        boolean fetchFromPlurkSourcer = false;
-//        boolean ending = false;
-
-        public void terminate() {
-        }
+        private boolean fetchFromPlurkSourcer = false;
+        boolean stop = false;
 
         @Override
         public void run() {
@@ -769,6 +684,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             if (null == plurk) {
                 return;
             }
+            System.out.println(serialID + " Thread Start");
 
             if (null == loadingPane) {
                 loadingPane = new ContentPanel(" ", jPanel_Comments.getWidth());
@@ -777,27 +693,31 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
             jPanel_Comments.add(jlayer);
             layerUI.start();
+//            System.out.println("layerUI.start()");
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     updateUI();
+//                    System.out.println("updateUI");
                 }
             });
-
+            if (stop) {
+                stopUpdating();
+            }
+            long start = System.currentTimeMillis();
             java.util.List<Comment> commentList = null;
             try {
-                System.out.println("fetch comments");
+                System.out.println(serialID + " fetch comments");
                 if (PlurkerApplication.offlineMode && new File("comments.obj").exists()) {
                     commentList = (java.util.List<Comment>) Persistence.readObjectAsXML("comments.obj");
                 } else if (null != plurkPool) {
                     commentList = plurkPool.getComments(plurk, 0, fetchFromPlurkSourcer);
                 }
-                System.out.println("fetch end");
+                System.out.println(serialID + " fetch end " + ((System.currentTimeMillis() - start) / 1000.));
             } catch (JSONException ex) {
                 Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
             } catch (java.lang.IllegalArgumentException ex) {
             }
-            if (null == commentList/* || true == stopFetch*/) {
-//                ending = true;
+            if (null == commentList) {
                 return;
             }
 
@@ -805,30 +725,49 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 Persistence.writeObjectAsXML(commentList, "comments.obj");
             }
 
-//            updateCommentsToUI(commentList);
+            if (stop) {
+                stopUpdating();
+            }
             commentsAdjustmentListener.stopListen();
+            System.out.println(serialID + " set ui " + ((System.currentTimeMillis() - start) / 1000.));
             setCommentListToUI(commentList);
+            System.out.println(serialID + " set ui end " + ((System.currentTimeMillis() - start) / 1000.));
+            if (stop) {
+                stopUpdating();
+            }
             updateCommentCountToPlurk(commentList);
 
 
+            stopUpdating();
+            System.out.println(serialID + " Thread End");
+        }
+
+        private void stopUpdating() {
+            System.out.println("stop updating");
             if (null != triggerCallBack) {
                 triggerCallBack.callback();
             }
-
-
             layerUI.stop();
-            jPanel_Comments.remove(jlayer);
+            if (jPanel_Comments.isAncestorOf(jlayer)) {
+                jPanel_Comments.remove(jlayer);
+            }
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     updateUI();
                 }
             });
-            commentsAdjustmentListener.startListen();
+        }
+
+        public void terminate() {
+            stop = true;
+            stopUpdateUI = true;
         }
 
         private void updateCommentCountToPlurk(java.util.List<Comment> commentList) {
             int size = commentList.size();
-            firstPanel.setNofityLabelCount(size);
+            if (null != firstPanel) {
+                firstPanel.setNofityLabelCount(size);
+            }
         }
     }
 
@@ -851,43 +790,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             return count - 1;
         }
         return count;
-    }
-
-    private void addCommentToUI_(Comment comment) {
-        firstPanel.addNofityLabelCount();
-        ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
-
-        Dimension size = jScrollPane2.getViewport().getSize();
-        contentPanel.updateWidth(size.width);
-        int contentHeight = contentPanel.getHeight();
-        int deltaHeight = size.height - contentHeight;
-
-        if (jPanel_Comments.getComponentCount() == 1) {
-            if (jPanel_Comments.getComponent(0) == noResponsePanel) {
-                jPanel_Comments.remove(noResponsePanel);
-            }
-            jPanel_Comments.add(contentPanel);
-            jPanel_Comments.add(getWhiteContentPanel(size.width, deltaHeight));
-        } else {
-            if (null == whitePanel) {
-                //沒有白就不用特別處理了
-                jPanel_Comments.add(contentPanel);
-            } else {
-                int whiteHeight = whitePanel.getHeight();
-                if (contentHeight > whiteHeight) {
-                    //不用白了
-                    jPanel_Comments.remove(whitePanel);
-                    whitePanel = null;
-                    jPanel_Comments.add(contentPanel);
-                } else {
-                    //要新的白
-                    jPanel_Comments.remove(whitePanel);
-                    jPanel_Comments.add(contentPanel);
-                    int newWhiteHeight = whitePanel.getHeight() - contentHeight;
-                    jPanel_Comments.add(getWhiteContentPanel(size.width, newWhiteHeight));
-                }
-            }
-        }
     }
 
     private ContentPanel initContentPanel(Comment comment, int width) {
@@ -914,11 +816,9 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 Plurk plurk = rootContentPanel.getPlurk();
                 Comment comment = plurkPool.responseAdd(plurk.getPlurkId(), text, qualifier);
                 if (null != comment) {
-//                    doTrigger = false;
                     commentsAdjustmentListener.stopListen();
                     addCommentToUI(comment);
                     jEditorPane_ResponseInput.setText("");
-//                    doTrigger = true;
                     commentsAdjustmentListener.startListen();
                 } else {
                     HttpRequestException httpRequestException = plurkPool.getSourcer().getHttpRequestException();

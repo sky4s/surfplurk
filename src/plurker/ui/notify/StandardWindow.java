@@ -21,20 +21,20 @@ import plurker.ui.util.GUIUtil;
 
 class StandardDialog extends JDialog implements ActionListener/*, AWTEventListener*/ {
 
-    StandardDialog(JPanel contentPanel, JPanel closePanel) {
-        this(contentPanel, closePanel, null);
+    StandardDialog(JPanel contentPanel) {
+        this(contentPanel, null);
     }
 
-    StandardDialog(JPanel contentPanel, JPanel closePanel, Frame owener) {
+    StandardDialog(JPanel contentPanel, Frame owener) {
         super(owener);
         this.contentPanel = contentPanel;
-        this.closePanel = closePanel;
+//        this.closePanel = closePanel;
         this.setAlwaysOnTop(false);
         getContentPane().add(contentPanel);
 //        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
     }
     protected JPanel contentPanel;
-    private JPanel closePanel;
+//    private JPanel closePanel;
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -62,9 +62,8 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
     @Override
     public void eventDispatched(AWTEvent event) {
         MouseEvent mouseevent = (MouseEvent) event;
-
-        if (mouseevent.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(mouseevent)) {
-            if (null != mouseevent.getComponent() && SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
+        if (null != mouseevent.getComponent() && SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
+            if (mouseevent.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(mouseevent)) {
                 //popup
                 Component child = getJPanel1ComponentAtCursor(mouseevent);
                 if (child instanceof ContentPanel) {
@@ -73,10 +72,9 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                     inHyperlink = false;
                 }
             }
-        }
-        if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(mouseevent)) {
-            //read or open hyperlink
-            if (null != mouseevent.getComponent() && SwingUtilities.isDescendingFrom(mouseevent.getComponent(), this)) {
+            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(mouseevent)) {
+                System.out.println("click event");
+                //read or open hyperlink
                 Component child = getJPanel1ComponentAtCursor(mouseevent);
 
                 if (child instanceof ContentPanel) {
@@ -86,17 +84,21 @@ public class PlurksPanel extends javax.swing.JPanel implements AWTEventListener,
                 if (child instanceof ContentPanel) {
                     if (((ContentPanel) child).isInHyperlink(mouseevent)) {
                     } else if (null != plurker) {
+                        System.out.println("click&open");
                         //滑鼠點下去, 如果是contentpanel, 而且plurker不是空的, 就設定plurker的current follow
                         ContentPanel contentPanel = (ContentPanel) child;
                         plurker.setCurrentFollow(contentPanel);
+
                     }
                     //滑鼠點下去, 如果是contentpanel, 而且plurker不是空的, 就設定plurker的current follow
 //                    ContentPanel contentPanel = (ContentPanel) child;
 //                    plurker.setCurrentFollow(contentPanel);
                 }
-            }
 
+            }
         }
+
+
     }
 
     public void updatePlurks() {

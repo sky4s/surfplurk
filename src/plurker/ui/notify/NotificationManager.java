@@ -206,6 +206,9 @@ public class NotificationManager {
     }
 
     public void setNotifyDialogVisible(boolean visible) {
+        if (null == notificationsDialog) {
+            return;
+        }
         if (visible) {
             notificationsDialog.setVisible(visible);
             notificationsDialog.setAlwaysOnTop(true);

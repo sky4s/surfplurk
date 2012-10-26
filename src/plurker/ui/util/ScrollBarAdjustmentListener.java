@@ -31,6 +31,7 @@ public class ScrollBarAdjustmentListener implements AdjustmentListener, CallBack
     }
 
     public void startListen() {
+        System.out.println("start "+doListen);
         doListen = true;
     }
 
@@ -54,8 +55,6 @@ public class ScrollBarAdjustmentListener implements AdjustmentListener, CallBack
         doListen = false;
         JScrollBar verticalScrollBar = (JScrollBar) e.getSource();
         int value = e.getValue();
-//        boolean isdrag = e.getValueIsAdjusting();
-//        System.out.println(prevalue + " " + value);
         if (value == 0) {
             //頂端
             if (value == prevalue || -1 == prevalue) {

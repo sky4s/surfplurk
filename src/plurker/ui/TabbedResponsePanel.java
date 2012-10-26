@@ -117,6 +117,7 @@ public class TabbedResponsePanel extends javax.swing.JPanel implements FollowerI
         }
 
     }
+    private JhromeTabUI normalTabUI;
 
     class TabbedPaneListener implements ITabbedPaneListener {
 
@@ -126,14 +127,16 @@ public class TabbedResponsePanel extends javax.swing.JPanel implements FollowerI
             ITab selectedTab = tabbedPane1.getSelectedTab();
             if (selectedTab instanceof DefaultTab) {
                 DefaultTab defaultTab = (DefaultTab) selectedTab;
+                if (null == normalTabUI) {
+                    normalTabUI = new JhromeTabUI();
+                }
                 //做reset
-                defaultTab.setUI(new JhromeTabUI());
-
+                defaultTab.setUI(normalTabUI);
             }
         }
     }
 
-    DefaultTab addToTabbedPane(String title, ResponsePanel responsePanel, boolean enableCloseButton) {
+    private DefaultTab addToTabbedPane(String title, ResponsePanel responsePanel, boolean enableCloseButton) {
         title = (null == title) ? responsePanel.getTabTitle() : title;
         DefaultTab tab = new DefaultTab(title, responsePanel);
         responsePanel.setDefaultTab(tab);

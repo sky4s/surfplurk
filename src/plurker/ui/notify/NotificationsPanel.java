@@ -54,7 +54,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         jTabbedPane2.addTab("追蹤中", followPanel);
 
         this.setSize(this.getPreferredSize());
-        this.jPanel3.setVisible(false);
+//        this.jPanel3.setVisible(false);
 //        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_WHEEL_EVENT_MASK);
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK);
     }
@@ -90,7 +90,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     public void eventDispatched(AWTEvent event) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseevent = (MouseEvent) event;
-            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED&& SwingUtilities.isLeftMouseButton(mouseevent) ) {
+            if (mouseevent.getID() == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(mouseevent)) {
 
                 Component component = mouseevent.getComponent();
                 if (null != component && SwingUtilities.isDescendingFrom(component, this)) {
@@ -138,32 +138,16 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel3 = new javax.swing.JPanel();
-        jButton_Close = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setPreferredSize(new java.awt.Dimension(300, 475));
         setLayout(new java.awt.BorderLayout());
 
-        jPanel3.setLayout(new java.awt.BorderLayout());
-
-        jButton_Close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/resource/dialog_close.png"))); // NOI18N
-        jButton_Close.setBorder(null);
-        jButton_Close.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/plurker/ui/resource/dialog_cancel.png"))); // NOI18N
-        jPanel3.add(jButton_Close, java.awt.BorderLayout.EAST);
-        jPanel3.add(jLabel1, java.awt.BorderLayout.CENTER);
-
-        add(jPanel3, java.awt.BorderLayout.PAGE_START);
-
         jTabbedPane2.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         add(jTabbedPane2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton_Close;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane2;
     // End of variables declaration//GEN-END:variables
 
@@ -241,7 +225,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
 
             Dimension size = this.getSize();
             notificationsDialog.setSize(this.getSize());
-            jButton_Close.addActionListener(notificationsDialog);
+//            jButton_Close.addActionListener(notificationsDialog);
         }
         return notificationsDialog;
     }
@@ -252,7 +236,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         private NotificationsPanel notificationsPanel;
 
         NotificationsDialog(NotificationsPanel notificationsPanel, Frame owener) {
-            super(notificationsPanel, jPanel3, owener);
+            super(notificationsPanel, owener);
             this.setIconImage(PlurkerApplication.PlurkIcon);
             this.notificationsPanel = notificationsPanel;
             getContentPane().add(notificationsPanel);
@@ -285,11 +269,11 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
             }
         }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == jButton_Close) {
-                this.setVisible(false);
-            }
-        }
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            if (e.getSource() == jButton_Close) {
+//                this.setVisible(false);
+//            }
+//        }
     }
 }
