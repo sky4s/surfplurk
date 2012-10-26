@@ -149,14 +149,14 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             TreeSet<Comment> newResponseSet = plurkPool.getStackResponseSet();
 
             for (Plurk plurk : newPlurkSet) {
-                NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
+                ContentPanel notify = ContentPanel.getNotifyInstance(plurk, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
 //                notify.setPlurker(plurker);
                 notifyManager.addToTinyWindow(notify);
 //                notifyManager.addToNotificationsDialog(notify);
             }
             for (Comment comment : newResponseSet) {
-                NotifyPanel notify = new NotifyPanel(comment, plurkPool);
+                ContentPanel notify = ContentPanel.getNotifyInstance(comment, plurkPool);
                 notify.updateWidth(NotificationManager.NotifyWidth);
 //                notify.setPlurker(plurker);
                 notifyManager.addToTinyWindow(notify);
@@ -181,20 +181,20 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             }
 
             for (Plurk plurk : newPlurkSet) {
-                NotifyPanel notify = new NotifyPanel(plurk, plurkPool);
+                ContentPanel notify = ContentPanel.getNotifyInstance(plurk, plurkPool);
 //                notify.updateWidth(NotificationManager.NotifyWidth);
 //                notify.setPlurker(plurker);
                 if (notifyManager.addToTinyWindow(notify)) {
-                    notify = (NotifyPanel) notify.clone();
+                    notify = (ContentPanel) notify.clone();
                 }
                 notifyManager.addToNotificationsDialog(notify);
             }
             for (Comment comment : newResponseSet) {
-                NotifyPanel notify = new NotifyPanel(comment, plurkPool);
+                ContentPanel notify = ContentPanel.getNotifyInstance(comment, plurkPool);
 //                notify.updateWidth(NotificationManager.NotifyWidth);
 //                notify.setPlurker(plurker);
                 if (notifyManager.addToTinyWindow(notify)) {
-                    notify = (NotifyPanel) notify.clone();
+                    notify = (ContentPanel) notify.clone();
                 }
                 notifyManager.addToNotificationsDialog(notify);
             }

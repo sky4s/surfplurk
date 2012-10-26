@@ -278,22 +278,24 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
 
     }
+    private String content;
 
     /**
      *
-     * @param content
+     * @param _content
      */
-    protected void initContent(String content) {
-        if (null == content) {
+    protected void initContent(String _content) {
+        if (null == _content) {
             try {
-                content = getContent();
+                _content = getContent();
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
         }
+        content = _content;
         initLabel_Avatar();
-        initEditorPane1(content, prefferedWidth);
+        initEditorPane1(_content, prefferedWidth);
         this.jLabel_Time.setVisible(false);
         this.jLabel_Notify.setVisible(false);
         if (!isMuted() && !notifyMode) {
@@ -833,5 +835,19 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     public static ContentPanel getNotifyInstance(String content, int width) {
         ContentPanel notify = new ContentPanel(null, null, null, width, content, Type.Unknow, true);
         return notify;
+    }
+
+    @Override
+    public Object clone() {
+        switch (type) {
+            case Plurk:
+                return new NotifyPanel(this.plurk, this.plurkPool);
+            case Comment:
+                return new NotifyPanel(this.comment, this.plurkPool);
+            case Unknow:
+                return new NotifyPanel(this.content, this.prefferedWidth);
+            default:
+                throw new UnsupportedOperationException();
+        }
     }
 }
