@@ -234,22 +234,24 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
         String profileImage = null;
         try {
+            UserInfo.ImageSize imageSize = UserInfo.ImageSize.Small;
+            UserInfo userInfo = null;
             if ((Type.Plurk == type || Type.FirstOfResponse == type) && null != plurk) {
                 long ownerId = isReplurk() ? plurk.getReplurkerId() : plurk.getOwnerId();
-                UserInfo userInfo = plurkPool.getUserInfo(ownerId);
-                UserInfo.ImageSize imageSize = isMuted() ? UserInfo.ImageSize.Small : UserInfo.ImageSize.Medium;
-//                UserInfo.ImageSize imageSize = UserInfo.ImageSize.Small;
-                profileImage = userInfo != null ? userInfo.getProfileImage(imageSize) : null;
+                userInfo = plurkPool.getUserInfo(ownerId);
+                imageSize = !isMuted() ? UserInfo.ImageSize.Medium : UserInfo.ImageSize.Small;
             } else if (Type.Comment == type && null != comment) {
                 long ownerId = comment.getOwnerId();
-                UserInfo userInfo = plurkPool.getUserInfo(ownerId);
-                if (null != userInfo) {
-                    profileImage = userInfo.getProfileImage(UserInfo.ImageSize.Small);
-                }
+                userInfo = plurkPool.getUserInfo(ownerId);
+            }
+
+            if (null != userInfo) {
+                profileImage = userInfo.getProfileImage(imageSize);
             }
         } catch (JSONException ex) {
             Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
 
         if (null != profileImage) {
             try {
@@ -301,7 +303,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
         content = _content;
         initLabel_Avatar();
-        initEditorPane1(_content, prefferedWidth);
+        initEditorPane1(content, prefferedWidth);
         this.jLabel_Time.setVisible(false);
         this.jLabel_Notify.setVisible(false);
         if (!isMuted() && !notifyMode) {
@@ -378,6 +380,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.responseInput = responseInput;
     }
     private JEditorPane responseInput;
+    public void reset() {
+        
+    }
 
     protected String getContent() throws JSONException {
         if (null != plurk) {

@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,8 +27,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.net.ssl.HttpsURLConnection;
-//import org.jivesoftware.stringprep.Punycode;
 
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -41,8 +38,6 @@ import plurker.image.GIFFrame;
 import plurker.image.ImageUtils;
 import plurker.ui.PlurkerApplication;
 import plurker.ui.Qualifier;
-//import sun.net.idn.Punycode;
-//import org.jivesoftware.stringprep.*;
 
 /**
  *
@@ -70,13 +65,13 @@ public class PlurkFormater {
         if (null == plurkPool) {
             return plurk.getContent();
         }
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         long ownderid = plurk.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
         String pretext = getPreText(userinfo, plurk);
-        System.out.println("#getPreText " + (System.currentTimeMillis() - start) / 1000.);
+//        System.out.println("#getPreText " + (System.currentTimeMillis() - start) / 1000.);
         String content = pretext + filterConten(plurk.getContent());
-        System.out.println("filter " + (System.currentTimeMillis() - start) / 1000.);
+//        System.out.println("filter " + (System.currentTimeMillis() - start) / 1000.);
         return content;
     }
 
@@ -88,13 +83,13 @@ public class PlurkFormater {
         if (null == plurkPool) {
             return comment.getContent();
         }
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         long ownderid = comment.getOwnerId();
         UserInfo userinfo = plurkPool.getUserInfo(ownderid);
         String pretext = getPreText(userinfo, comment, false, isNotify);
-        System.out.println("#getPreText " + (System.currentTimeMillis() - start) / 1000.);
+//        System.out.println("#getPreText " + (System.currentTimeMillis() - start) / 1000.);
         String content = pretext + filterConten(comment.getContent());
-        System.out.println("filter " + (System.currentTimeMillis() - start) / 1000.);
+//        System.out.println("filter " + (System.currentTimeMillis() - start) / 1000.);
         return content;
     }
 
@@ -114,9 +109,6 @@ public class PlurkFormater {
         precache("http://replurker.png", "./image/f82b1fb13b0692732212b8d112aa9a14.png");
     }
 
-//    public String getPreText(UserInfo userInfo, ContextIF context) throws JSONException {
-//        return getPreText(userInfo, context, false);
-//    }
     public String getPreText(UserInfo userInfo, ContextIF context, boolean isPlurk, boolean isNotify) throws JSONException {
         String qualifier = context.getQualifier();
         Qualifier q = Qualifier.getQualifier(qualifier);
@@ -177,20 +169,7 @@ public class PlurkFormater {
 
     private static String getDisplayName(UserInfo userInfo) throws JSONException {
         return getName(userInfo, true);
-//        if (null != userInfo) {
-//            String displayName = userInfo.getDisplayName();
-//            if (null == displayName || "".equals(displayName)) {
-//                displayName = userInfo.getNickName();
-//            }
-//            String htmlNameColor = userInfo.getHTMLNameColor();
-//            String result = "<b><font color=\"" + htmlNameColor + "\">" + displayName + "</font></b>";
-//            return result;
-//        } else {
-//            return "N/A";
-//        }
-
     }
-//    private Parser parser = new Parser();
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 //        FileReader reader = new FileReader("b.html");
@@ -280,54 +259,20 @@ public class PlurkFormater {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         String newurl = null;
-//        try {
 
         String host = url.getHost();
-        //            System.out.println(host);
-        //            try {
-        //                host = java.net.URLEncoder.encode(url.getHost(), "Unicode");
-        //            } catch (UnsupportedEncodingException ex) {
-        //                Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
-        //            }
-        //            String host = url.getHost();
-        //            org.jivesoftware.stringprep.
-        //            Punycode.encode(null, blns)
-        //            host = org.jivesoftware.stringprep.Punycode.encode(host);
         host = IDN.toASCII(host);
-
-
         String path = url.getPath();
-//        try {
-//            path = java.net.URLEncoder.encode(path, "UTF-8");
-//        } catch (UnsupportedEncodingException ex) {
-//            Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
-//            StringBuffer punyurl = Punycode.encode(new StringBuffer(host), null);
-//            host = punyurl.toString();
-//            host = java.net.URLEncoder.encode(host, "UTF-8");
-//            String path = java.net.URLEncoder.encode(url.getPath(), "UTF-8");
         newurl = url.getProtocol() + "://" + host + path;
 
-//        } catch (PunycodeException ex) {
-//            Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return src;
         return newurl;
     }
 
-    private void cacheImage(String src) {
-        URL url = null;
-        try {
-            url = new URL(encodeToUTF8(src));
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(PlurkFormater.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        GIFFrame[] gifFrame = null;
-        Image image = null;
-        //僅處理 gif
+    private Image processGIFImage(URL url) {
+        String src = url.getFile();
+
         if (-1 != src.indexOf(".gif") || -1 != src.indexOf(".GIF")) {
+            GIFFrame[] gifFrame = null;
             try {
                 HttpURLConnection openConnection = (HttpURLConnection) url.openConnection();
                 openConnection.setFollowRedirects(true);
@@ -342,10 +287,42 @@ public class PlurkFormater {
             //檢查是不是delay time==0
             if (isDelayTimeZero(gifFrame)) {
                 //若是, 則重新設定delay time並且產生新的gif
-                image = getGIFImage(gifFrame, 100);
+                return getGIFImage(gifFrame, 100);
             }
         }
-//          plurkPool.getImage(url);
+        return null;
+    }
+
+    private void cacheImage(String src) {
+        URL url = null;
+        try {
+            url = new URL(encodeToUTF8(src));
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(PlurkFormater.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Image image = processGIFImage(url);
+        //僅處理 gif
+//        if (-1 != src.indexOf(".gif") || -1 != src.indexOf(".GIF")) {
+//            GIFFrame[] gifFrame = null;
+//            try {
+//                HttpURLConnection openConnection = (HttpURLConnection) url.openConnection();
+//                openConnection.setFollowRedirects(true);
+//                openConnection.setInstanceFollowRedirects(false);
+//                openConnection.connect();
+//                InputStream inputStream = openConnection.getInputStream();
+//                gifFrame = GIFFrame.getGIFFrame(inputStream);
+//            } catch (IOException ex) {
+//                Logger.getLogger(PlurkFormater.class
+//                        .getName()).log(Level.SEVERE, null, ex);
+//            }
+//            //檢查是不是delay time==0
+//            if (isDelayTimeZero(gifFrame)) {
+//                //若是, 則重新設定delay time並且產生新的gif
+//                image = getGIFImage(gifFrame, 100);
+//            }
+//        }
         if (null == plurkPool.imageCache.get(url)) {
             if (null == image) {
                 if (url.getProtocol().equals("https")) {
@@ -373,23 +350,6 @@ public class PlurkFormater {
         return image;
     }
 
-//    private Image createImageFromHttps(URL url) {
-//        try {
-//            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-//            BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
-//            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-//            int c;
-//            while ((c = in.read()) != -1) {
-//                byteArrayOut.write(c);
-//            }
-//            Image image = Toolkit.getDefaultToolkit().createImage(
-//                    byteArrayOut.toByteArray());
-//            return image;
-//        } catch (IOException ex) {
-//            Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
-//            return null;
-//        }
-//    }
     private static Image getGIFImage(GIFFrame[] gifFrame, int delayTime) {
         AnimatedGifEncoder encoder = new AnimatedGifEncoder();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -405,43 +365,6 @@ public class PlurkFormater {
         buffer = null;
         return image;
     }
-//    private NodeList recurseTagRemove(NodeList list) throws MalformedURLException {
-//        if (list == null) {
-//            return null;
-//        }
-//
-//        Node node = null;
-//        SimpleNodeIterator iterator = list.elements();
-//
-//        while (iterator.hasMoreNodes()) {
-//            node = iterator.nextNode();
-//            if (node == null) {
-//                break;
-//            }
-//            if (node instanceof Tag) {
-//                Tag tag = (Tag) node;
-//                if (tag instanceof ImageTag)//<img> 标签
-//                {
-//                    ImageTag imageTag = (ImageTag) tag;
-//                    String imageURL = imageTag.getImageURL();
-//                    boolean isGIF = false;// imageURL.indexOf("gif") != -1;
-//                    URL url = new URL(imageURL);
-//                    if (null == plurkPool.imageCache.get(url) && !isGIF) {
-//                        Image image = Toolkit.getDefaultToolkit().createImage(url);
-//                        imageTag.setAttribute("height", "40");
-//                        if (null == imageTag.getAttribute("width")) {
-//                        }
-//
-//                        plurkPool.imageCache.put(url, image);
-//                    }
-//                }
-//
-//                recurseTagRemove(node.getChildren());
-//            }
-//        }
-//
-//        return list;
-//    }
     private static SimpleDateFormat GMTDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
     private static SimpleDateFormat PlurkerDateFormat = new SimpleDateFormat("MMM dd - HH:mm", Locale.TAIWAN);
 
@@ -471,10 +394,6 @@ public class PlurkFormater {
     public static String getPostedString(Plurk plurk) {
         try {
             return PlurkerDateFormat.format(plurk.getPostedDate());
-//        } catch (JSONException ex) {
-//            Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
-
-
         } catch (ParseException ex) {
             Logger.getLogger(PlurkerApplication.class
                     .getName()).log(Level.SEVERE, null, ex);
