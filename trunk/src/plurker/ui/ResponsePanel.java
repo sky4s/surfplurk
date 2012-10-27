@@ -802,6 +802,8 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         contentPanel.updateWidth(width);
         return contentPanel;
     }
+ 
+    
     private ResponsePanel thisObject = this;
     private AbstractAction enterAction = new AbstractAction() {
         @Override

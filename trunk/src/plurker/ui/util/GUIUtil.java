@@ -122,21 +122,16 @@ public class GUIUtil {
     private static JEditorPane dummyEditorPane;//= null;
 
     public static int getContentHeight(String content, int width, Dictionary imageCache) {
-//        if (null == dummyEditorPane) {
         JEditorPane dummyEditorPane = new JEditorPane();
-//        dummyEditorPane.setEditorKit(FixedHTMLEditorKit.getInstance());
         dummyEditorPane.setContentType("text/html");
-//        dummyEditorPane.setFont(GUIUtil.font);
         dummyEditorPane.getDocument().putProperty("imageCache", imageCache);
         dummyEditorPane.setBorder(null);
-//        }
 
         dummyEditorPane.setSize(width, Short.MAX_VALUE);
         dummyEditorPane.setText(content);
 
         return dummyEditorPane.getPreferredSize().height;
     }
-//    public final static int DefaultScrollBarWidth = 15;
     public final static int DefaultUnitIncrement = 20;
     public final static int PlurksPerFetch = 20;
 
