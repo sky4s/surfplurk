@@ -34,7 +34,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
 
     public final static boolean debugMode = new File("debug.txt").exists();
     public final static boolean offlineMode = new File("offline.txt").exists();
-    public final static boolean cacheImage = false;
+    public final static boolean cacheImage = true;
 //    private ResponsePanel currentResponsePanel = new ResponsePanel();
     private TabbedResponsePanel tabbedResponsePanel = new TabbedResponsePanel();
 

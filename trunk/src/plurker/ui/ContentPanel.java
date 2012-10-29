@@ -350,7 +350,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             try {
 
                 _content = getContent();
-                System.out.println("#getContent " + (System.currentTimeMillis() - start) / 1000.);
+//                System.out.println("#getContent " + (System.currentTimeMillis() - start) / 1000.);
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
                 return;
@@ -371,7 +371,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.jPanel_Button.setVisible(false);
 
 
-        System.out.println("else " + (System.currentTimeMillis() - start) / 1000.);
+//        System.out.println("else " + (System.currentTimeMillis() - start) / 1000.);
     }
 
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type) {
@@ -579,7 +579,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     @SuppressWarnings("empty-statement")
     public void updateWidth(int width) {
-//        Rectangle viewRect = getViewportViewRect();
         Rectangle bounds = this.getBounds();
         boolean seen = true;// viewRect != null ? viewRect.contains(bounds.x, bounds.y) : false;
 
