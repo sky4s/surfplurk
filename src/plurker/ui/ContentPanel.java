@@ -69,7 +69,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
     private ContentPanel contentPanel = this;
     private boolean deprecated = false;
-    
     private static ArrayList<ContentPanel> staticList = new ArrayList<>();
 
     public static ContentPanel getStaticContentPanel() {
