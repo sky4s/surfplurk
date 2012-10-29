@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +68,21 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
     }
     private ContentPanel contentPanel = this;
+    private boolean deprecated = false;
+    
+    private static ArrayList<ContentPanel> staticList = new ArrayList<>();
+
+    public static ContentPanel getStaticContentPanel() {
+        return null;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
+    }
 
     class NewBieActionListener implements ActionListener {
 
@@ -252,17 +268,57 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
+        boolean fetchByThread = true;
         if (null != profileImage) {
-            try {
-                URL url = new URL(profileImage);
-                labelAvatarImage = plurkPool.getImage(url);
-                this.jLabel_Avatar.setIcon(new ImageIcon(labelAvatarImage));
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
+            if (fetchByThread) {
+                fetchImageByThread(profileImage);
+            } else {
+                try {
+                    URL url = new URL(profileImage);
+                    labelAvatarImage = plurkPool.getImage(url);
+                    this.jLabel_Avatar.setIcon(new ImageIcon(labelAvatarImage));
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+        }
+    }
+    private MediaTracker mediaTracker;
+    static int serialID = 0;
+
+    private void fetchImageByThread(String imageurl) {
+//        System.out.println("fetch");
+//        if (null == mediaTracker) {
+        mediaTracker = new MediaTracker(this);
+//        }
+        try {
+            final URL url = new URL(imageurl);
+
+            new Thread() {
+                @Override
+                public void run() {
+//                    serialID++;
+                    try {
+//                        System.out.println(serialID + "before get");
+                        labelAvatarImage = plurkPool.getImage(url);
+//                        System.out.println(serialID + "after get");
+                        mediaTracker.addImage(labelAvatarImage, 0);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        mediaTracker.waitForAll();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+//                        System.out.println(serialID + "check all");
+                    jLabel_Avatar.setIcon(new ImageIcon(labelAvatarImage));
+                }
+            }.start();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     private UnreadType unreadType;
@@ -315,9 +371,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.jLabel_Floor.setVisible(false);
         this.jPanel_Button.setVisible(false);
 
-        this.jEditorPane1.addHyperlinkListener(new PlurkerHyperlinkListener());
 
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
         System.out.println("else " + (System.currentTimeMillis() - start) / 1000.);
     }
 
@@ -328,21 +382,27 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type, boolean notifyMode) {
         initComponents();
+        this.jEditorPane1.addHyperlinkListener(new PlurkerHyperlinkListener());
+        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
+        this.plurkPool = plurkPool;
+
+        init(plurk, comment, width, content, type, notifyMode);
+    }
+
+    private void init(Plurk plurk, Comment comment, int width, String content, Type type, boolean notifyMode) {
         this.plurk = plurk;
         this.comment = comment;
-        this.plurkPool = plurkPool;
         this.prefferedWidth = width;
         this.type = type;
         this.notifyMode = notifyMode;
-        initContent(content);
         this.jLabel_Image.setVisible(false);
+        initContent(content);
     }
     private boolean notifyMode = false;
 
-    public void setNotifyMode(boolean notifyMode) {
-        this.notifyMode = notifyMode;
-    }
-
+//    public void setNotifyMode(boolean notifyMode) {
+//        this.notifyMode = notifyMode;
+//    }
     public void setFloor(int floor) {
         if (null != comment) {
             jLabel_Floor.setVisible(true);
@@ -380,8 +440,13 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         this.responseInput = responseInput;
     }
     private JEditorPane responseInput;
-    public void reset() {
-        
+
+    public void reset(Comment comment, ContentPanel firstPanel, JEditorPane responseInput) {
+        this.plurk = null;
+        this.content = null;
+        init(null, comment, -1, null, Type.Comment, notifyMode);
+        this.plurkPanel = firstPanel;
+        this.responseInput = responseInput;
     }
 
     protected String getContent() throws JSONException {

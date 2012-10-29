@@ -164,8 +164,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             }
         });
 
-
-
         //接著去抓comment, 因為費時, 所以要用thread
         this.commentsAdjustmentListener.stopListen();
         commentsFetchThread = new CommentsFetchThread();
@@ -698,11 +696,9 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
             jPanel_Comments.add(jlayer);
             layerUI.start();
-//            System.out.println("layerUI.start()");
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     updateUI();
-//                    System.out.println("updateUI");
                 }
             });
             if (stop) {
@@ -796,14 +792,12 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         }
         return count;
     }
-
+    
     private ContentPanel initContentPanel(Comment comment, int width) {
         ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
         contentPanel.updateWidth(width);
         return contentPanel;
     }
- 
-    
     private ResponsePanel thisObject = this;
     private AbstractAction enterAction = new AbstractAction() {
         @Override
