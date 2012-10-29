@@ -65,15 +65,7 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
 
         boolean useTabbedPane = true;
         if (useTabbedPane) {
-            //jhrome的 tab
-//            tabbedPane = new TabbedPane();
-//            tabbedPane.addTabbedPaneListener(this);
-//            tabbedPane.setBackground(Color.white);
-//
-//            tabbedPane.setUseUniformWidth(false);
-//            tabbedPane.getNewTabButton().setVisible(false);
             tabbedResponsePanel = new TabbedResponsePanel();
-//            this.jPanel3.setVisible(false);
         }
 
         if (usePlurksPanel) {
@@ -87,13 +79,10 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         if (useSystemTray && SystemTray.isSupported()) {
             SystemTray systemTray = SystemTray.getSystemTray();
 
-//            Image image = Toolkit.getDefaultToolkit()
-//                    .getImage(PlurkerApplication.class.getResource("/plurker/ui/resource/plurk tray.png"));
             trayicon = new JTrayIcon(PlurkIcon);
             trayicon.setJPopupMenu(this.jPopupMenu_TrayIcon);
             trayicon.setToolTip("Surf Plurk");
             trayicon.addMouseListener(trayICONHandler);
-//            trayicon.addMouseMotionListener(trayIconMouseListener);
             try {
                 systemTray.add(trayicon);
             } catch (AWTException ex) {
@@ -639,13 +628,11 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         try {
             long userID = plurkSourcer.getUserID();
             UserInfo userInfo = plurkPool.getUserInfo(userID);
-//            String displayName = userInfo.getDisplayName();
             String fullName = userInfo.getFullName();
             String profileImage = userInfo.getProfileImage(UserInfo.ImageSize.Medium);
             BufferedImage image = plurkPool.getImage(new URL(profileImage));
             this.jLabel_Avatar.setIcon(new ImageIcon(image));
             this.jLabel_Avatar.setText(fullName);
-//            this.jLabel_Displayname
         } catch (IOException | JSONException ex) {
             Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -823,7 +810,9 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
     }//GEN-LAST:event_jCheckBoxMenuItem_TopNotifyDialogWhenUpdateActionPerformed
 
     /**
-     * -DproxyHost=auhqtmg06.corpnet.auo.com  -DproxyPassword=jamoe70F  -DproxyPort=80  -DproxyUser=skyforceshen
+     * -DproxyHost=auhqtmg06.corpnet.auo.com -DproxyPassword=jamoe70F
+     * -DproxyPort=80 -DproxyUser=skyforceshen
+     *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
