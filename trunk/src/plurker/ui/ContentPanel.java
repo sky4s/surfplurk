@@ -33,24 +33,20 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Element;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.View;
-import javax.swing.text.ViewFactory;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.InlineView;
-import javax.swing.text.html.ParagraphView;
 import org.json.JSONException;
 import plurker.image.ImageUtils;
 import plurker.source.PlurkChangeListener;
 import plurker.source.PlurkFormater;
 import plurker.source.PlurkPool;
+import plurker.source.PlurkSourcer;
 import plurker.ui.tooltip.CommentToolTipPanel;
 import plurker.ui.tooltip.PlurkerToolTip;
 import plurker.ui.tooltip.ToolTipPanel;
 import plurker.ui.util.DirectScroll;
+import plurker.ui.util.FixedHTMLEditorKit;
 import plurker.ui.util.HyperlinkHandler;
 import plurker.util.Utils;
+import shu.util.Persistence;
 
 /**
  *
@@ -60,19 +56,41 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     @Override
     protected void paintComponent(Graphics g) {
+//        System.out.println("before paint");
         super.paintComponent(g);
+//        System.out.println("after paint");
         if (newBie) {
             newBie = false;
             newBieTimer = new Timer(16, new NewBieActionListener());
             newBieTimer.start();
         }
+//        System.out.println(this.content);
+        if (firstSeen) {
+//            this.updateWidth(this.prefferedWidth);
+//            System.out.println("firstSeen " + this.getHeight());
+            firstSeen = false;
+        }
     }
+    private boolean firstSeen = true;
     private ContentPanel contentPanel = this;
     private boolean deprecated = false;
-    private static ArrayList<ContentPanel> staticList = new ArrayList<>();
+    private static ArrayList<ContentPanel> staticDeprecatedList = new ArrayList<>();
+    private static ArrayList<ContentPanel> staticWorkingList = new ArrayList<>();
 
-    public static ContentPanel getStaticContentPanel() {
-        return null;
+    public static ContentPanel getStaticContentPanel(Comment comment, PlurkPool plurkPool, ContentPanel firstPanel, JEditorPane responseInput) {
+        ContentPanel result = null;
+        if (0 != staticDeprecatedList.size()) {
+            result = staticDeprecatedList.get(0);
+            result.setDeprecated(false);
+            result.reset(comment, firstPanel, responseInput);
+//            System.out.println("get old");
+        }
+        if (null == result) {
+            result = new ContentPanel(comment, plurkPool, firstPanel, responseInput);
+            staticWorkingList.add(result);
+//            System.out.println("get new");
+        }
+        return result;
     }
 
     public boolean isDeprecated() {
@@ -81,6 +99,13 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     public void setDeprecated(boolean deprecated) {
         this.deprecated = deprecated;
+        if (deprecated) {
+            staticDeprecatedList.add(this);
+            staticWorkingList.remove(this);
+        } else {
+            staticDeprecatedList.remove(this);
+            staticWorkingList.add(this);
+        }
     }
 
     class NewBieActionListener implements ActionListener {
@@ -111,17 +136,21 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         frame.setLayout(new java.awt.BorderLayout());
 
         BufferedImage refreshImage = ImageUtils.loadImageFromURL(ContentPanel.class.getResource("/plurker/ui/resource/1349158187_refresh.png"));
-        ContentPanel contentPanel = new ContentPanel(refreshImage);
+        Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
+        PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
+        final PlurkPool pool = new PlurkPool(plurkSourcerInstance);
+//        ContentPanel contentPanel = new ContentPanel(refreshImage);
+        ContentPanel contentPanel = new ContentPanel(plurk, pool);
 //        ContentPanel contentPanel = new ContentPanel(content);
-        contentPanel.setNewBie(true);
-        contentPanel.getTimeLabel().setText("今天");
-        contentPanel.getAvatarLabel().setText("1234");
+//        contentPanel.setNewBie(true);
+//        contentPanel.getTimeLabel().setText("今天");
+//        contentPanel.getAvatarLabel().setText("1234");
         frame.add(contentPanel, java.awt.BorderLayout.CENTER);
         frame.setSize(300, 100);
 //        frame.pack();
         frame.setVisible(true);
 
-        contentPanel.setNofityLabelCount(8);
+//        contentPanel.setNofityLabelCount(8);
 
     }
 
@@ -155,7 +184,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
 
         jEditorPane1.setText(content);
-        updateWidth(width);
+        if (-1 != width) {
+            updateWidth(width);
+        }
     }
     private boolean copyFromOther = false;
     private ContentPanel plurkPanel;
@@ -382,6 +413,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type, boolean notifyMode) {
         initComponents();
         this.jEditorPane1.addHyperlinkListener(new PlurkerHyperlinkListener());
+        this.jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
         this.plurkPool = plurkPool;
 
@@ -579,6 +611,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     @SuppressWarnings("empty-statement")
     public void updateWidth(int width) {
+//        System.out.println("update width " + width);
+        this.prefferedWidth = width;
         Rectangle bounds = this.getBounds();
         boolean seen = true;// viewRect != null ? viewRect.contains(bounds.x, bounds.y) : false;
 
@@ -888,6 +922,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                 HyperlinkHandler.getInstance().hyperlinkUpdate(e);
             } else if (EventType.ENTERED == eventType) {
                 inHyperlink = true;
+                Element sourceElement = e.getSourceElement();
             } else if (EventType.EXITED == eventType) {
                 inHyperlink = false;
             }
