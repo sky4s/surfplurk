@@ -22,6 +22,7 @@ import javax.swing.text.*;
 import javax.swing.event.*;
 import javax.swing.text.html.*;
 import plurker.image.ImageUtils;
+import plurker.source.PlurkFormater;
 //import shu.image.ImageUtils;
 
 /**
@@ -724,15 +725,31 @@ public class PlurkerImageView extends View {
                     getProperty(IMAGE_CACHE_PROPERTY);
             if (cache != null) {
                 newImage = (Image) cache.get(src);
-            } else {
-                newImage = Toolkit.getDefaultToolkit().getImage(src);
-                if (newImage != null && getLoadsSynchronously()) {
-// Force the image to be loaded by using an ImageIcon.
-                    ImageIcon ii = new ImageIcon();
-                    ii.setImage(newImage);
-                }
+            } /*else {
+             newImage = Toolkit.getDefaultToolkit().getImage(src);
+             if (newImage != null && getLoadsSynchronously()) {
+             // Force the image to be loaded by using an ImageIcon.
+             ImageIcon ii = new ImageIcon();
+             ii.setImage(newImage);
+             }
+             }*/
+            if (null == newImage) {
+                
+                newImage = PlurkFormater.getInstance(null).cacheImage(src.toString());
+//                System.out.println(src);
+//                newImage = Toolkit.getDefaultToolkit().getImage(src);
+//                if (newImage != null && getLoadsSynchronously()) {
+//// Force the image to be loaded by using an ImageIcon.
+//                    ImageIcon ii = new ImageIcon();
+//                    ii.setImage(newImage);
+//                    
+////                                if (cache != null) {
+////                                    cache.put(ii, cache)
+////                                }
+//                }
             }
         }
+//        System.out.println(src);
         image = newImage;
     }
 

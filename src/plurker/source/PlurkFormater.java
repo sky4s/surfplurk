@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -227,10 +228,10 @@ public class PlurkFormater {
                 }
                 e.attr("width", height);
             }
-            String src = e.attr("src");
-            if (PlurkerApplication.cacheImage) {
-                cacheImage(src);
-            }
+//            String src = e.attr("src");
+//            if (PlurkerApplication.cacheImage) {
+//                cacheImage(src);
+//            }
         }
 
 
@@ -268,7 +269,7 @@ public class PlurkFormater {
         return newurl;
     }
 
-    private Image processGIFImage(URL url) {
+    public Image processGIFImage(URL url) {
         String src = url.getFile();
 
         if (-1 != src.indexOf(".gif") || -1 != src.indexOf(".GIF")) {
@@ -293,7 +294,29 @@ public class PlurkFormater {
         return null;
     }
 
-    private void cacheImage(String src) {
+    public Image cacheImage(URL url) {
+        Image image = processGIFImage(url);
+        if (null == plurkPool.imageCache.get(url)) {
+            if (null == image) {
+                if (url.getProtocol().equals("https")) {
+                    image = createImageFromHttps(url);
+                } else {
+//                    image = Toolkit.getDefaultToolkit().createImage(url);
+                    image = Toolkit.getDefaultToolkit().getImage(url);
+                }
+            }
+            plurkPool.imageCache.put(url, image);
+
+            if (null != image) {
+// Force the image to be loaded by using an ImageIcon.
+                ImageIcon ii = new ImageIcon();
+                ii.setImage(image);
+            }
+        }
+        return image;
+    }
+
+    public Image cacheImage(String src) {
         URL url = null;
         try {
             url = new URL(encodeToUTF8(src));
@@ -301,38 +324,8 @@ public class PlurkFormater {
             Logger.getLogger(PlurkFormater.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
+        return cacheImage(url);
 
-        Image image = processGIFImage(url);
-        //僅處理 gif
-//        if (-1 != src.indexOf(".gif") || -1 != src.indexOf(".GIF")) {
-//            GIFFrame[] gifFrame = null;
-//            try {
-//                HttpURLConnection openConnection = (HttpURLConnection) url.openConnection();
-//                openConnection.setFollowRedirects(true);
-//                openConnection.setInstanceFollowRedirects(false);
-//                openConnection.connect();
-//                InputStream inputStream = openConnection.getInputStream();
-//                gifFrame = GIFFrame.getGIFFrame(inputStream);
-//            } catch (IOException ex) {
-//                Logger.getLogger(PlurkFormater.class
-//                        .getName()).log(Level.SEVERE, null, ex);
-//            }
-//            //檢查是不是delay time==0
-//            if (isDelayTimeZero(gifFrame)) {
-//                //若是, 則重新設定delay time並且產生新的gif
-//                image = getGIFImage(gifFrame, 100);
-//            }
-//        }
-        if (null == plurkPool.imageCache.get(url)) {
-            if (null == image) {
-                if (url.getProtocol().equals("https")) {
-                    image = createImageFromHttps(url);
-                } else {
-                    image = Toolkit.getDefaultToolkit().createImage(url);
-                }
-            }
-            plurkPool.imageCache.put(url, image);
-        }
     }
 
     private Image createImageFromHttps(URL url) {
@@ -346,7 +339,8 @@ public class PlurkFormater {
         } catch (MalformedURLException ex) {
             Logger.getLogger(PlurkFormater.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Image image = Toolkit.getDefaultToolkit().createImage(httpurl);
+//        Image image = Toolkit.getDefaultToolkit().createImage(httpurl);
+        Image image = Toolkit.getDefaultToolkit().getImage(httpurl);
         return image;
     }
 

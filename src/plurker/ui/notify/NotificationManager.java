@@ -255,7 +255,7 @@ public class NotificationManager {
         NotificationManager instance = NotificationManager.getInstance();
         for (int x = 0; x < 15; x++) {
 //            instance.addToTinyWindow(new JLabel(Integer.toString(x + 1)));
-            instance.addToNotificationsDialog(ContentPanel.getNotifyInstance("1234", 300));
+//            instance.addToNotificationsDialog(ContentPanel.getNotifyInstance("1234", 300));
 
         }
 //        Thread.currentThread().sleep(5000);

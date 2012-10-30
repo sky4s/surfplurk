@@ -21,7 +21,7 @@ import plurker.ui.PlurkerImageView;
  */
 public class FixedHTMLEditorKit extends HTMLEditorKit {
 
-    private static FixedHTMLEditorKit fixedHTMLEditorKit = new FixedHTMLEditorKit();
+    private static FixedHTMLEditorKit fixedHTMLEditorKit;
 
     public final static FixedHTMLEditorKit getInstance() {
         if (null == fixedHTMLEditorKit) {
