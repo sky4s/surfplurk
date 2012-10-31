@@ -168,7 +168,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         //接著去抓comment, 因為費時, 所以要用thread
         this.commentsAdjustmentListener.stopListen();
         commentsFetchThread = new CommentsFetchThread();
-//        commentsFetchThread.start();
+        commentsFetchThread.start();
     }
     private ContentPanel loadingPane;
     public final static String RedFont = "<font color=\"#FF0000\">";
@@ -703,7 +703,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             if (null == plurk) {
                 return;
             }
-            System.out.println(serialID + " Thread Start");
+//            System.out.println(serialID + " Thread Start");
 
             if (null == loadingPane) {
                 loadingPane = new ContentPanel(" ", jPanel_Comments.getWidth());
@@ -723,7 +723,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             long start = System.currentTimeMillis();
             java.util.List<Comment> commentList = null;
             try {
-                System.out.println(serialID + " fetch comments");
+//                System.out.println(serialID + " fetch comments");
                 if (PlurkerApplication.offlineMode && new File("comments.obj").exists()) {
                     commentList = (java.util.List<Comment>) Persistence.readObjectAsXML("comments.obj");
                 } else if (null != plurkPool) {
@@ -756,11 +756,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
 
 
             stopUpdating();
-            System.out.println(serialID + " Thread End");
+//            System.out.println(serialID + " Thread End");
         }
 
         private void stopUpdating() {
-            System.out.println("stop updating");
+//            System.out.println("stop updating");
             if (null != triggerCallBack) {
                 triggerCallBack.callback();
             }
@@ -809,10 +809,16 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         return count;
     }
 
-    private ContentPanel initContentPanel(Comment comment, int width) {
-        ContentPanel contentPanel = ContentPanel.getStaticContentPanel(comment, plurkPool, firstPanel, jEditorPane_ResponseInput);
+    private ContentPanel initContentPanel(Comment comment, final int width) {
+        final ContentPanel contentPanel = ContentPanel.getStaticContentPanel(comment, plurkPool, firstPanel, jEditorPane_ResponseInput);
 //        ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
-        contentPanel.updateWidth(width);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                contentPanel.updateWidth(width);
+            }
+        });
+
         return contentPanel;
     }
     private ResponsePanel thisObject = this;

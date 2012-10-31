@@ -10,6 +10,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 import java.io.*;
+import plurker.source.PlurkFormater;
+import plurker.source.PlurkPool;
+import plurker.source.PlurkSourcer;
+import plurker.ui.PlurkerApplication;
+import plurker.ui.util.FixedHTMLEditorKit;
 
 /**
  * Very simplistic "Web browser" using Swing. Supply a URL on the command line
@@ -20,8 +25,13 @@ public class Browser extends JFrame implements HyperlinkListener,
         ActionListener {
 
     public static void main(String[] args) {
+        PlurkSourcer.setDoValidToken(false);
+        PlurkSourcer sourcer = PlurkerApplication.getPlurkSourcerInstance();
+        PlurkPool pool = new PlurkPool(sourcer);
+        PlurkFormater.getInstance(pool);
+
         if (args.length == 0) {
-            new Browser("http://www.apl.jhu.edu/~hall/");
+            new Browser("http://localhost/b.html");
         } else {
             new Browser(args[0]);
         }
@@ -51,7 +61,9 @@ public class Browser extends JFrame implements HyperlinkListener,
         getContentPane().add(topPanel, BorderLayout.NORTH);
 
         try {
-            htmlPane = new JEditorPane(initialURL);
+            htmlPane = new JEditorPane();
+            htmlPane.setEditorKit(FixedHTMLEditorKit.getInstance());
+            htmlPane.setPage(initialURL);
             htmlPane.setEditable(false);
             htmlPane.addHyperlinkListener(this);
             JScrollPane scrollPane = new JScrollPane(htmlPane);
