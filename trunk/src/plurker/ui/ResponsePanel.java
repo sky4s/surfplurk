@@ -4,7 +4,6 @@
  */
 package plurker.ui;
 
-import plurker.ui.util.GUIUtil;
 import com.google.jplurk_oauth.data.*;
 import com.google.jplurk_oauth.skeleton.HttpRequestException;
 import java.awt.*;
@@ -33,8 +32,8 @@ import plurker.source.PlurkSourcer;
 import plurker.ui.util.DirectScroll;
 import plurker.ui.util.ScrollBarAdjustmentListener;
 import plurker.ui.util.WaitLayerUI;
-//import shu.image.ImageUtils;
 import shu.util.Persistence;
+import plurker.ui.util.GUIUtil;
 
 /**
  *
@@ -169,7 +168,7 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
         //接著去抓comment, 因為費時, 所以要用thread
         this.commentsAdjustmentListener.stopListen();
         commentsFetchThread = new CommentsFetchThread();
-        commentsFetchThread.start();
+//        commentsFetchThread.start();
     }
     private ContentPanel loadingPane;
     public final static String RedFont = "<font color=\"#FF0000\">";

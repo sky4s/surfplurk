@@ -301,7 +301,6 @@ public class PlurkFormater {
                 if (url.getProtocol().equals("https")) {
                     image = createImageFromHttps(url);
                 } else {
-//                    image = Toolkit.getDefaultToolkit().createImage(url);
                     image = Toolkit.getDefaultToolkit().getImage(url);
                 }
             }

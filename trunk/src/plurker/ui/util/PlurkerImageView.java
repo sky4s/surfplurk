@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package plurker.ui;
+package plurker.ui.util;
 
 /*
  * @(#)myImageView.java	1.53 03/03/17
@@ -16,7 +16,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
@@ -712,6 +715,17 @@ public class PlurkerImageView extends View {
             }
         }
     }
+    private static ArrayList<ChangeListener> changeListenerList = new ArrayList<>();
+
+    public static void addChangeListener(ChangeListener changeListener) {
+        changeListenerList.add(changeListener);
+    }
+
+    private static void fireChangeEvent(ChangeEvent changeEvent) {
+        for (ChangeListener listener : changeListenerList) {
+            listener.stateChanged(changeEvent);
+        }
+    }
 
     /**
      * Loads the image from the URL getImageURL. This should only be invoked
@@ -734,19 +748,12 @@ public class PlurkerImageView extends View {
              }
              }*/
             if (null == newImage) {
-                
                 newImage = PlurkFormater.getInstance(null).cacheImage(src.toString());
 //                System.out.println(src);
-//                newImage = Toolkit.getDefaultToolkit().getImage(src);
-//                if (newImage != null && getLoadsSynchronously()) {
-//// Force the image to be loaded by using an ImageIcon.
-//                    ImageIcon ii = new ImageIcon();
-//                    ii.setImage(newImage);
-//                    
-////                                if (cache != null) {
-////                                    cache.put(ii, cache)
-////                                }
-//                }
+                //從這裡去喚起content panel 做udpate width?
+                Document document = this.getDocument();
+                ChangeEvent ce = new ChangeEvent(document);
+                fireChangeEvent(ce);
             }
         }
 //        System.out.println(src);
