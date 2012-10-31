@@ -36,7 +36,7 @@ public class PlurkSourcer implements Serializable {
     public final static void setMinimalData(boolean minimalData) {
         AbstractModule.setMinimalData(minimalData);
     }
-    private static boolean doValidToken = true;
+    private static boolean doValidToken = false;
 
     public final static void setDoValidToken(boolean valid) {
         doValidToken = valid;

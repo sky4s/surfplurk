@@ -124,7 +124,6 @@ public class NotificationManager {
             return false;
         }
         initNotificationsDialog();
-//        notify.addMouseListener(notifyPanelMouseAdapter);
         notify.setAutoHighlight(true);
         notificationsPanel.addToAll(notify);
         Type type = notify.getType();
@@ -138,9 +137,7 @@ public class NotificationManager {
         } catch (JSONException ex) {
             Logger.getLogger(NotificationManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //        notify.getComment()
-        //        notificationsFrame.addToAll(notify);
-        //        Plurk plurk = notify.getPlurk();
+ 
         if (null != followerIF && followerIF.isInFollow(plurkId)) {
             ContentPanel clone = (ContentPanel) notify.clone();
             notificationsPanel.addToFollow(clone);

@@ -453,6 +453,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 jPanel_CommentsMouseClicked(evt);
             }
         });
+        jPanel_Comments.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                jPanel_CommentsComponentResized(evt);
+            }
+        });
         jPanel_Comments.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentRemoved(java.awt.event.ContainerEvent evt) {
                 jPanel_CommentsComponentRemoved(evt);
@@ -499,6 +504,15 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
             }
         }
     }//GEN-LAST:event_jPanel_CommentsComponentRemoved
+
+    private void jPanel_CommentsComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel_CommentsComponentResized
+//        Component component = evt.getComponent();
+//        if (component != noResponsePanel && component != whitePanel) {
+//            this.updateWhiteUI();
+//            System.out.println("update "+evt);
+//        }
+
+    }//GEN-LAST:event_jPanel_CommentsComponentResized
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox jComboBox_Qualifier1;
     private javax.swing.JEditorPane jEditorPane_ResponseInput;
@@ -577,24 +591,24 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     }
 
     private void updateWhiteUI() {
+        Dimension size = jPanel_Comments.getSize();
         if (Mode.Notify != mode && 0 == jPanel_Comments.getComponentCount()) {
             //不是notify,而且又沒東西
             if (null == noResponsePanel) {
                 noResponsePanel = new ContentPanel("還沒有人回應哦，趕快來搶頭香囉！:)");
                 noResponsePanel.addMouseListener(updateMouseListener);
+                noResponsePanel.setSize(size);
+                noResponsePanel.setPreferredSize(size);
             }
             jPanel_Comments.add(noResponsePanel);
         } else {
-
-            Dimension size = jPanel_Comments.getSize();
             Dimension preferredSize = jPanel_Comments.getPreferredSize();
             int deltaHeight = size.height - preferredSize.height;
-//            
             if (deltaHeight > 0) {
                 if (null == whitePanel) {
-
                     if (Mode.Notify == mode) {
-                        whitePanel = new ContentPanel("");
+                        whitePanel = ContentPanel.getNotifyInstance("", size.width);
+//                        whitePanel = new ContentPanel("");
                     } else {
                         whitePanel = new ContentPanel(refreshImage);
                         whitePanel.addMouseListener(updateMouseListener);
@@ -610,15 +624,11 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
                 }
 
             } else {
-//                whitePanel = null;
                 JViewport viewport = jScrollPane2.getViewport();
                 if (null != commentsAdjustmentListener) {
                     commentsAdjustmentListener.stopListen();
                 }
                 viewport.setViewPosition(new Point(0, jPanel_Comments.getPreferredSize().height));
-//                if (null != commentsAdjustmentListener) {
-//                    commentsAdjustmentListener.startListen();
-//                }
             }
 
         }
@@ -627,8 +637,6 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     private boolean stopUpdateUI = false;
 
     private void setCommentListToUI(final java.util.List<Comment> commentList) {
-
-
         if (null != commentList && !commentList.isEmpty()) {
             int totalHeight = 0;
             int length = commentList.size();
@@ -812,12 +820,9 @@ public class ResponsePanel extends javax.swing.JPanel implements ScrollBarAdjust
     private ContentPanel initContentPanel(Comment comment, final int width) {
         final ContentPanel contentPanel = ContentPanel.getStaticContentPanel(comment, plurkPool, firstPanel, jEditorPane_ResponseInput);
 //        ContentPanel contentPanel = new ContentPanel(comment, plurkPool, this.firstPanel, this.jEditorPane_ResponseInput);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                contentPanel.updateWidth(width);
-            }
-        });
+
+        contentPanel.updateWidth(width);
+
 
         return contentPanel;
     }

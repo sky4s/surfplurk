@@ -71,8 +71,15 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
 //        System.out.println(this.content);
         if (firstSeen) {
+//            Container parent = this.getParent();
+//            if (null != parent) {
+//                int width = parent.getPreferredSize().width;
+//                this.updateWidth(width);
+//                System.out.println(width + " " + parent.getWidth());
+//            }
 //            this.updateWidth(this.prefferedWidth);
 //            System.out.println("firstSeen " + this.getHeight());
+            System.out.println("firstSeen" + this.getWidth() + " " + this.getSize() + " " + this.getPreferredSize());
             firstSeen = false;
         }
     }
@@ -175,7 +182,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         return plurkPool;
     }
 
-    private void initEditorPane1(String content, int width) {
+    private void initEditorPane1(String content) {
 
 
         if (this.notifyMode) {
@@ -185,9 +192,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
 
         jEditorPane1.setText(content);
-        if (-1 != width) {
-            updateWidth(width);
-        }
+//        if (-1 != width) {
+//            updateWidth(width);
+//        }
     }
     private boolean copyFromOther = false;
     private ContentPanel plurkPanel;
@@ -377,11 +384,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     protected void initContent(String _content) {
         long start = System.currentTimeMillis();
         if (null == _content) {
-//             _content ="";
             try {
 
                 _content = getContent();
-//                System.out.println("#getContent " + (System.currentTimeMillis() - start) / 1000.);
             } catch (JSONException ex) {
                 Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
                 return;
@@ -389,7 +394,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
         content = _content;
         initLabel_Avatar();
-        initEditorPane1(content, prefferedWidth);
+        initEditorPane1(content);
+        this.jPanel_Info.setVisible(false);
         this.jLabel_Time.setVisible(false);
         this.jLabel_Notify.setVisible(false);
         if (!isMuted() && !notifyMode) {
@@ -400,7 +406,9 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         //暫時不提供的功能
         this.jLabel_Floor.setVisible(false);
         this.jPanel_Button.setVisible(false);
-
+        if (-1 != prefferedWidth) {
+            this.updateWidth(prefferedWidth);
+        }
 
 //        System.out.println("else " + (System.currentTimeMillis() - start) / 1000.);
     }
@@ -418,21 +426,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         if (null != plurkPool && PlurkerApplication.cacheImage) {
             jEditorPane1.getDocument().putProperty("imageCache", plurkPool.getImageCache());
         }
-//        this.jEditorPane1.getDocument().addDocumentListener(new DocumentListener() {
-//
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                System.out.println(e);
-//            }
-//        });
+
         PlurkerImageView.addChangeListener(new PlurkImageChangeListener());
 
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
@@ -447,8 +441,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         public void stateChanged(ChangeEvent e) {
             Object source = e.getSource();
             if (source == jEditorPane1.getDocument()) {
-//                System.out.println("stateChanged");
                 if (-1 != prefferedWidth) {
+//                    System.out.println("stateChanged");
                     updateWidth(prefferedWidth);
                 }
             }
@@ -491,6 +485,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         String timeText = PlurkFormater.getTimeText(postedDate);
         this.jLabel_Time.setText(timeText);
         this.jLabel_Time.setVisible(true);
+        this.jPanel_Info.setVisible(true);
     }
 
     /**
@@ -631,54 +626,63 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
     }//GEN-LAST:event_jLayeredPane1ComponentResized
 
-    Rectangle getViewportViewRect() {
-        Container parent = this.getParent();
-        if (null != parent) {
-            parent = parent.getParent();
-        }
-        Rectangle viewRect = null;
-        if (null != parent) {
-            JViewport viewport = (JViewport) parent;
-            viewRect = viewport.getViewRect();
-        }
-        return viewRect;
-    }
-
+//    Rectangle getViewportViewRect() {
+//        Container parent = this.getParent();
+//        if (null != parent) {
+//            parent = parent.getParent();
+//        }
+//        Rectangle viewRect = null;
+//        if (null != parent) {
+//            JViewport viewport = (JViewport) parent;
+//            viewRect = viewport.getViewRect();
+//        }
+//        return viewRect;
+//    }
     @SuppressWarnings("empty-statement")
-    public void updateWidth(int width) {
-//        System.out.println("update width " + width);
+    public void updateWidth(final int width) {
+        System.out.println("updateWidth" + width);
         this.prefferedWidth = width;
-        Rectangle bounds = this.getBounds();
-        boolean seen = true;// viewRect != null ? viewRect.contains(bounds.x, bounds.y) : false;
 
-        if (seen) {
-            Border border = this.getBorder();
-            Insets borderInsets = border.getBorderInsets(this);
+        final ContentPanel thisObject = this;
 
-            int editorPaneWidth = width - (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0) - (borderInsets.left + borderInsets.right);
-            String content = jEditorPane1.getText();
-            int prefferedHeight = GUIUtil.getContentHeight(content, editorPaneWidth, null != plurkPool ? plurkPool.getImageCache() : null);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Rectangle bounds = thisObject.getBounds();
+                boolean seen = true;// viewRect != null ? viewRect.contains(bounds.x, bounds.y) : false;
 
-            int label2Height = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
-            prefferedHeight = Math.max(prefferedHeight, label2Height);
-            Dimension preferredSizeOfInfo = this.jPanel_Info.getPreferredSize();
-            prefferedHeight += preferredSizeOfInfo.getHeight();
+                if (seen) {
+                    Border border = getBorder();
+                    Insets borderInsets = border.getBorderInsets(thisObject);
 
-            Dimension fit = new Dimension(editorPaneWidth, prefferedHeight);
-            jLayeredPane1.setSize(fit);
-            jLayeredPane1.setPreferredSize(fit);
-            jEditorPane1.setSize(fit);
-            jEditorPane1.setPreferredSize(fit);
+                    int editorPaneWidth = width - (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0) - (borderInsets.left + borderInsets.right);
+                    String content = jEditorPane1.getText();
+                    int prefferedHeight = GUIUtil.getContentHeight(content, editorPaneWidth, null != plurkPool ? plurkPool.getImageCache() : null);
 
-            Dimension fitWithBorder = new Dimension(width, prefferedHeight + borderInsets.top + borderInsets.bottom);
-            this.setSize(fitWithBorder);
-            this.setPreferredSize(fitWithBorder);
-        } else {
-            int height = this.getHeight();
-            Dimension fitWithBorder = new Dimension(width, height);
-            this.setSize(fitWithBorder);
-            this.setPreferredSize(fitWithBorder);
-        }
+                    int label2Height = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
+                    prefferedHeight = Math.max(prefferedHeight, label2Height);
+                    Dimension preferredSizeOfInfo = thisObject.jPanel_Info.getPreferredSize();
+                    prefferedHeight += preferredSizeOfInfo.getHeight();
+
+                    Dimension fit = new Dimension(editorPaneWidth, prefferedHeight);
+                    jLayeredPane1.setSize(fit);
+                    jLayeredPane1.setPreferredSize(fit);
+                    jEditorPane1.setSize(fit);
+                    jEditorPane1.setPreferredSize(fit);
+
+                    Dimension fitWithBorder = new Dimension(width, prefferedHeight + borderInsets.top + borderInsets.bottom);
+                    thisObject.setSize(fitWithBorder);
+                    thisObject.setPreferredSize(fitWithBorder);
+                } else {
+                    int height = thisObject.getHeight();
+                    Dimension fitWithBorder = new Dimension(width, height);
+                    thisObject.setSize(fitWithBorder);
+                    thisObject.setPreferredSize(fitWithBorder);
+                }
+            }
+        });
+
+
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

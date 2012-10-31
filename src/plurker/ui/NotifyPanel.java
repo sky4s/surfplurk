@@ -12,20 +12,28 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import org.json.JSONException;
+import plurker.image.ImageUtils;
 import plurker.source.PlurkFormater;
 import plurker.source.PlurkPool;
 import plurker.source.PlurkSourcer;
+import plurker.ui.util.GUIUtil;
+import plurker.util.Utils;
 import shu.util.Persistence;
 
 /**
  *
  * @author SkyforceShen
- * @deprecated 
+ * @deprecated
  */
 public class NotifyPanel extends ContentPanel {
 
@@ -95,28 +103,43 @@ public class NotifyPanel extends ContentPanel {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        GUIUtil.initGUI();
+        JFrame frame = new JFrame();
+        frame.setLayout(new java.awt.BorderLayout());
+        BufferedImage refreshImage = ImageUtils.loadImageFromURL(ContentPanel.class.getResource("/plurker/ui/resource/1349158187_refresh.png"));
+//        Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
         PlurkSourcer.setDoValidToken(false);
         PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
-        PlurkPool plurkpool = new PlurkPool(plurkSourcerInstance);
+        final PlurkPool pool = new PlurkPool(plurkSourcerInstance);
+//        ContentPanel contentPanel = new ContentPanel(refreshImage);
+        String content = Utils.readContent(new File("c.html"));
+        ContentPanel contentPanel = new ContentPanel(content, 300);
+        ContentPanel contentPanel2 = (ContentPanel) contentPanel.clone();
+//        ContentPanel contentPanel = new ContentPanel(content);
+//        contentPanel.setNewBie(true);
+//        contentPanel.getTimeLabel().setText("今天");
+//        contentPanel.getAvatarLabel().setText("1234");
+        JScrollPane scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        frame.add(scroll, java.awt.BorderLayout.CENTER);
+        JPanel panel = new JPanel();
+//        panel.setSize(100, 100);
+        panel.setLayout(new javax.swing.BoxLayout(panel, javax.swing.BoxLayout.Y_AXIS));
+        scroll.setViewportView(panel);
 
-        JFrame frame = new JFrame();
-        Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
-        NotifyPanel notifyPanel2 = new NotifyPanel(plurk, plurkpool);
-        notifyPanel2.setAutoHighlight(true);
-//        notifyPanel2.setBackground(Color.yellow);
-        notifyPanel2.updateWidth(300);
-
-        notifyPanel2.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                System.out.println("click" + e);
-            }
-        });
 
 
-
-        frame.add(notifyPanel2);
-        frame.pack();
+        frame.setSize(300, 400);
         frame.setVisible(true);
+        int sw = scroll.getVerticalScrollBar().getWidth();
+        int w = panel.getWidth()- sw-100;
+//        System.out.println(w);
+//        w = panel.getPreferredSize().width;
+//        w = 100;
+        contentPanel.updateWidth(w);
+        contentPanel2.updateWidth(w);
+        panel.add(contentPanel);
+        panel.add(contentPanel2);
     }
 }

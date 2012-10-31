@@ -154,8 +154,6 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
         }
         boolean displayMessage = true;
         boolean topDialogWhenUpdate = true;
-//        boolean displayTinyWindow = true;
-//        boolean displayNotifyFrame = true;
 
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -171,8 +169,6 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
 
             for (Plurk plurk : newPlurkSet) {
                 ContentPanel notify = ContentPanel.getNotifyInstance(plurk, plurkPool);
-//                notify.updateWidth(NotificationManager.NotifyWidth);
-//                notify.setPlurker(plurker);
                 if (notifyManager.addToTinyWindow(notify)) {
                     notify = (ContentPanel) notify.clone();
                 }
@@ -180,8 +176,6 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             }
             for (Comment comment : newResponseSet) {
                 ContentPanel notify = ContentPanel.getNotifyInstance(comment, plurkPool);
-//                notify.updateWidth(NotificationManager.NotifyWidth);
-//                notify.setPlurker(plurker);
                 if (notifyManager.addToTinyWindow(notify)) {
                     notify = (ContentPanel) notify.clone();
                 }
