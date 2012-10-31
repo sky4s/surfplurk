@@ -11,9 +11,7 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.InlineView;
-import javax.swing.text.html.ParagraphView;
-import plurker.ui.PlurkerImageView;
+import javax.swing.text.html.*;
 
 /**
  *

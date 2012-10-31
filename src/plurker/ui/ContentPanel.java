@@ -4,6 +4,7 @@
  */
 package plurker.ui;
 
+import plurker.ui.util.PlurkerImageView;
 import plurker.ui.util.GUIUtil;
 import com.google.jplurk_oauth.data.Comment;
 import com.google.jplurk_oauth.data.Data;
@@ -29,6 +30,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
@@ -171,16 +176,12 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     private void initEditorPane1(String content, int width) {
-        jEditorPane1.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+
 
         if (this.notifyMode) {
             jEditorPane1.setFont(GUIUtil.smallfont);
         } else {
             jEditorPane1.setFont(GUIUtil.font);
-        }
-
-        if (null != plurkPool && PlurkerApplication.cacheImage) {
-            jEditorPane1.getDocument().putProperty("imageCache", plurkPool.getImageCache());
         }
 
         jEditorPane1.setText(content);
@@ -220,7 +221,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     //first panel, 屬於comment panel擁有
     public ContentPanel(ContentPanel plurkPanel) {
         this(plurkPanel.plurk, plurkPanel.comment, plurkPanel.plurkPool, plurkPanel.prefferedWidth, plurkPanel.getJEditorPane().getText(), Type.FirstOfResponse);
-//        copyFromOther = true;
         this.plurkPanel = plurkPanel;
         plurkPanel.setNotifyLabelNormal();
     }
@@ -414,10 +414,45 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         initComponents();
         this.jEditorPane1.addHyperlinkListener(new PlurkerHyperlinkListener());
         this.jEditorPane1.setEditorKit(FixedHTMLEditorKit.getInstance());
+        jEditorPane1.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        if (null != plurkPool && PlurkerApplication.cacheImage) {
+            jEditorPane1.getDocument().putProperty("imageCache", plurkPool.getImageCache());
+        }
+//        this.jEditorPane1.getDocument().addDocumentListener(new DocumentListener() {
+//
+//            @Override
+//            public void insertUpdate(DocumentEvent e) {
+//            }
+//
+//            @Override
+//            public void removeUpdate(DocumentEvent e) {
+//            }
+//
+//            @Override
+//            public void changedUpdate(DocumentEvent e) {
+//                System.out.println(e);
+//            }
+//        });
+        PlurkerImageView.addChangeListener(new PlurkImageChangeListener());
+
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
         this.plurkPool = plurkPool;
 
         init(plurk, comment, width, content, type, notifyMode);
+    }
+
+    class PlurkImageChangeListener implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            Object source = e.getSource();
+            if (source == jEditorPane1.getDocument()) {
+//                System.out.println("stateChanged");
+                if (-1 != prefferedWidth) {
+                    updateWidth(prefferedWidth);
+                }
+            }
+        }
     }
 
     private void init(Plurk plurk, Comment comment, int width, String content, Type type, boolean notifyMode) {
