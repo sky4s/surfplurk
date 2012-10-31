@@ -133,13 +133,15 @@ public class NotifyPanel extends ContentPanel {
         frame.setSize(300, 400);
         frame.setVisible(true);
         int sw = scroll.getVerticalScrollBar().getWidth();
-        int w = panel.getWidth()- sw-100;
+        int w = panel.getWidth();//- sw-100;
 //        System.out.println(w);
 //        w = panel.getPreferredSize().width;
 //        w = 100;
-        contentPanel.updateWidth(w);
-        contentPanel2.updateWidth(w);
+//        contentPanel.updateWidth(w);
+//        contentPanel2.updateWidth(w);
         panel.add(contentPanel);
         panel.add(contentPanel2);
+//        contentPanel.updateWidth(w);
+//        contentPanel2.updateWidth(w);
     }
 }
