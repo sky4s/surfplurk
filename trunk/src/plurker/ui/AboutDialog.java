@@ -19,7 +19,7 @@ import javax.swing.event.HyperlinkListener;
  */
 public class AboutDialog extends javax.swing.JDialog {
 
-    public final static String Version = "0.4 (Build 20121004)";
+    public final static String Version = "0.5 (Build 20121031)";
 
     /**
      * Creates new form AboutDialog

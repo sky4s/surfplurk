@@ -57,6 +57,9 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
         Plurk plurk = notifyPanel.getPlurk();
         if (null == plurk) {
             Comment comment = notifyPanel.getComment();
+            if (null == comment) {
+                int x = 1;
+            }
             plurk = comment.getParentPlurk();
         }
         PlurkPool plurkPool = notifyPanel.getPlurkPool();
@@ -143,28 +146,28 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     private javax.swing.JTabbedPane jTabbedPane2;
     // End of variables declaration//GEN-END:variables
 
-    private void alterToFitsize(ContentPanel notify) {
-        int width = this.allPanel.getWidth();
-//        System.out.println(width);
-        int contentHeight = getContentHeight(notify, width);
-        Dimension size = new Dimension(width, contentHeight);
-        notify.setSize(width, contentHeight);
-        notify.setPreferredSize(size);
+    private void alterToFitSize(ContentPanel notify) {
+//        int width = this.allPanel.getWidth();
+        int width = this.allPanel.getPreferredSize().width;
+//        int contentHeight = getContentHeight(notify, width);
+//        Dimension size = new Dimension(width, contentHeight);
+//        notify.setSize(width, contentHeight);
+//        notify.setPreferredSize(size);
+        notify.updateWidth(width);
     }
 
     public void addToAll(ContentPanel notify) {
-//        alterToFitsize(notify);
+        alterToFitSize(notify);
         this.allPanel.addContentPanel(notify);
     }
 
     private static int getContentHeight(ContentPanel notify, int width) {
-//        TinyNotificationPanel tmppanel = new TinyNotificationPanel(component);
         notify.setSize(width, Short.MAX_VALUE);
         return notify.getPreferredSize().height;
     }
 
     public void addToFollow(ContentPanel notify) {
-//        jPanel2.add(notify);
+        alterToFitSize(notify);
         this.followPanel.addContentPanel(notify);
     }
 
@@ -203,20 +206,8 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
             notificationsDialog = new NotificationsDialog(this, owener);
             notificationsDialog.setIconImage(PlurkerApplication.PlurkIcon);
 
-//            notificationsDialog.addWindowFocusListener(new WindowFocusListener() {
-//                @Override
-//                public void windowGainedFocus(WindowEvent e) {
-////                    System.out.println(e);
-//                }
-//
-//                @Override
-//                public void windowLostFocus(WindowEvent e) {
-//                    System.out.println(e);
-//                }
-//            });
-
             Dimension size = this.getSize();
-            notificationsDialog.setSize(this.getSize());
+            notificationsDialog.setSize(size);
 //            jButton_Close.addActionListener(notificationsDialog);
         }
         return notificationsDialog;
@@ -260,7 +251,6 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
                 }
             }
         }
-
 //        @Override
 //        public void actionPerformed(ActionEvent e) {
 //            if (e.getSource() == jButton_Close) {
