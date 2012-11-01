@@ -9,14 +9,19 @@ import com.google.jplurk_oauth.data.Plurk;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -103,7 +108,7 @@ public class NotifyPanel extends ContentPanel {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         GUIUtil.initGUI();
         JFrame frame = new JFrame();
         frame.setLayout(new java.awt.BorderLayout());
@@ -112,10 +117,24 @@ public class NotifyPanel extends ContentPanel {
         PlurkSourcer.setDoValidToken(false);
         PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
         final PlurkPool pool = new PlurkPool(plurkSourcerInstance);
+
+        final URL url = new URL("http://localhost/win8.bmp");
+        long start = System.currentTimeMillis();
+//         Image win8  =Toolkit.getDefaultToolkit().createImage(url);
+        Image win8 = Toolkit.getDefaultToolkit().getImage(url);
+//        BufferedImage win8 = pool.getImage(url);
+        System.out.println((System.currentTimeMillis() - start) / 1000.);
+        MediaTracker mediaTracker = new MediaTracker(frame);
+        mediaTracker.addImage(win8, 0);
+        mediaTracker.waitForID(0);
+        System.out.println((System.currentTimeMillis() - start) / 1000.);
+
 //        ContentPanel contentPanel = new ContentPanel(refreshImage);
         String content = Utils.readContent(new File("c.html"));
         ContentPanel contentPanel = new ContentPanel(content, 300);
+
         ContentPanel contentPanel2 = (ContentPanel) contentPanel.clone();
+
 //        ContentPanel contentPanel = new ContentPanel(content);
 //        contentPanel.setNewBie(true);
 //        contentPanel.getTimeLabel().setText("今天");
@@ -140,6 +159,8 @@ public class NotifyPanel extends ContentPanel {
 //        contentPanel.updateWidth(w);
 //        contentPanel2.updateWidth(w);
         panel.add(contentPanel);
+        contentPanel2.getAvatarLabel().setIcon(new ImageIcon(win8));
+        contentPanel2.getAvatarLabel().setVisible(true);
         panel.add(contentPanel2);
 //        contentPanel.updateWidth(w);
 //        contentPanel2.updateWidth(w);
