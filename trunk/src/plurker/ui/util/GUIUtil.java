@@ -116,9 +116,9 @@ public class GUIUtil {
         ToolTipManager.sharedInstance().setInitialDelay(0);
 
     }
-    public static Font font = new Font("微軟正黑體", Font.PLAIN, 13);
-    public static Font smallfont = new Font("微軟正黑體", Font.PLAIN, 12);
-    public static Font boldFont = new Font("微軟正黑體", Font.BOLD, 13);
+    public static Font font = new Font("微軟正黑體", Font.PLAIN, 14);
+    public static Font smallfont = new Font("微軟正黑體", Font.PLAIN, 13);
+    public static Font boldFont = new Font("微軟正黑體", Font.BOLD, 14);
     private static JEditorPane dummyEditorPane;//= null;
 
     public static int getContentHeight(String content, int width, Dictionary imageCache) {
