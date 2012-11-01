@@ -615,6 +615,8 @@ public class PlurkerApplication extends javax.swing.JFrame /*implements ITabbedP
             this.plurksPanel.setPlurkPool(plurkPool);
         } catch (JSONException ex) {
             Logger.getLogger(PlurkerApplication.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (java.lang.IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, "407 Error");
         }
     }
 

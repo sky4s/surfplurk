@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -79,7 +80,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 //            }
 //            this.updateWidth(this.prefferedWidth);
 //            System.out.println("firstSeen " + this.getHeight());
-            System.out.println("firstSeen" + this.getWidth() + " " + this.getSize() + " " + this.getPreferredSize());
+//            System.out.println("firstSeen" + this.getWidth() + " " + this.getSize() + " " + this.getPreferredSize());
             firstSeen = false;
         }
     }
@@ -308,7 +309,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         boolean fetchByThread = true;
         if (null != profileImage) {
             if (fetchByThread) {
-                fetchImageByThread(profileImage);
+                fetchProfileImageByThread(profileImage);
             } else {
                 try {
                     URL url = new URL(profileImage);
@@ -323,24 +324,17 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
         }
     }
     private MediaTracker mediaTracker;
-    static int serialID = 0;
 
-    private void fetchImageByThread(String imageurl) {
-//        System.out.println("fetch");
-//        if (null == mediaTracker) {
+    private void fetchProfileImageByThread(String imageurl) {
         mediaTracker = new MediaTracker(this);
-//        }
         try {
             final URL url = new URL(imageurl);
 
             new Thread() {
                 @Override
                 public void run() {
-//                    serialID++;
                     try {
-//                        System.out.println(serialID + "before get");
                         labelAvatarImage = plurkPool.getImage(url);
-//                        System.out.println(serialID + "after get");
                         mediaTracker.addImage(labelAvatarImage, 0);
                     } catch (IOException ex) {
                         Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -350,8 +344,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                     } catch (InterruptedException ex) {
                         Logger.getLogger(ContentPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-//                        System.out.println(serialID + "check all");
                     jLabel_Avatar.setIcon(new ImageIcon(labelAvatarImage));
+                    updateWidth(prefferedWidth);
                 }
             }.start();
         } catch (MalformedURLException ex) {
@@ -416,7 +410,8 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type) {
         this(plurk, comment, plurkPool, width, content, type, false);
     }
-//    private static int SerialID = 0;
+    private static int SerialID = 0;
+    private int serialID = SerialID++;
 
     protected ContentPanel(Plurk plurk, Comment comment, PlurkPool plurkPool, int width, String content, Type type, boolean notifyMode) {
         initComponents();
@@ -434,6 +429,15 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
         init(plurk, comment, width, content, type, notifyMode);
     }
+    private ArrayList<ChangeListener> changeListenerList = new ArrayList<>();
+
+    public void addChangeListener(ChangeListener changeListener) {
+        changeListenerList.add(changeListener);
+    }
+
+    public void removeChangeListener(ChangeListener changeListener) {
+        changeListenerList.remove(changeListener);
+    }
 
     class PlurkImageChangeListener implements ChangeListener {
 
@@ -442,10 +446,18 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             Object source = e.getSource();
             if (source == jEditorPane1.getDocument()) {
                 if (-1 != prefferedWidth) {
-//                    System.out.println("stateChanged");
+                    System.out.println("PlurkImageStateChanged " + "(" + serialID + ")");
                     updateWidth(prefferedWidth);
+
                 }
             }
+        }
+    }
+
+    private void fireChangeEvent(ChangeEvent changeEvent) {
+        System.out.println("fireChangeEvent" + " (" + serialID + ")");
+        for (ChangeListener listener : changeListenerList) {
+            listener.stateChanged(changeEvent);
         }
     }
 
@@ -625,7 +637,6 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             jLabel_Image.setLocation(x, y);
         }
     }//GEN-LAST:event_jLayeredPane1ComponentResized
-
 //    Rectangle getViewportViewRect() {
 //        Container parent = this.getParent();
 //        if (null != parent) {
@@ -638,52 +649,47 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 //        }
 //        return viewRect;
 //    }
+    private final ContentPanel thisObject = this;
+
     @SuppressWarnings("empty-statement")
     public void updateWidth(final int width) {
-        System.out.println("updateWidth" + width);
+        if (prefferedWidth == width) {
+            return;
+        }
         this.prefferedWidth = width;
-
-        final ContentPanel thisObject = this;
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Rectangle bounds = thisObject.getBounds();
-                boolean seen = true;// viewRect != null ? viewRect.contains(bounds.x, bounds.y) : false;
+                System.out.println("run updateWidth" + prefferedWidth + " (" + serialID + ")");
+//                Rectangle bounds = thisObject.getBounds();
 
-                if (seen) {
-                    Border border = getBorder();
-                    Insets borderInsets = border.getBorderInsets(thisObject);
+                Border border = getBorder();
+                Insets borderInsets = border.getBorderInsets(thisObject);
 
-                    int editorPaneWidth = width - (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0) - (borderInsets.left + borderInsets.right);
-                    String content = jEditorPane1.getText();
-                    int prefferedHeight = GUIUtil.getContentHeight(content, editorPaneWidth, null != plurkPool ? plurkPool.getImageCache() : null);
+                int editorPaneWidth = width - (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0) - (borderInsets.left + borderInsets.right);
+                String content = jEditorPane1.getText();
+                int prefferedHeight = GUIUtil.getContentHeight(content, editorPaneWidth, null != plurkPool ? plurkPool.getImageCache() : null);
 
-                    int label2Height = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
-                    prefferedHeight = Math.max(prefferedHeight, label2Height);
-                    Dimension preferredSizeOfInfo = thisObject.jPanel_Info.getPreferredSize();
-                    prefferedHeight += preferredSizeOfInfo.getHeight();
+                int label2Height = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
+                prefferedHeight = Math.max(prefferedHeight, label2Height);
+                Dimension preferredSizeOfInfo = thisObject.jPanel_Info.getPreferredSize();
+                prefferedHeight += preferredSizeOfInfo.getHeight();
 
-                    Dimension fit = new Dimension(editorPaneWidth, prefferedHeight);
-                    jLayeredPane1.setSize(fit);
-                    jLayeredPane1.setPreferredSize(fit);
-                    jEditorPane1.setSize(fit);
-                    jEditorPane1.setPreferredSize(fit);
+                Dimension fit = new Dimension(editorPaneWidth, prefferedHeight);
+                jLayeredPane1.setSize(fit);
+                jLayeredPane1.setPreferredSize(fit);
+                jEditorPane1.setSize(fit);
+                jEditorPane1.setPreferredSize(fit);
 
-                    Dimension fitWithBorder = new Dimension(width, prefferedHeight + borderInsets.top + borderInsets.bottom);
-                    thisObject.setSize(fitWithBorder);
-                    thisObject.setPreferredSize(fitWithBorder);
-                } else {
-                    int height = thisObject.getHeight();
-                    Dimension fitWithBorder = new Dimension(width, height);
-                    thisObject.setSize(fitWithBorder);
-                    thisObject.setPreferredSize(fitWithBorder);
-                }
+                Dimension fitWithBorder = new Dimension(width, prefferedHeight + borderInsets.top + borderInsets.bottom);
+                thisObject.setSize(fitWithBorder);
+                thisObject.setPreferredSize(fitWithBorder);
+
+
+                fireChangeEvent(new ChangeEvent(thisObject));
             }
         });
-
-
-
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane jEditorPane1;

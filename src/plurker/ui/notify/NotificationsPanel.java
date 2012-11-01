@@ -149,6 +149,7 @@ public class NotificationsPanel extends javax.swing.JPanel implements AWTEventLi
     private void alterToFitSize(ContentPanel notify) {
 //        int width = this.allPanel.getWidth();
         int width = this.allPanel.getPreferredSize().width;
+        System.out.println(width);
 //        int contentHeight = getContentHeight(notify, width);
 //        Dimension size = new Dimension(width, contentHeight);
 //        notify.setSize(width, contentHeight);
