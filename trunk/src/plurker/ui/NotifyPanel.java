@@ -9,15 +9,22 @@ import com.google.jplurk_oauth.data.Plurk;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,59 +117,100 @@ public class NotifyPanel extends ContentPanel {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         GUIUtil.initGUI();
-        JFrame frame = new JFrame();
-        frame.setLayout(new java.awt.BorderLayout());
+
         BufferedImage refreshImage = ImageUtils.loadImageFromURL(ContentPanel.class.getResource("/plurker/ui/resource/1349158187_refresh.png"));
-//        Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
-        PlurkSourcer.setDoValidToken(false);
-        PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
-        final PlurkPool pool = new PlurkPool(plurkSourcerInstance);
-
-        final URL url = new URL("http://localhost/win8.bmp");
-        long start = System.currentTimeMillis();
-//         Image win8  =Toolkit.getDefaultToolkit().createImage(url);
-        Image win8 = Toolkit.getDefaultToolkit().getImage(url);
-//        BufferedImage win8 = pool.getImage(url);
-        System.out.println((System.currentTimeMillis() - start) / 1000.);
-        MediaTracker mediaTracker = new MediaTracker(frame);
-        mediaTracker.addImage(win8, 0);
-        mediaTracker.waitForID(0);
-        System.out.println((System.currentTimeMillis() - start) / 1000.);
-
-//        ContentPanel contentPanel = new ContentPanel(refreshImage);
-        String content = Utils.readContent(new File("c.html"));
-        ContentPanel contentPanel = new ContentPanel(content, 300);
-
-        ContentPanel contentPanel2 = (ContentPanel) contentPanel.clone();
-
-//        ContentPanel contentPanel = new ContentPanel(content);
-//        contentPanel.setNewBie(true);
-//        contentPanel.getTimeLabel().setText("今天");
-//        contentPanel.getAvatarLabel().setText("1234");
-        JScrollPane scroll = new JScrollPane();
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        frame.add(scroll, java.awt.BorderLayout.CENTER);
-        JPanel panel = new JPanel();
-//        panel.setSize(100, 100);
-        panel.setLayout(new javax.swing.BoxLayout(panel, javax.swing.BoxLayout.Y_AXIS));
-        scroll.setViewportView(panel);
+//        PlurkSourcer.setDoValidToken(false);
+//        PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
+//        final PlurkPool pool = new PlurkPool(plurkSourcerInstance);
 
 
 
-        frame.setSize(300, 400);
-        frame.setVisible(true);
-        int sw = scroll.getVerticalScrollBar().getWidth();
-        int w = panel.getWidth();//- sw-100;
-//        System.out.println(w);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    final JFrame frame = new JFrame();
+                    frame.setLayout(new java.awt.BorderLayout());
+                    MediaTracker mediaTracker = new MediaTracker(frame);
+
+
+
+                    final URL url = new URL("http://localhost/win8.bmp");
+                    long start = System.currentTimeMillis();
+                    final Image win8 = Toolkit.getDefaultToolkit().getImage(url);
+                    System.out.println((System.currentTimeMillis() - start) / 1000.);
+                    String content = Utils.readContent(new File("c.html"));
+                    mediaTracker.addImage(win8, 0);
+                    mediaTracker.waitForID(0);
+                    System.out.println((System.currentTimeMillis() - start) / 1000.);
+
+
+                    JScrollPane scroll = new JScrollPane();
+                    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                    frame.add(scroll, java.awt.BorderLayout.CENTER);
+                    final JPanel panel = new JPanel();
+                    panel.setLayout(new javax.swing.BoxLayout(panel, javax.swing.BoxLayout.Y_AXIS));
+                    scroll.setViewportView(panel);
+                    frame.setSize(300, 400);
+                    frame.setVisible(true);
+
+
+                    int sw = scroll.getVerticalScrollBar().getWidth();
+                    final int w = panel.getWidth() - sw;//-100;
+                    System.out.println(w);
+                    final ContentPanel contentPanel = new ContentPanel(content,w);
+                    final ContentPanel contentPanel2 = new ContentPanel(content, w);
 //        w = panel.getPreferredSize().width;
 //        w = 100;
-//        contentPanel.updateWidth(w);
-//        contentPanel2.updateWidth(w);
-        panel.add(contentPanel);
-        contentPanel2.getAvatarLabel().setIcon(new ImageIcon(win8));
-        contentPanel2.getAvatarLabel().setVisible(true);
-        panel.add(contentPanel2);
-//        contentPanel.updateWidth(w);
-//        contentPanel2.updateWidth(w);
+
+                    AWTEventListener listener = new AWTEventListener() {
+                        @Override
+                        public void eventDispatched(AWTEvent event) {
+                            if (panel == event.getSource()) {
+                                System.out.print("panel ");
+                            }
+                            System.out.println(event);
+                            if (event.getSource() instanceof ContentPanel) {
+
+//                     panel.updateUI();
+                                ContentPanel contentPanel = (ContentPanel) event.getSource();
+                                Container parent = contentPanel.getParent();
+//                    parent.repaint();
+                    SwingUtilities.updateComponentTreeUI(parent);
+                            }
+                        }
+                    };
+                    Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.COMPONENT_EVENT_MASK);
+
+                    panel.add(contentPanel);
+                    panel.add(contentPanel2);
+                    System.out.println("add over");
+
+
+                    new Thread() {
+                        public void run() {
+                            try {
+                                Thread.currentThread().sleep(2000);
+                                System.out.println("wait 2s over");
+                                contentPanel.updateWidth(w);
+                                contentPanel2.updateWidth(w);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(NotifyPanel.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }.start();
+
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(NotifyPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(NotifyPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+
+
+
+
     }
 }

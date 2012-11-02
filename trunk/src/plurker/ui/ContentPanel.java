@@ -464,11 +464,12 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     private void init(Plurk plurk, Comment comment, int width, String content, Type type, boolean notifyMode) {
         this.plurk = plurk;
         this.comment = comment;
-        this.prefferedWidth = width;
+//        this.prefferedWidth = width;
         this.type = type;
         this.notifyMode = notifyMode;
         this.jLabel_Image.setVisible(false);
         initContent(content);
+        this.updateWidth(width);
     }
     private boolean notifyMode = false;
 
@@ -668,13 +669,16 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
                 Insets borderInsets = border.getBorderInsets(thisObject);
 
                 int editorPaneWidth = width - (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0) - (borderInsets.left + borderInsets.right);
-                String content = jEditorPane1.getText();
-                int prefferedHeight = GUIUtil.getContentHeight(content, editorPaneWidth, null != plurkPool ? plurkPool.getImageCache() : null);
-
-                int label2Height = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
-                prefferedHeight = Math.max(prefferedHeight, label2Height);
+//                String content = jEditorPane1.getText();
+//                int prefferedHeight_ = GUIUtil.getContentHeight(content, editorPaneWidth, null != plurkPool ? plurkPool.getImageCache() : null);
+                int prefferedHeight = GUIUtil.getContentHeight(content, editorPaneWidth, null);
+                int avatarLabelHeight = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
+                prefferedHeight = Math.max(prefferedHeight, avatarLabelHeight);
                 Dimension preferredSizeOfInfo = thisObject.jPanel_Info.getPreferredSize();
                 prefferedHeight += preferredSizeOfInfo.getHeight();
+
+//                int avatarLabelWidth = (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0);
+//                int prefferedWidth = editorPaneWidth + avatarLabelWidth;
 
                 Dimension fit = new Dimension(editorPaneWidth, prefferedHeight);
                 jLayeredPane1.setSize(fit);

@@ -132,6 +132,21 @@ public class GUIUtil {
 
         return dummyEditorPane.getPreferredSize().height;
     }
+
+    public static int getContentHeight(JEditorPane editorPane, int width) {
+        JEditorPane dummyEditorPane = new JEditorPane();
+        dummyEditorPane.setContentType("text/html");
+        Object property = editorPane.getDocument().getProperty("imageCache");
+        if (null != property) {
+            dummyEditorPane.getDocument().putProperty("imageCache", property);
+        }
+        dummyEditorPane.setBorder(editorPane.getBorder());
+
+        dummyEditorPane.setSize(width, Short.MAX_VALUE);
+        dummyEditorPane.setText(editorPane.getText());
+
+        return dummyEditorPane.getPreferredSize().height;
+    }
     public final static int DefaultUnitIncrement = 20;
     public final static int PlurksPerFetch = 20;
 
