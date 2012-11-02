@@ -8,6 +8,7 @@ import com.google.jplurk_oauth.data.*;
 import com.google.jplurk_oauth.module.Timeline;
 import com.google.jplurk_oauth.skeleton.DateTime;
 import com.google.jplurk_oauth.skeleton.RequestException;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -289,7 +290,7 @@ public class PlurkPool implements ChangeListener {
             }
         }
     }
-    Dictionary imageCache = new Hashtable();
+    Dictionary<URL, Image> imageCache = new Hashtable<>();
 
     public BufferedImage getImage(URL url) throws IOException {
         BufferedImage image = (BufferedImage) imageCache.get(url);
