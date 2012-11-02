@@ -158,7 +158,7 @@ public class NotifyPanel extends ContentPanel {
                     int sw = scroll.getVerticalScrollBar().getWidth();
                     final int w = panel.getWidth() - sw;//-100;
                     System.out.println(w);
-                    final ContentPanel contentPanel = new ContentPanel(content,w);
+                    final ContentPanel contentPanel = new ContentPanel(content, w);
                     final ContentPanel contentPanel2 = new ContentPanel(content, w);
 //        w = panel.getPreferredSize().width;
 //        w = 100;
@@ -176,7 +176,7 @@ public class NotifyPanel extends ContentPanel {
                                 ContentPanel contentPanel = (ContentPanel) event.getSource();
                                 Container parent = contentPanel.getParent();
 //                    parent.repaint();
-                    SwingUtilities.updateComponentTreeUI(parent);
+                                SwingUtilities.updateComponentTreeUI(parent);
                             }
                         }
                     };
