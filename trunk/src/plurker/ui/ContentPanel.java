@@ -145,25 +145,54 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     public static void main(String[] args) throws InterruptedException, IOException {
         GUIUtil.initGUI();
         JFrame frame = new JFrame();
-        String content = Utils.readContent(new File("b.html"));
+        final String content = Utils.readContent(new File("c.html"));
         frame.setLayout(new java.awt.BorderLayout());
 
-        BufferedImage refreshImage = ImageUtils.loadImageFromURL(ContentPanel.class.getResource("/plurker/ui/resource/1349158187_refresh.png"));
-        Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
+//        BufferedImage refreshImage = ImageUtils.loadImageFromURL(ContentPanel.class.getResource("/plurker/ui/resource/1349158187_refresh.png"));
+//        Plurk plurk = (Plurk) Persistence.readObjectAsXML("plurk.obj");
+        PlurkSourcer.setDoValidToken(false);
         PlurkSourcer plurkSourcerInstance = PlurkerApplication.getPlurkSourcerInstance();
         final PlurkPool pool = new PlurkPool(plurkSourcerInstance);
-//        ContentPanel contentPanel = new ContentPanel(refreshImage);
-        ContentPanel contentPanel = new ContentPanel(plurk, pool);
-//        ContentPanel contentPanel = new ContentPanel(content);
-//        contentPanel.setNewBie(true);
-//        contentPanel.getTimeLabel().setText("今天");
-//        contentPanel.getAvatarLabel().setText("1234");
-        frame.add(contentPanel, java.awt.BorderLayout.CENTER);
-        frame.setSize(300, 100);
-//        frame.pack();
-        frame.setVisible(true);
+        PlurkFormater.getInstance(pool);
 
-//        contentPanel.setNofityLabelCount(8);
+        final JPanel panel = new JPanel();
+        panel.setLayout(new javax.swing.BoxLayout(panel, javax.swing.BoxLayout.Y_AXIS));
+        frame.add(panel, java.awt.BorderLayout.CENTER);
+        frame.setSize(500, 500);
+        frame.setVisible(true);
+//        frame.pack();
+
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                int width = panel.getWidth();
+                int height = panel.getHeight();
+
+                ContentPanel contentPanel = new ContentPanel(content, pool);
+                contentPanel.updateWidth(width);
+//                System.out.println(contentPanel.getPreferredSize());
+//                System.out.println(contentPanel.getSize());
+
+                panel.add(contentPanel);
+                ContentPanel blank = new ContentPanel("");
+                panel.add(blank);
+//                System.out.println(contentPanel.getPreferredSize());
+//                System.out.println(contentPanel.getSize());
+
+                int blankheight = height - contentPanel.getPreferredSize().height;
+
+                blank.setPreferredSize(new Dimension(width, blankheight));
+                blank.setSize(new Dimension(width, blankheight));
+//                panel.updateUI();
+
+                System.out.println(contentPanel.getPreferredSize());
+                System.out.println(contentPanel.getSize());
+            }
+        });
+
+
+
 
     }
 
@@ -235,6 +264,10 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 
     public ContentPanel(String content) {
         this(null, null, null, -1, content, Type.Unknow);
+    }
+
+    private ContentPanel(String content, PlurkPool plurkPool) {
+        this(null, null, plurkPool, -1, content, Type.Unknow);
     }
     private BufferedImage image;
 
@@ -464,7 +497,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     private void init(Plurk plurk, Comment comment, int width, String content, Type type, boolean notifyMode) {
         this.plurk = plurk;
         this.comment = comment;
-//        this.prefferedWidth = width;
+        this.prefferedWidth = width;
         this.type = type;
         this.notifyMode = notifyMode;
         this.jLabel_Image.setVisible(false);
@@ -652,48 +685,55 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
 //    }
     private final ContentPanel thisObject = this;
 
-    @SuppressWarnings("empty-statement")
-    public void updateWidth(final int width) {
-        if (prefferedWidth == width) {
+    private void updateWidth0(int width) {
+        if (-1 == width) {
             return;
         }
         this.prefferedWidth = width;
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("run updateWidth" + prefferedWidth + " (" + serialID + ")");
-//                Rectangle bounds = thisObject.getBounds();
+        Border border = getBorder();
+        Insets borderInsets = border.getBorderInsets(thisObject);
 
-                Border border = getBorder();
-                Insets borderInsets = border.getBorderInsets(thisObject);
-
-                int editorPaneWidth = width - (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0) - (borderInsets.left + borderInsets.right);
-//                String content = jEditorPane1.getText();
-//                int prefferedHeight_ = GUIUtil.getContentHeight(content, editorPaneWidth, null != plurkPool ? plurkPool.getImageCache() : null);
-                int prefferedHeight = GUIUtil.getContentHeight(content, editorPaneWidth, null);
-                int avatarLabelHeight = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
-                prefferedHeight = Math.max(prefferedHeight, avatarLabelHeight);
-                Dimension preferredSizeOfInfo = thisObject.jPanel_Info.getPreferredSize();
-                prefferedHeight += preferredSizeOfInfo.getHeight();
-
-//                int avatarLabelWidth = (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0);
-//                int prefferedWidth = editorPaneWidth + avatarLabelWidth;
-
-                Dimension fit = new Dimension(editorPaneWidth, prefferedHeight);
-                jLayeredPane1.setSize(fit);
-                jLayeredPane1.setPreferredSize(fit);
-                jEditorPane1.setSize(fit);
-                jEditorPane1.setPreferredSize(fit);
-
-                Dimension fitWithBorder = new Dimension(width, prefferedHeight + borderInsets.top + borderInsets.bottom);
-                thisObject.setSize(fitWithBorder);
-                thisObject.setPreferredSize(fitWithBorder);
+        int editorPaneWidth = width - (null != labelAvatarImage ? labelAvatarImage.getWidth() : 0) - (borderInsets.left + borderInsets.right);
+        int prefferedHeight = GUIUtil.getContentHeight(jEditorPane1, width);
+        int avatarLabelHeight = (null != labelAvatarImage ? labelAvatarImage.getHeight() : 0);
+        prefferedHeight = Math.max(prefferedHeight, avatarLabelHeight);
+        Dimension preferredSizeOfInfo = thisObject.jPanel_Info.getPreferredSize();
+        prefferedHeight += preferredSizeOfInfo.getHeight();
 
 
-                fireChangeEvent(new ChangeEvent(thisObject));
-            }
-        });
+        Dimension fit = new Dimension(editorPaneWidth, prefferedHeight);
+        jLayeredPane1.setSize(fit);
+        jLayeredPane1.setPreferredSize(fit);
+        jEditorPane1.setSize(fit);
+        jEditorPane1.setPreferredSize(fit);
+
+        Dimension fitWithBorder = new Dimension(width, prefferedHeight + borderInsets.top + borderInsets.bottom);
+        thisObject.setSize(fitWithBorder);
+        thisObject.setPreferredSize(fitWithBorder);
+
+
+        fireChangeEvent(new ChangeEvent(thisObject));
+    }
+
+    public void updateWidth(final int width) {
+        updateWidth(width, true);
+    }
+
+    public void updateWidth(final int width, boolean invokeByEventDispatch) {
+
+        if (invokeByEventDispatch) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    updateWidth0(width);
+                }
+            });
+        } else {
+            updateWidth0(width);
+        }
+
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane jEditorPane1;
