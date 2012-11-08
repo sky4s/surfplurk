@@ -140,7 +140,8 @@ public class GUIUtil {
         if (null != property) {
             dummyEditorPane.getDocument().putProperty("imageCache", property);
         }
-        dummyEditorPane.setBorder(editorPane.getBorder());
+//        dummyEditorPane.setBorder(editorPane.getBorder());
+        dummyEditorPane.setBorder(null);
 
         dummyEditorPane.setSize(width, Short.MAX_VALUE);
         dummyEditorPane.setText(editorPane.getText());
