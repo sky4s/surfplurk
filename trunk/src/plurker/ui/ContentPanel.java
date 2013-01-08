@@ -479,7 +479,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
             Object source = e.getSource();
             if (source == jEditorPane1.getDocument()) {
                 if (-1 != prefferedWidth) {
-                    System.out.println("PlurkImageStateChanged " + "(" + serialID + ")");
+//                    System.out.println("PlurkImageStateChanged " + "(" + serialID + ")");
                     updateWidth(prefferedWidth);
 
                 }
@@ -488,7 +488,7 @@ public class ContentPanel extends javax.swing.JPanel implements AWTEventListener
     }
 
     private void fireChangeEvent(ChangeEvent changeEvent) {
-        System.out.println("fireChangeEvent" + " (" + serialID + ")");
+//        System.out.println("fireChangeEvent" + " (" + serialID + ")");
         for (ChangeListener listener : changeListenerList) {
             listener.stateChanged(changeEvent);
         }
